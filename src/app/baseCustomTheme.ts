@@ -10,6 +10,9 @@ export const customTheme: ThemeProps = {
 					"bg-magenta text-magenta-foreground border border-transparent enabled:hover:bg-magenta-dark",
 				ghost: "bg-transparent text-foreground enabled:hover:bg-foreground/10",
 			},
+			size: {
+				fit: "p-0",
+			},
 		},
 	},
 };

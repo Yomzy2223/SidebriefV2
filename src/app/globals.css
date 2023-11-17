@@ -6,7 +6,8 @@
 	:root {
 		--background: 0 0% 100%; /* #ffffff */
 		--foreground: 200 4% 15%; /* #242627 */
-		--foreground-light: 195 2% 31%; /* #4E5152 */
+		--foreground-grey: 195 2% 31%; /* #4E5152 */
+		--foreground-light-grey: 180 1% 45%; /* #727474 */
 
 		--primary: 197 100% 47%; /* #00ADEF */
 		--primary-dark: 197 100% 36%; /* #0084B8 */
@@ -15,5 +16,7 @@
 		--magenta: 325 100% 46%; /* #EB008B */
 		--magenta-dark: 325 100% 32%; /* #A3005F */
 		--magenta-foreground: 0 0% 100%; /* #ffffff */
+
+		--border: 216 37% 95%; /* #EDF1F6 */
 	}
 }

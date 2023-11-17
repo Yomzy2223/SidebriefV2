@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Flowbite } from "@/components/ui";
+import { Flowbite } from "@/components/flowbite";
 import { customTheme } from "./baseCustomTheme";
 
 const inter = Inter({ subsets: ["latin"] });

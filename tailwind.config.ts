@@ -16,7 +16,8 @@ const config: Config = {
 				},
 				foreground: {
 					DEFAULT: "hsl(var(--foreground))",
-					light: "hsl(var(--foreground-light))",
+					grey: "hsl(var(--foreground-grey))",
+					"light-grey": "hsl(var(--foreground-light-grey))",
 				},
 				primary: {
 					DEFAULT: "hsl(var(--primary))",
@@ -27,6 +28,9 @@ const config: Config = {
 					DEFAULT: "hsl(var(--magenta))",
 					foreground: "hsl(var(--magenta-foreground))",
 					dark: "hsl(var(--magenta-dark))",
+				},
+				border: {
+					DEFAULT: "hsl(var(--border))",
 				},
 			},
 			backgroundImage: {

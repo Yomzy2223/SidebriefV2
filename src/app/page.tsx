@@ -1,10 +1,10 @@
-import Image from "next/image";
-import { Button } from "@/components/ui";
-import Link from "next/link";
+import { Button } from "@/components/flowbite";
+import { Navbar } from "@/components/navbar";
 
 export default function Home() {
 	return (
 		<div>
+			<Navbar />
 			<p>Hello world</p>
 			<Button color="primary">Click me</Button>
 			<Button color="magenta">Click me</Button>
