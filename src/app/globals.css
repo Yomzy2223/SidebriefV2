@@ -25,3 +25,13 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+h1 {
+}
+h2 {
+  @apply;
+}
+/* Custom Typography */
+label {
+  @apply font-medium text-sm;
+}
