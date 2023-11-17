@@ -2,11 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+} */
+
+@layer base {
+  :root {
+    
+    --primary: 194 100% 42%; /* #00A2D4 */
+
+    --grey: 0 0% 95%; /* #F1F1F1 */
+
+    /* CMYK base colors */
+    --cyan: 100%, 0%, 0%, 0%;
+    --cyan-light: 38%, 0%, 0%, 0%;
+    --yellow: 0%, 0%, 100%, 0%;
+    --black: 0%, 0%, 0%, 100%;
+    --magenta:0%, 100%, 0%, 0%;
+    --magenta-light:0%, 34%, 0%, 0%;
+    --info-background: 0%, 12%, 14%, 2%;
+
+    /* --background: 0 0% 100%; /* #ffffff */
+    --foreground: 200 4% 15%; /* #242627 */
+    --foreground-grey: 195, 2%, 31% /*#4E5152*/
+
+    --background-blue: 194 100% 42% / 0.1; /* rgba(0, 162, 212, 0.10) */
+
+    --muted: 213 33% 95%; /* #EDF1F6 */
+    --muted-foreground: 210 1% 59%; /* #959697 */
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --border: 216 37% 95%; /*  */
+    --input: 0 0% 84%; /*  */
+
+    --primary: 7 83% 58%; /**/
+    --primary-foreground: 0 0% 100%; /**/
+
+    --secondary: 194 100% 42%; /**/
+    --secondary-foreground: 0 0% 100%; /* #ffffff */
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 7 61% 48%; /* #C54130 */
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 194 100% 42%; /* #00A2D4 */
+
+    --radius: 0.5rem;
+
+    --success: 140 100% 42%; #00D448 */
+
+    /* --grey: 0 0% 95%; /* #F1F1F1 */
+    --cyan: 100%, 0%, 0%, 0%;
+    --yellow: 0%, 0%, 100%, 0%;
+    --magenta:0%, 100%, 0%, 0%;
+    --black: 0%, 0%, 0%, 100%; */
+  }
 }
+
 
 @media (prefers-color-scheme: dark) {
   :root {
