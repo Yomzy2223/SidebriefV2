@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+const colors = require('tailwindcss/colors')
 
 const config: Config = {
 	content: [
@@ -28,13 +29,26 @@ const config: Config = {
 					DEFAULT: "hsl(var(--magenta))",
 					foreground: "hsl(var(--magenta-foreground))",
 					dark: "hsl(var(--magenta-dark))",
+					light: "hsla(var(--magenta-light))",
 				},
+				yellow: {
+					DEFAULT: "hsl(var(--yellow))",
+					dark: "hsl(var(--sb-yellow-dark))",
+
+				},
+				
 				border: {
 					DEFAULT: "hsl(var(--border))",
 				},
 				"sb-blue": {
 					light: "hsl(var(--sb-blue-light))",
 				},
+
+				// sb: {
+				// 	cyan: "hsl(var(--sb-cyan)",
+				// 	yellow:  "hsl(var(--sb-cyan)",
+				// 	yellowdark:  "hsl(var(--sb-yellow-dark)",
+				// },
 			},
 			backgroundImage: {
 				"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
