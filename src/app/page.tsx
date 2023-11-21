@@ -22,7 +22,7 @@ export default function Home() {
 				<CountryCard name="Canada" active={false} />
 				<CountryCard name="Senegal" active={false} />
 			</div>
-			<AuthStepper />
+			<AuthStepper progress={2} />
 		</div>
 	);
 }

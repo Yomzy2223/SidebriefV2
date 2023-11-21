@@ -6,8 +6,8 @@ export const AuthStepper = ({ progress = 1 }: { progress?: number }) => {
 		<ol className="flex items-center w-full mb-4 sm:mb-5 gap-2">
 			<li
 				className={cn(
-					"flex w-full items-center gap-2 after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-100 after:border-4 after:inline-block",
-					{ "after:border-blue-100": progress >= 1 }
+					"flex w-full items-center gap-2 after:content-[''] after:w-full after:h-1.5 after:bg-gray-100 after:inline-block",
+					{ "after:bg-blue-100": progress >= 2 }
 				)}
 			>
 				<div
@@ -21,8 +21,8 @@ export const AuthStepper = ({ progress = 1 }: { progress?: number }) => {
 			</li>
 			<li
 				className={cn(
-					"flex w-full items-center gap-2 after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-100 after:border-4 after:inline-block",
-					{ "after:border-blue-100": progress >= 2 }
+					"flex w-full items-center gap-2 after:content-[''] after:w-full after:h-1.5 after:bg-gray-100 after:inline-block",
+					{ "after:bg-blue-100": progress >= 3 }
 				)}
 			>
 				<div
