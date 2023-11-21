@@ -40,6 +40,9 @@ const config: Config = {
 				border: {
 					DEFAULT: "hsl(var(--border))",
 				},
+				"sb-blue": {
+					light: "hsl(var(--sb-blue-light))",
+				},
 
 				// sb: {
 				// 	cyan: "hsl(var(--sb-cyan)",
