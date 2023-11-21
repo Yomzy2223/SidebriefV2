@@ -3,8 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Flowbite } from "@/components/flowbite";
 import { customTheme } from "./baseCustomTheme";
-
-const inter = Inter({ subsets: ["latin"] });
+import { BrFirma } from "@/font";
 
 export const metadata: Metadata = {
 	title: "Create Next App",
@@ -19,7 +18,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<Flowbite theme={customTheme}>
-				<body className={inter.className}>{children}</body>
+				<body className={BrFirma.className}>{children}</body>
 			</Flowbite>
 		</html>
 	);
