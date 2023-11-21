@@ -32,6 +32,9 @@ const config: Config = {
 				border: {
 					DEFAULT: "hsl(var(--border))",
 				},
+				"sb-blue": {
+					light: "hsl(var(--sb-blue-light))",
+				},
 			},
 			backgroundImage: {
 				"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

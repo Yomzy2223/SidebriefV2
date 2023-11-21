@@ -42,7 +42,7 @@ const navroutes = [
 
 export const Navigation = () => {
 	return (
-		<div className="py-5 flex space-x-4">
+		<div className="py-5 flex">
 			{navroutes.map((el, i) => (
 				<Link key={i} href={el.to}>
 					<Button
