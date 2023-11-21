@@ -22,13 +22,8 @@
     --sb-blue-light: 194 100% 90%; /* #CCF3FF */
   }
 }
-/* Custom Typography */
-/* 
-h1 {
+
+@layer utilities {
+  .p-12 {
+  }
 }
-h2 {
-  @apply;
-}
-label {
-  @apply font-medium text-sm;
-} */
