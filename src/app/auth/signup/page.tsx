@@ -1,8 +1,8 @@
-import { AuthLayout } from "@/components/features/auth/authLayout";
+import AuthFormWrapper from "@/components/features/auth/authFormWrapper";
 import React from "react";
 
 const SignUp = () => {
-  return <AuthLayout>SignUp</AuthLayout>;
+  return <AuthFormWrapper>SignUp</AuthFormWrapper>;
 };
 
 export default SignUp;

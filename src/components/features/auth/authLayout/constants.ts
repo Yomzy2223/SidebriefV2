@@ -1,24 +1,31 @@
-import { Google, Yahoo } from "@/assets/social";
-import { StaticImageData } from "next/image";
+import { TestimonialUser } from "@/assets/icons";
 
-interface Isocial {
-	name: string;
-	text: string;
-	loginText: string;
-	icon: StaticImageData;
-}
-
-export const signUpSocial: Isocial[] = [
-	{
-		name: "google",
-		text: "Sign up with Google",
-		loginText: "Sign in with Google",
-		icon: Google,
-	},
-	{
-		name: "yahoo",
-		text: "Sign up with Yahoo",
-		loginText: "Sign in with Yahoo",
-		icon: Yahoo,
-	},
+export const testimonies = [
+  {
+    id: 1,
+    title: "Sidebrief made my business registration easy.",
+    details:
+      "Being a foreigner, I was trying to be careful with doing business and I am glad that just in time I found Sidebrief!!!",
+    name: "Aderibigbe Adeola",
+    profession: "CEO, Cakes by me",
+    img: TestimonialUser,
+  },
+  {
+    id: 2,
+    title: "Sidebrief made my business registration easy.",
+    details:
+      "Being a foreigner, I was trying to be careful with doing business and I am glad that just in time I found Sidebrief!!!",
+    name: "Aderibigbe Adeola",
+    profession: "CEO, Cakes by me",
+    img: TestimonialUser,
+  },
+  {
+    id: 3,
+    title: "Sidebrief made my business registration easy.",
+    details:
+      "Being a foreigner, I was trying to be careful with doing business and I am glad that just in time I found Sidebrief!!!",
+    name: "Aderibigbe Adeola",
+    profession: "CEO, Cakes by me",
+    img: TestimonialUser,
+  },
 ];
