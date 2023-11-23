@@ -1,0 +1,15 @@
+/* Swiper pagination styles */
+.swiper-pagination-bullet {
+  transition: 0.2s ease width;
+  max-width: 7px !important;
+  max-height: 7px !important;
+}
+
+.swiper-pagination-bullet-active {
+  border-radius: 8px !important;
+  height: 7px !important;
+  width: 38px !important;
+  max-width: 100% !important;
+  background: white !important;
+  margin-block: auto !important;
+}

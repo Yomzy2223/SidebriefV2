@@ -2,7 +2,7 @@ import { Button } from "@/components/flowbite";
 import { Navbar } from "@/components/navbar";
 import { CountryCard } from "@/components/cards/countrycard";
 import { AuthStepper } from "@/components/stepper/auth";
-import { StepNavbar } from "@/components/StepNavbar";
+// import { StepNavbar } from "@/components/StepNavbar";
 export default function Home() {
   return (
     <div>
@@ -14,7 +14,7 @@ export default function Home() {
 			<Button color="magenta">
 				Click me
 			</Button> */}
-      <StepNavbar />
+      {/* <StepNavbar /> */}
       <div className="flex flex-col gap-2 max-w-sm">
         <CountryCard name="Ghana" active={true} />
         <CountryCard name="Kenya" active={false} />
