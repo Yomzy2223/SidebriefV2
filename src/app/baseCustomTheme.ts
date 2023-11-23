@@ -10,8 +10,16 @@ export const customTheme: ThemeProps = {
         magenta:
           "bg-magenta text-magenta-foreground border border-transparent enabled:hover:bg-magenta-dark",
         ghost: "bg-transparent text-foreground enabled:hover:bg-foreground/10",
-        outline:
-          "bg-transparent text-foreground border border-input hover:bg-accent",
+      },
+      outline: {
+        on: "flex justify-center bg-transparent text-inherit transition-all duration-75 ease-in group-enabled:group-hover:bg-opacity-0 group-enabled:group-hover:text-inherit dark:bg-gray-900 dark:text-white w-full",
+        color: {
+          white: "border border-white enabled:hover:bg-foreground/10",
+          primary:
+            "border border-primary bg-transparent enabled:hover:bg-primary-dark",
+          magenta:
+            "border border-magenta bg-transparent enabled:hover:bg-magenta-dark",
+        },
       },
       size: {
         fit: "p-0",

@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import Testimonial from "./testimonial";
+// import Testimonial from "./testimonial";
 import Image from "next/image";
 import { SidebriefLogo } from "@/assets/images";
 
@@ -37,7 +37,7 @@ export const AuthLayout = ({ children, login }: authLayoutProps) => {
             </p>
           </div>
 
-          <Testimonial />
+          {/* <Testimonial /> */}
         </div>
       </div>
     </div>
