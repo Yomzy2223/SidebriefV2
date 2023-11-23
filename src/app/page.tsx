@@ -6,9 +6,9 @@ import { AuthStepper } from "@/components/stepper/auth";
 import { RequestInfoPanel } from "@/components/features/requestInfoPanel";
 
 export default function Home() {
-	return (
-		<div>
-			{/* <Navbar />
+  return (
+    <div>
+      {/* <Navbar />
 			<p>Hello world</p>
 			<Button color="sb-cyan-90">Click me</Button>
 			<Button color="magenta">Click me</Button>
@@ -26,7 +26,7 @@ export default function Home() {
 				<CountryCard name="Senegal" active={false} />
 			</div>
 			<AuthStepper progress={2} /> */}
-			<RequestInfoPanel />
-		</div>
-	);
+      <RequestInfoPanel />
+    </div>
+  );
 }

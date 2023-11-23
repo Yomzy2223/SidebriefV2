@@ -3,7 +3,7 @@ import { Thumbs, Profilecard, FileShield } from "@/assets/icons";
 
 export const AuthStepper = ({ progress = 1 }: { progress?: number }) => {
   return (
-    <ol className="flex items-center w-full mb-4 sm:mb-5 gap-2">
+    <ol className="flex items-center w-full mb-4 sm:mb-6 gap-2">
       <li
         className={cn(
           "flex w-full items-center gap-2 after:content-[''] after:w-full after:h-1.5 after:bg-gray-100 after:inline-block",
@@ -34,7 +34,7 @@ export const AuthStepper = ({ progress = 1 }: { progress?: number }) => {
           <Profilecard />
         </div>
       </li>
-      <li className="flex items-center w-full">
+      <li className="flex items-center">
         <div
           className={cn(
             "flex items-center justify-center w-10 h-10 text-gray-500 bg-gray-100 rounded-full lg:h-12 lg:w-12 shrink-0",
