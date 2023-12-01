@@ -17,6 +17,11 @@ export const launchSteps = [
 		Icon: Clipboard,
 	},
 	{
+		name: "KYC",
+		description: "Your detail here",
+		Icon: FileCheck,
+	},
+	{
 		name: "Review",
 		description: "Your detail here",
 		Icon: FileCheck,

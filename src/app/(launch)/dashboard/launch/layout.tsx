@@ -24,8 +24,13 @@ export default function LaunchLayout({ children }: { children: ReactNode }) {
 			break;
 		case "kyc":
 			progress = 4;
+			break;
+		case "review":
+			progress = 5;
+			break;
 		default:
 			progress = 0;
+			break;
 	}
 
 	return (
@@ -36,9 +41,11 @@ export default function LaunchLayout({ children }: { children: ReactNode }) {
 				</div>
 				{children}
 			</div>
-			<div className="ml-8 xl:ml-auto hidden lg:block">
-				<RequestInfoPanel />
-			</div>
+			{path !== "review" ? (
+				<div className="ml-8 xl:ml-auto hidden lg:block">
+					<RequestInfoPanel />
+				</div>
+			) : null}
 		</div>
 	);
 }
