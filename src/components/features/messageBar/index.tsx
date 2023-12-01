@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const Message = () => {
 	return (
-		<div className="w-full bg-red-200 h-12 flex items-center justify-center px-8">
+		<div className="w-full bg-red-200 py-2 flex items-center justify-center px-8">
 			<p className="text-center font-medium leading-normal">
 				There’s an issue on your business registration{" "}
 				<b>(Agro Technology Limited)</b>, please{" "}
