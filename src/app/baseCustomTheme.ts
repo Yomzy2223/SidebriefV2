@@ -31,6 +31,7 @@ export const customTheme: ThemeProps = {
 			},
 			size: {
 				fit: "p-0",
+				icon: "p-1",
 			},
 		},
 	},
