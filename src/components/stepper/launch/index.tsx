@@ -2,13 +2,10 @@
 
 import { cn } from "@/lib/utils";
 import { launchSteps } from "./constant";
-// import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { BadgeCheck } from "@/assets/svg";
 import Image from "next/image";
 
 export const LaunchStepper = ({ progress = 1 }: { progress?: number }) => {
-	// const matches = useMediaQuery("(min-width: 768px)");
-
 	return (
 		<>
 			{/* Mobile stepper */}

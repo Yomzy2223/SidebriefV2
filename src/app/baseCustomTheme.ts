@@ -18,6 +18,7 @@ export const customTheme: ThemeProps = {
 				magenta:
 					"bg-magenta text-magenta-foreground border border-transparent enabled:hover:bg-magenta-dark",
 				ghost: "bg-transparent text-foreground enabled:hover:bg-foreground/10",
+				link: "bg-transparent text-primary enabled:hover:underline",
 			},
 			outline: {
 				on: "flex justify-center bg-transparent text-inherit transition-all duration-75 ease-in group-enabled:group-hover:bg-opacity-0 group-enabled:group-hover:text-inherit dark:bg-gray-900 dark:text-white w-full",

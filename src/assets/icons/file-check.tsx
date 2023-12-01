@@ -6,7 +6,7 @@ export const FileCheck = () => (
 		viewBox="0 0 16 17"
 		fill="none"
 	>
-		<g clip-path="url(#clip0_14135_5485)">
+		<g clipPath="url(#clip0_14135_5485)">
 			<path
 				d="M5.4987 4.5V0.604C5.09703 0.7144 4.72453 0.9112 4.4212 1.2032L2.06453 3.4656C1.7612 3.7568 1.5562 4.1144 1.44036 4.5H5.4987Z"
 				fill="currentColor"
