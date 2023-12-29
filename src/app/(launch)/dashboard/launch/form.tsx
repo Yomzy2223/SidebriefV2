@@ -54,7 +54,7 @@ export const LaunchForm1 = () => {
 					<CountryCard name="Delaware" code="us" />
 				</div>
 			</div>
-			<Button color="magenta" size={"lg"}>
+			<Button color="magenta" size={"lg"} href="/dashboard/launch/plan">
 				<div className="space-x-2 flex items-center">
 					<p>Continue</p>
 					<ArrowRight />

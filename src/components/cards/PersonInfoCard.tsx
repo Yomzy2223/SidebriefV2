@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image'
-import React from 'react';
+import { Card } from  "@/components/flowbite";
 import { HiCheckCircle } from "react-icons/hi";
 import { AngleIcon, LinkIcon } from "@/assets/svg";
+
 
 const cardData = [
   { id: 1, initials: 'SO', name: 'Sayo Oluwole', email: 'sayooluwole@gmail.com', shareAllocated: 10 },
@@ -28,7 +29,8 @@ const PersonInfoCard = ({
     
   
  return (
-    <div className="w-[400px] p-5 pl-6 border border-gray-300 rounded-md ">
+    // <div className="w-[400px] p-5 pl-6 border border-gray-300 rounded-md ">
+    <div className="w-full md:min-w-[480px] md:max-w-[calc(50%-12px)]">
       <div className='flex flex-row'>
         <div className="w-[15%]">
           <div className="bg-primary text-white rounded-full h-10 w-10 flex items-center justify-center">
@@ -61,6 +63,7 @@ const PersonInfoCard = ({
                 />
               </div>
             </div>
+
           </div>
 
           <h5 className="text-2xl font-bold tracking-tight  text-gray-900 dark:text-white">
@@ -70,7 +73,7 @@ const PersonInfoCard = ({
             {email}
           </p>
 
-          <div className="flex flex-col md:flex-row items-center md:items-start pt-3 text-xs text-gray-700">
+          {/* <div className="flex flex-col md:flex-row items-center md:items-start pt-3 text-xs text-gray-700">
             <div className="flex items-center  justify-center whitespace-nowrap md:justify-start sm:mr-3">
               <span className="mr-1 text-[#4E5152]">
                 <HiCheckCircle/>
@@ -85,8 +88,11 @@ const PersonInfoCard = ({
               <p>HT Share Type</p>
             </div>
 
-          </div>
-    
+          </div> */}
+          <div className="mt-3.5 flex-col sm:flex-row flex flex-wrap gap-2">
+						{/* <CheckBullet grey>10% share allocated</CheckBullet>
+						<CheckBullet grey>HT Share Type</CheckBullet> */}
+					</div>
         </div>
 
       </div>
