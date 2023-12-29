@@ -22,6 +22,7 @@ export const ProprietorInfoReview = () => {
 			<div className="flex flex-wrap gap-6">
 				<ProprietorInfoReviewCard />
 				<ProprietorInfoReviewCard />
+				<ProprietorInfoReviewCard />
 			</div>
 		</div>
 	);

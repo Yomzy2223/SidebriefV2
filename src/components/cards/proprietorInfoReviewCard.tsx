@@ -7,7 +7,7 @@ import { CheckBullet } from "../reuseables/checkBullet";
 
 export const ProprietorInfoReviewCard = () => {
 	return (
-		<Card className="w-full  md:min-w-[480px] md:max-w-[calc(50%-12px)]">
+		<Card className="w-full md:min-w-[480px] md:max-w-[calc(50%-12px)]">
 			<div className="grid grid-cols-[50px,1fr] grid-row-[repeat(2,fit-content)] gap-x-2.5 gap-y-7">
 				<div className="bg-primary text-white w-[50px] h-[50px] rounded-full grid place-items-center">
 					SO
@@ -26,6 +26,7 @@ export const ProprietorInfoReviewCard = () => {
 					<h6 className="text-2xl font-semibold leading-normal">
 						Sayo Oluwole
 					</h6>
+
 					<p className="text-foreground-5 leading-normal">
 						Sayoluwole@gmail.com
 					</p>
