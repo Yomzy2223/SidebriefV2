@@ -10,5 +10,6 @@ export { Clipboard } from "./clipboard";
 export { FileCheck } from "./file-check";
 export { ArrowRight } from "./arrow-right";
 export { SwatchBook } from "./swatchbook";
+export { Upload } from "./upload";
 
 export { TestimonialUser, Hamburger };
