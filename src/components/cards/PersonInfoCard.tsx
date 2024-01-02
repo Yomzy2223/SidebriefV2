@@ -73,7 +73,7 @@ const PersonInfoCard = ({
             {email}
           </p>
 
-          {/* <div className="flex flex-col md:flex-row items-center md:items-start pt-3 text-xs text-gray-700">
+          <div className="flex flex-col md:flex-row items-center md:items-start pt-3 text-xs text-gray-700">
             <div className="flex items-center  justify-center whitespace-nowrap md:justify-start sm:mr-3">
               <span className="mr-1 text-[#4E5152]">
                 <HiCheckCircle/>
@@ -88,7 +88,7 @@ const PersonInfoCard = ({
               <p>HT Share Type</p>
             </div>
 
-          </div> */}
+          </div>
           <div className="mt-3.5 flex-col sm:flex-row flex flex-wrap gap-2">
 						{/* <CheckBullet grey>10% share allocated</CheckBullet>
 						<CheckBullet grey>HT Share Type</CheckBullet> */}

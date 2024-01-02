@@ -8,5 +8,15 @@ import Copy from "./copy.svg"
 import BankIcon from "./bankIcon.svg"
 import CardIcon from "./CardIcon.svg"
 import CreditCardIcon from "./CreditIcon.svg"
-
-export { AuthPattern,BankIcon,CardIcon, CreditCardIcon,  Copy, GoogleIcon, YahooIcon, BadgeCheck, AngleIcon, LinkIcon }
+import Timer from "./Timer.svg"
+import DotsIcon from "./ellipsis.svg"
+import ApprovedImage from "./AppliedCircle.svg"
+import Download from "./Download.svg"
+import ProgressImage from "./ProgressCircle.svg"
+import CompletedImage from "./CompletedCircle.svg"
+import AppliedImage from "./ApplyCIrcle.svg"
+import DetailIcon from "./DetailIcon.svg"
+import CalcIcon from "./calc.svg"
+import Settings from "./cog.svg"
+import EllipsisVertical from "./ElpVertical.svg"
+export { AuthPattern,BankIcon,CardIcon, CreditCardIcon,  Copy, DetailIcon, GoogleIcon, YahooIcon, BadgeCheck, AngleIcon, LinkIcon, Timer, DotsIcon, AppliedImage, ApprovedImage, Download, ProgressImage, CompletedImage, CalcIcon, Settings, EllipsisVertical }
