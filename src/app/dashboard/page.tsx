@@ -72,7 +72,7 @@ const ApplicationBadge: React.FC<BadgeProps> = ({ size = 'sm', status  }) => {
 
 	return (
 		<span className={`inline-block px-2 py-1 text-xs font-semibold text-${badgeColor}-800 bg-${badgeColor}-400 rounded ${size === 'sm' ? 'text-sm' : 'text-xs'}`}>
-		{status ? status.charAt(0).toUpperCase() + status.slice(1) : ''}
+			{status ? status.charAt(0).toUpperCase() + status.slice(1) : ''}
 		</span>
 	);
   };

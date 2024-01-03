@@ -1,11 +1,13 @@
 "use client"
 import React, { useState } from 'react';
 import { Plans } from "./plans";
-import { Button } from "@/components/flowbite";
+import { Button , Card} from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { BankIcon, CardIcon, CreditCardIcon } from "@/assets/svg";
 import Image from "next/image";
-
+import { ServicesModal } from '@/components/services/ServicesModal';
+import { X } from "lucide-react"
+import { ProceedPayModal } from './ProceedPayModal';
 const tabs = [
 	{ name: 'Bank Transfer', href: '#', icon: BankIcon, current: false },
 	{ name: 'Card Payment', href: '#', icon: CardIcon, current: false},
@@ -16,6 +18,17 @@ function classNames(...classes: any[]) {
 	return classes.filter(Boolean).join(' ');
   }
 export default function RegistrationPlan() {
+	const [openModal, setOpenModal] = useState(false);
+
+	const [openDiv, setOpenDiv] = useState(false)
+
+	const handleRemoveDiv = () => {
+		setOpenDiv(false);
+	  };
+
+	const closeModal = () => {
+		setOpenModal(false);
+	};
 	const [currentTab, setCurrentTab] = useState(tabs.find((tab) => tab.current));
 
 	// const handleTabChange = (selectedTab) => {
@@ -30,44 +43,40 @@ export default function RegistrationPlan() {
 				<h6 className="text-2xl leading-normal font-semibold">
 					Registration Plan
 				</h6>
-				{/* <p className="font-medium leading-normal text-primary">
-					Give the business a face
-				</p> */}
 			</div>
 			<Plans />
 
-			<div>
+
+
+			<Button color="magenta" size={"lg"} className="self-start" onClick={() => setOpenModal(true)}>
+					<div className="space-x-2 flex items-center">
+						<p>Continue</p>
+						<ArrowRight />
+					</div>
+				</Button>
+
+			{/* <div className='p-5 border'>
 				<div className="flex justify-between w-full">
 					<div className="flex flex-col">
-						<h6 className="text-2xl leading-normal font-semibold">
-							Choose your Payment Choice
+						<h6 className="text-2xl leading-normal font-semibold text-primary">
+							Before you proceed to payment
 						</h6>
-						
-						<div className="sm:block">
-							<nav className="flex space-x-4" aria-label="Tabs">
-								{tabs.map((tab) => (
-								<a
-									key={tab.name}
-									href={tab.href}
-								>
-									<div className="flex flex-col items-center p-4">
-										<Image src ={tab.icon} quality={100} alt=""/>
-										<h3 className="font-medium text-md leading-normal text-center mt-2">{tab.name} </h3>
-									</div>
-								</a>
-								))}
-							</nav>
-						</div>
+						<p className='py-4'>See other things you can do alongside side your business registration to save time. It may require additional documents and increase in payment</p>
 					</div>
 				</div>
-			</div>
 
-			<Button color="magenta" size={"lg"} className="self-start" href="/dashboard/launch/payment">
-				<div className="space-x-2 flex items-center">
-					<p>Continue</p>
-					<ArrowRight />
-				</div>
-			</Button>
+
+				<Button color="magenta" size={"lg"} className="self-start" onClick={() => setOpenModal(true)}>
+					<div className="space-x-2 flex items-center">
+						<p>Continue</p>
+						<ArrowRight />
+					</div>
+				</Button>
+
+			</div> */}
+
+			{/* <ProceedPayModal open={openModal} close={closeModal}/> */}
+			<ServicesModal open={openModal} close={closeModal}/>
 		</div>
 	);
 }
