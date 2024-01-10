@@ -14,6 +14,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
     "axios": "^1.6.2",
+    "canvas-confetti": "^1.9.2",
     "clsx": "^2.0.0",
     "flowbite": "^2.1.1",
     "flowbite-react": "^0.6.4",
@@ -38,6 +39,7 @@
     "@storybook/react": "^7.5.3",
     "@storybook/testing-library": "^0.2.2",
     "@testing-library/react": "^14.1.0",
+    "@types/canvas-confetti": "^1.6.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
