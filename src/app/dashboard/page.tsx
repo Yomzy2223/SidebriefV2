@@ -135,9 +135,8 @@ const renderFile = (file: File) => {
 export default function Dashboard() {
 	return (
 		<div className="p-8 relative">
-			<div className="flex flex-row">
-				<div className="px-4 sm:px-0">
-					
+			<div className="flex flex-col sm:flex-row">
+				<div className="px-0 sm:px-0">
 					<div className="flex items-center">
 						<h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
 							Contifery agricultural limited
@@ -146,13 +145,22 @@ export default function Dashboard() {
 							<ApplicationBadge size="lg" status="Submitted" />
 						</span>
 					</div>
-						
 					<p className="mt-2 text-sm text-gray-500">
 						Now continue the process of registering your business without the need for any physical paperwork.
 					</p>
 				</div>
 
+				<div className="sm:hidden w-full mt-6">
+					<Button color="magenta" size={"lg"} className="self-start">
+						<div className="space-x-2 flex items-center">
+							<p>Resume</p>
+							<ArrowRight />
+						</div>
+					</Button>
+				</div>
+			</div>
 
+			<div className="hidden sm:block">
 				<Button color="magenta" size={"lg"} className="mr-7 self-start mt-8 absolute top-0 right-0">
 					<div className="space-x-2 flex items-center">
 						<p>Resume</p>
@@ -161,47 +169,51 @@ export default function Dashboard() {
 				</Button>
 			</div>
 
-			<div className="flex mt-4">
-				<div className="flex-1 md:w-1/2  py-4">	
+
+			<div className="flex flex-col md:flex-row mt-4">
+				<div className="flex-1 md:w-1/2 py-4">
 					<div className="w-28">
-						<Badge size="sm" color="yellow">
-							My Business
-						</Badge>
+					<Badge size="sm" color="yellow">
+						My Business
+					</Badge>
 					</div>
-					
+
 					<h2 className="text-lg font-bold mb-2">Ayomide Constructions</h2>
 					<div className="flex items-center justify-between">
-						<p>Manage all your business registrations in one place</p>
-						<div className="flex items-center">
-							<h4 className="text-primary mr-2">See details</h4>
-							<span>
-								<Image src={DetailIcon} alt=""/>
-							</span>
-						</div>
-
+					<p>Manage all your business registrations in one place</p>
+					<div className="flex items-center">
+						<h4 className="text-primary mr-2">See details</h4>
+						<span>
+						<Image src={DetailIcon} alt="" />
+						</span>
 					</div>
-					
-					
+					</div>
+
 					<div className="flex justify-between items-start">
-						<DateBar/>
+					<DateBar />
 
-						<div className="mt-12">
-							<div className="space-y-6">
-								{files.map((file) => (
-									<h3 className="text-lg leading-normal font-semibold border rounded-4xl p-3" key={file.id}>
-									{renderFile(file)}
-									</h3>
-								))}
-							</div>
-						</div>	
+					<div className="mt-12">
+						<div className="space-y-6">
+						{files.map((file) => (
+							<h3
+							className="text-lg leading-normal font-semibold border rounded-4xl p-3"
+							key={file.id}
+							>
+							{renderFile(file)}
+							</h3>
+						))}
+						</div>
+					</div>
 					</div>
 				</div>
 
-				<div className="flex-1 md:w-1/2  p-4">
+				<div className="flex-1 md:w-1/2 p-4">
 					<h2 className="text-lg font-bold mb-2">My Activities</h2>
-					<Activity/>
+					<Activity />
 				</div>
-			</div>	
+			</div>
+
+
 
 			<div className="max-w-12xl">
 				<ul role="list"

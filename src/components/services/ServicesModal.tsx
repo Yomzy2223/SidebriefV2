@@ -70,18 +70,22 @@ export const ServicesModal = ({
       }
     };
     return (
-        <Modal show={open} onClose={close} size={"7xl"} >
+        <Modal show={open} onClose={close} size={"5xl"} >
             <Modal.Header>Other services you can get alongside your business registration</Modal.Header>
             <Modal.Body>
                 <p className='font-bold mb-4'>Total Fee: {`#${totalFee}`}</p>
                 <div className="-mb-10">
                   {selectedServices.map((service, index) => (
-                    <div key={index} className="bg-[#00A2D4] text-white px-7 py-2 mr-4 rounded-md inline-flex items-center">
-                        {service} 
-                        <Button color='primary' onClick={() => handleRemoveService(service)}>
-                          <X className="w-5 h-5 ml-2" />
-                        </Button>
-                   </div>
+                  <div
+                    key={index}
+                    className="bg-[#00A2D4] text-white px-7 py-2 mr-4 mb-4 md:mb-0 rounded-md inline-flex items-center"
+                  >
+                    {service} 
+                    <Button color='primary' onClick={() => handleRemoveService(service)}>
+                      <X className="w-5 h-5 ml-2" />
+                    </Button>
+                  </div>
+
                   ))}
                 </div>
                 <div className="max-w-12xl">
@@ -90,20 +94,25 @@ export const ServicesModal = ({
                     >
                       {OtherServices.map((service) => (
                         <li key={service.name} className="rounded-2xl border border-gray-200 p-8" onClick={() => handleServiceAdd(service.name)}>
-                        <div className="flex items-center justify-between">
-                          <div className="flex justify-between items-center py-4">
-                            <Image src={service.icon} alt="" className="h-8 w-8"/>
-                            <h3 className="ml-4 font-semibold text-gray-900">
-                              {service.name}
-                            </h3>
+                          <div className="flex items-center justify-between">
+                            <div className="flex justify-between items-center py-4">
+                              <Image src={service.icon} alt="" className="h-8 w-8"/>
+                              <h3 className="ml-4 font-semibold text-gray-900">
+                                {service.name}
+                              </h3>
+                            </div>
+                            <h4 className="text-primary">{`#${service.amount}`}</h4>
                           </div>
-                          <h4 className="text-primary">{`#${service.amount}`}</h4>
-                        </div>
-                        <p className="mt-2 text-gray-700">{service.description}</p>
+                          <p className="mt-2 text-gray-700">{service.description}</p>
 
-                        <div className='mt-5'>
-                          <h2 className='font-300'>Documents Required</h2>
-                      </div>
+                          <div className='mt-5'>
+                            <h2 className='font-300'>Documents Required</h2>
+                            <ul className="flex list-disc p-0 pl-3 whitespace-nowrap font-bold">
+                              <li className="mr-4 ml-0 text-sm">Statement of Account</li>
+                              <li className="mr-4 ml-2 text-sm">NIN</li>
+                            </ul>
+
+                          </div>
                         </li>
                         
                       ))}
@@ -116,6 +125,12 @@ export const ServicesModal = ({
                     Pay Now
                     </span>
                     <ArrowRight/>
+                  </Button>
+
+                  <Button onClick={close} color="gray" className='px-12 py-3 bg-white border-none'>
+                    <span className='mx-3 text-primary text-lg'>
+                      See All Services
+                    </span>
                   </Button>
               </div>
             </Modal.Body>
