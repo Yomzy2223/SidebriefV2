@@ -5,5 +5,11 @@ export { Thumbs } from "./thumbs";
 export { Profilecard } from "./profilecard";
 export { FileShield } from "./fileshield";
 import TestimonialUser from "./testimonial_user.svg";
+import Hamburger from "./hamburger";
+export { Clipboard } from "./clipboard";
+export { FileCheck } from "./file-check";
+export { ArrowRight } from "./arrow-right";
+export { SwatchBook } from "./swatchbook";
+export { Upload } from "./upload";
 
-export { TestimonialUser };
+export { TestimonialUser, Hamburger };
