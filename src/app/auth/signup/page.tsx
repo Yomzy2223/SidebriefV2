@@ -6,12 +6,16 @@ import { AuthStepper } from "@/components/stepper/auth";
 import { Button } from "flowbite-react";
 import { ArrowRight, ArrowRightCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import * as z from "zod";
 
 const SignUp = () => {
+  const router = useRouter();
+
   const handleSignUp = (values: any) => {
     console.log(values);
+    router.push("/auth/signup/select-service");
   };
 
   return (
@@ -32,14 +36,19 @@ const SignUp = () => {
             Privacy Policy
           </Link>
         </p>
+
         <AuthStepper />
+
         <div className="flex items-center gap-14">
+          <p className="sb-text-16 text-foreground-3">
+            Have an account?{" "}
+            <Button color="plain" size="fit" className="text-primary">
+              Sign In
+            </Button>
+          </p>
           <Button type="submit" color="magenta">
             Click to create account <ArrowRightCircle className="ml-1" />
           </Button>
-          <p className="sb-text-18 text-foreground-3">
-            Have an account? <span className="text-primary">Sign In</span>
-          </p>
         </div>
       </DynamicForm>
     </AuthFormWrapper>
@@ -52,7 +61,7 @@ const formInfo = [
   {
     name: "name",
     label: "Hello, Tell us your name",
-    type: "toggle",
+    type: "text",
     textInputProp: {
       placeholder: "Enter your name",
     },

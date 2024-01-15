@@ -26,12 +26,12 @@ const AuthFormWrapper = ({ children, login }: propTypes) => {
     <div>
       <div className="mb-10">
         <h2 className="sb-text-32 font-semibold mb-2">{title}</h2>
-        <p className="sb-text-18 font-normal text-foreground-3">
+        <p className="sb-text-16 font-normal text-foreground-3">
           {description}
         </p>
       </div>
-      <div className="flex gap-8 mb-6">
-        <Button color="outline" className="!sb-text-18">
+      <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:gap-8">
+        <Button outline className="!sb-text-18">
           <Image
             src={GoogleIcon}
             alt="Google icon"
@@ -39,7 +39,7 @@ const AuthFormWrapper = ({ children, login }: propTypes) => {
           />
           {google}
         </Button>
-        <Button color="outline">
+        <Button outline>
           <Image
             src={YahooIcon}
             alt="Yahoo icon"

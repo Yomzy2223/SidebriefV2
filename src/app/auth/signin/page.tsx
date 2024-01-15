@@ -26,7 +26,7 @@ const SignIn = () => {
           <Button type="submit" color="magenta">
             Continue to Sign In <ArrowRightCircle className="ml-1" />
           </Button>
-          <p className="sb-text-18 text-foreground-3">
+          <p className="sb-text-16 text-foreground-3">
             Don&#39;t have an account?{" "}
             <span className="text-primary">Sign Up</span>
           </p>

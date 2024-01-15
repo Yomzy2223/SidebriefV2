@@ -1,13 +1,17 @@
 import Image from "next/image";
 import axios from "axios";
 import { cn } from "@/lib/utiils";
+import { Button } from "flowbite-react";
+import { MouseEventHandler } from "react";
 
 export const CountryCard = async ({
   name,
   active,
+  onClick,
 }: {
   name: string;
   active?: boolean;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 }) => {
   const code_country: { [key: string]: string } = (
     await axios.get("https://flagcdn.com/en/codes.json")
@@ -22,11 +26,13 @@ export const CountryCard = async ({
   );
 
   return (
-    <div
+    <Button
       className={cn(
         "flex items-center gap-2 px-4 py-2 rounded-xl border-[1.5px]",
-        { "bg-sb-blue-light": active }
+        { "bg-card": active }
       )}
+      onClick={onClick}
+      color="plain"
     >
       <div className="relative w-11 h-8 rounded-lg overflow-hidden outline-4 outline-black">
         <Image
@@ -36,6 +42,6 @@ export const CountryCard = async ({
         />
       </div>
       <p className="font-medium text-lg leading-snug">{name}</p>
-    </div>
+    </Button>
   );
 };
