@@ -1,15 +1,12 @@
 import { Badge, Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
-import { Rocket } from "@/assets/images"
+
 import Image, { StaticImageData } from "next/image";
 import Activity from "@/components/activiity";
 import DateBar from "@/components/business/business";
 import { Download, DetailIcon, CalcIcon, Settings } from "@/assets/svg";
 import { imageTypeImage } from "@/lib/utils";
 import ServicesList from "@/components/services/ServicesList";
-import RegistrationSteps from "./RegistrationSteps";
-import ServiceTypes from "./ServiceTypes";
-import ProfileHeaderLayout from "./ProfileHeader/ProfileHeader";
 interface File {
 	id?: string;
 	name: string;
@@ -19,8 +16,7 @@ interface File {
 interface BadgeProps {
 	size?: 'sm' | 'lg'; 
 	status: 'Pending' | 'Ongoing' | 'Completed' | 'Submitted'; 
-}
-
+  }
 const files: File[] = [
 	{
 	  id: "1",
@@ -99,68 +95,56 @@ const renderFile = (file: File) => {
 	return null; 
 };
 
-const businessDetails = {
-    businessName: 'Contifery agricultural limited',
-    address: 'Nō 22 Alamala Rd., Ajanlekoko, Lagos',
-    status: 'Applied',
-    date: '12th August, 2022',
-};
-
-export default function Dashboard() {
+export default function DashboardFirst() {
 	return (
 		<div className="p-8 relative">
-			
-
-			<ProfileHeaderLayout {...businessDetails}/>
-
-			{/* <RegistrationSteps/>
-
-			<ServiceTypes/> */}
-			
-
-			<div className="flex flex-col md:flex-row mt-4">
-				<div className="flex-1 md:w-1/2 py-4">
-					<div className="w-28">
-						<Badge size="sm" color="yellow">
-							My Business
-						</Badge>
-					</div>
-
-					<h2 className="text-lg font-bold mb-2">Ayomide Constructions</h2>
-					<div className="flex items-center justify-between">
-					<p>Manage all your business registrations in one place</p>
+			<div className="flex flex-col sm:flex-row">
+				<div className="px-0 sm:px-0">
 					<div className="flex items-center">
-						<h4 className="text-primary mr-2">See details</h4>
-						<span>
-							<Image src={DetailIcon} alt="" />
-						</span>
+						<h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+							Welcome to Sidebrief, Joshua
+						</h1>
+						
 					</div>
-					</div>
-
-					<div className="flex justify-between items-start">
-					<DateBar />
-
-					<div className="mt-12">
-						<div className="space-y-6">
-						{files.map((file) => (
-							<h3
-							className="text-lg leading-normal font-semibold border rounded-4xl p-3"
-							key={file.id}
-							>
-							{renderFile(file)}
-							</h3>
-						))}
-						</div>
-					</div>
-					</div>
+					<p className="mt-2 text-sm text-gray-500">
+						We are glad to have you join the 22,000,000 people all over the world who manage their businesses using the simplest and easiest business solution.
+					</p>
 				</div>
 
-				<div className="flex-1 md:w-1/2 p-4">
-					<h2 className="text-lg font-bold mb-2">My Activities</h2>
-					<Activity />
+				<div className="sm:hidden w-full mt-6">
+					<Button color="magenta" size={"lg"} className="self-start">
+						<div className="space-x-2 flex items-center">
+							<p>Register New Business</p>
+							<ArrowRight />
+						</div>
+					</Button>
 				</div>
 			</div>
+
+			<div className="hidden sm:block">
+				<Button color="magenta" size={"lg"} className="mr-7 self-start mt-8 absolute top-0 right-0">
+					<div className="space-x-2 flex items-center">
+						<p>Register New Business</p>
+						<ArrowRight />
+					</div>
+				</Button>
+			</div>
+
+
+			<div className="px-0 sm:px-0 mt-12">
+				<div className="flex items-center">
+					<h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+						Handpicked for you
+					</h1>
+					
+				</div>
+				<p className="mt-2 text-sm text-gray-500">
+				Here are suggested services you can start with
+				</p>
+			</div>
+
 			<ServicesList/>
+			
 		</div>
 
 	);
