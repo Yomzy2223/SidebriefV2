@@ -161,45 +161,6 @@ export default function Dashboard() {
 			</div>
 
 			<div className="flex flex-col md:flex-row mt-4 w-full gap-3">
-				{/* <div className="flex-1 md:w-1/2 py-4">
-					<div className="w-28">
-						<Badge size="sm" color="yellow">
-							My Business
-						</Badge>
-					</div>
-
-					<h2 className="text-lg font-bold mb-2">
-						Ayomide Constructions
-					</h2>
-					<div className="flex items-center justify-between">
-						<p>
-							Manage all your business registrations in one place
-						</p>
-						<div className="flex items-center">
-							<h4 className="text-primary mr-2">See details</h4>
-							<span>
-								<Image src={DetailIcon} alt="" />
-							</span>
-						</div>
-					</div> */}
-
-				{/* <div className="flex justify-between items-start">
-						<DateBar />
-
-						<div className="mt-12">
-							<div className="space-y-6">
-								{files.map((file) => (
-									<h3
-										className="text-lg leading-normal font-semibold border rounded-4xl p-3"
-										key={file.id}
-									>
-										{renderFile(file)}
-									</h3>
-								))}
-							</div>
-						</div>
-					</div> */}
-				{/* </div> */}
 				<SectionWrapper title="Proprietors" morelink="">
 					<Proprietor />
 				</SectionWrapper>
