@@ -11,5 +11,6 @@ export { FileCheck } from "./file-check";
 export { ArrowRight } from "./arrow-right";
 export { SwatchBook } from "./swatchbook";
 export { Upload } from "./upload";
+export { LightOutlineArrow } from "./light-outline-arrow";
 
 export { TestimonialUser, Hamburger };
