@@ -15,8 +15,15 @@ const handler = NextAuth({
       id: "google",
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
       profile(profile) {
-        return profile;
+        return { id: profile.sub, ...profile };
       },
     }),
     CredentialsProvider({
@@ -44,11 +51,25 @@ const handler = NextAuth({
     //   return true;
     // },
     async redirect({ baseUrl, url }) {
+      console.log("Redirecting to" + baseUrl + " or " + url);
       return baseUrl;
     },
     async jwt({ token, account, profile, user, session, trigger }) {
-      console.log(token, account, profile, user, session, trigger);
+      if (account) {
+        token.expires_at = account.expires_at;
+        token.access_token = account.access_token;
+        token.refresh_token = account.refresh_token;
+      }
+      if (profile) {
+        token.fullname = profile.name;
+        token.firstname = profile.given_name;
+        token.lastname = profile.family_name;
+        token.email = profile.email;
+        token.picture = profile.picture;
+        token.expires_at = profile.exp;
+      }
       if (user) {
+        console.log("if user", user);
         token.user = user;
         return token as Awaitable<JWT>;
       }
@@ -56,7 +77,7 @@ const handler = NextAuth({
     },
     async session({ newSession, session, token, trigger, user }) {
       // console.log(newSession, session, token, trigger, user);
-      console.log(token);
+      console.log("Returning session", token);
       return session as Awaitable<Session>;
     },
   },
