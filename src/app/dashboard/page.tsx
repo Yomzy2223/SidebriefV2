@@ -6,6 +6,7 @@ import Activity from "@/components/activiity";
 import DateBar from "@/components/business/business";
 import { Download, DetailIcon, CalcIcon, Settings } from "@/assets/svg";
 import { imageTypeImage } from "@/lib/utils";
+
 import {
 	SectionWrapper,
 	DocumentComponent,
@@ -162,7 +163,7 @@ export default function Dashboard() {
 
 			<div className="flex flex-col md:flex-row mt-4 w-full gap-3">
 				<SectionWrapper title="Proprietors" morelink="">
-					<Proprietor />
+					<Proprietor proprietors={[]} />
 				</SectionWrapper>
 
 				<SectionWrapper title="Documents" morelink="">

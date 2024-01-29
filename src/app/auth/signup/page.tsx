@@ -52,7 +52,7 @@ const formInfo = [
   {
     name: "name",
     label: "Hello, Tell us your name",
-    type: "toggle",
+    type: "text",
     textInputProp: {
       placeholder: "Enter your name",
     },
