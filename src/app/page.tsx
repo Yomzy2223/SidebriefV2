@@ -10,15 +10,15 @@ export default function Home() {
   return (
     <div>
       <Navbar />
-			{/* <p>Hello world</p>
+      {/* <p>Hello world</p>
 			<Button color="sb-cyan-90">Click me</Button>
-			<Button color="magenta">Click me</Button>
+			<Button color="secondary">Click me</Button>
 			<Button color="ghost">Click me</Button>
-			<Button color="magenta">
+			<Button color="secondary">
 				Click me
 			</Button> */}
-			{/* <StepNavbar /> */}
-			{/* <div className="flex flex-col gap-2 max-w-sm">
+      {/* <StepNavbar /> */}
+      {/* <div className="flex flex-col gap-2 max-w-sm">
 				<CountryCard name="Ghana" active={true} />
 				<CountryCard name="Kenya" active={false} />
 				<CountryCard name="United States" active={false} />
@@ -26,9 +26,9 @@ export default function Home() {
 				<CountryCard name="Canada" active={false} />
 				<CountryCard name="Senegal" active={false} />
 			</div> */}
-			{/* <AuthStepper progress={2} />
+      {/* <AuthStepper progress={2} />
       <RequestInfoPanel /> */}
-		<PersonInfo/>
+      <PersonInfo />
     </div>
   );
 }

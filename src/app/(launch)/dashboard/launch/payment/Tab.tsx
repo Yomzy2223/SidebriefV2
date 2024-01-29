@@ -1,32 +1,51 @@
-import React, { useState , ReactNode} from 'react';
-import Image, { StaticImageData } from 'next/image';
+import React, { useState, ReactNode } from "react";
+import Image, { StaticImageData } from "next/image";
 import { Button } from "@/components/flowbite";
 import { BankIcon, CardIcon, CreditCardIcon } from "@/assets/svg";
-import Transfer from './Transfer';
-import { PaymentOption } from './PaymentOption';
-import { CardPayment } from './CardPayment';
+import Transfer from "./Transfer";
+import { PaymentOption } from "./PaymentOption";
+import { CardPayment } from "./CardPayment";
 import { ArrowRight } from "@/assets/icons";
 
 interface Tab {
   name: string;
   href: string;
-  icon: StaticImageData
+  icon: StaticImageData;
   current: boolean;
   content: ReactNode;
 }
-const tabs: Tab[] =  [
-  { name: 'Bank Transfer', href: '#', icon: BankIcon, current: true, content: <Transfer/> },
-  { name: 'Card Payment', href: '#', icon: CardIcon, current: false, content: <PaymentOption/> },
-  { name: 'Bank USSD', href:  '#', icon: CreditCardIcon, current: false, content: <CardPayment/> },
+const tabs: Tab[] = [
+  {
+    name: "Bank Transfer",
+    href: "#",
+    icon: BankIcon,
+    current: true,
+    content: <Transfer />,
+  },
+  {
+    name: "Card Payment",
+    href: "#",
+    icon: CardIcon,
+    current: false,
+    content: <PaymentOption />,
+  },
+  {
+    name: "Bank USSD",
+    href: "#",
+    icon: CreditCardIcon,
+    current: false,
+    content: <CardPayment />,
+  },
 ];
 
 function classNames(...classes: (string | any)[]) {
-  return classes.filter(Boolean).join(' ');
+  return classes.filter(Boolean).join(" ");
 }
 
-
 const Tab = () => {
-  const [currentTab, setCurrentTab] = useState<Tab | any>(tabs.find((tab) => tab.current));
+  const [currentTab, setCurrentTab] = useState<Tab | any>(
+    tabs.find((tab) => tab.current)
+  );
 
   const handleTabChange = (selectedTab: Tab) => {
     setCurrentTab(selectedTab);
@@ -50,14 +69,18 @@ const Tab = () => {
                     href={tab.href}
                     onClick={() => handleTabChange(tab)}
                     className={classNames(
-                      tab.current ? 'bg-gray-100 text-gray-700' : 'text-gray-500 hover:text-gray-700',
-                      'rounded-md px-3 py-2 text-sm font-medium'
+                      tab.current
+                        ? "bg-gray-100 text-gray-700"
+                        : "text-gray-500 hover:text-gray-700",
+                      "rounded-md px-3 py-2 text-sm font-medium"
                     )}
-                    aria-current={tab.current ? 'page' : undefined}
+                    aria-current={tab.current ? "page" : undefined}
                   >
                     <div className="flex flex-col items-center p-4">
-                      <Image src={tab.icon} alt="" className="w-6 h-6" /> 
-                      <h3 className="font-medium text-md leading-normal text-center mt-2">{tab.name} </h3>
+                      <Image src={tab.icon} alt="" className="w-6 h-6" />
+                      <h3 className="font-medium text-md leading-normal text-center mt-2">
+                        {tab.name}{" "}
+                      </h3>
                     </div>
                   </a>
                 ))}
@@ -68,7 +91,7 @@ const Tab = () => {
         </div>
       </div>
 
-      <Button color="magenta" size={"lg"} className="self-start mt-8">
+      <Button color="secondary" size={"lg"} className="self-start mt-8">
         <div className="space-x-2 flex items-center">
           <p>Continue</p>
           <ArrowRight />
@@ -79,4 +102,3 @@ const Tab = () => {
 };
 
 export default Tab;
-

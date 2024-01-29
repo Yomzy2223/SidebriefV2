@@ -65,7 +65,7 @@ const SelectService = () => {
         >
           Skip to Dashboard <ChevronRight />
         </Button>
-        <Button color="magenta" onClick={handleContinue}>
+        <Button color="secondary" onClick={handleContinue}>
           Continue <ArrowRightCircle className="ml-1" />
         </Button>
       </div>

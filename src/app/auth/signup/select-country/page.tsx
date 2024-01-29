@@ -45,7 +45,7 @@ const SelectCountry = () => {
         >
           Go back
         </Button>
-        <Button color="magenta" onClick={handleContinue}>
+        <Button color="secondary" onClick={handleContinue}>
           Done <ArrowRightCircle className="ml-1" />
         </Button>
       </div>

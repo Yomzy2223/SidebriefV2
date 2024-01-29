@@ -5,6 +5,7 @@ import DynamicForm from "@/components/form/dynamicForm";
 import { AuthStepper } from "@/components/stepper/auth";
 import { Button } from "flowbite-react";
 import { ArrowRight, ArrowRightCircle } from "lucide-react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -18,8 +19,23 @@ const SignUp = () => {
     router.push("/auth/signup/select-service");
   };
 
+  const handleSignUpWithGoogle = async () => {
+    const response = await signIn("google");
+    console.log(response);
+  };
+
+  const handleSignUpWithYahoo = async () => {
+    const response = await signIn("yahoo");
+    console.log(response);
+  };
+
   return (
-    <AuthFormWrapper>
+    <AuthFormWrapper
+      handlers={{
+        google: handleSignUpWithGoogle,
+        yahoo: handleSignUpWithYahoo,
+      }}
+    >
       <DynamicForm
         formInfo={formInfo}
         defaultValues={defaultValues}
@@ -40,15 +56,20 @@ const SignUp = () => {
         <AuthStepper />
 
         <div className="flex items-center gap-14">
+          <Button type="submit" color="secondary">
+            Click to create account <ArrowRightCircle className="ml-1" />
+          </Button>
           <p className="sb-text-16 text-foreground-3">
             Have an account?{" "}
-            <Button color="plain" size="fit" className="text-primary">
+            <Button
+              color="plain"
+              size="fit"
+              className="text-secondary"
+              href="/auth/signin"
+            >
               Sign In
             </Button>
           </p>
-          <Button type="submit" color="magenta">
-            Click to create account <ArrowRightCircle className="ml-1" />
-          </Button>
         </div>
       </DynamicForm>
     </AuthFormWrapper>

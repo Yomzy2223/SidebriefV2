@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Flowbite } from "@/components/flowbite";
-import { customTheme } from "./baseCustomTheme";
 import { BrFirma } from "@/font";
+import Providers from "@/lib/helpers/provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,9 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Flowbite theme={customTheme}>
-        <body className={BrFirma.className}>{children}</body>
-      </Flowbite>
+      <body className={BrFirma.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
