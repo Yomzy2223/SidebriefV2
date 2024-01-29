@@ -1,4 +1,4 @@
-import { Badge, Button } from "@/components/flowbite";
+import { Badge, Button, Tabs } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { Rocket } from "@/assets/images";
 import Image, { StaticImageData } from "next/image";
@@ -6,6 +6,11 @@ import Activity from "@/components/activiity";
 import DateBar from "@/components/business/business";
 import { Download, DetailIcon, CalcIcon, Settings } from "@/assets/svg";
 import { imageTypeImage } from "@/lib/utils";
+import {
+  SectionWrapper,
+  DocumentComponent,
+  Proprietor,
+} from "@/components/dashboard";
 
 interface File {
   id?: string;
@@ -112,25 +117,6 @@ const features: FeatureProps[] = [
     icon: Rocket,
   },
 ];
-const renderFile = (file: File) => {
-  const fileType = imageTypeImage.find((type) => type.type === file.type);
-
-  if (fileType) {
-    return (
-      <span className="flex items-center justify-between" key={file.id}>
-        <Image src={fileType.image} alt={file.name} className="mr-2 w-6 h-6" />
-        <span className="flex items-center flex-grow ">
-          <span className="underline mr-16">{file.name}</span>
-          <p className="text-primary ml-auto">
-            <Image src={Download} alt="Download" />
-          </p>
-        </span>
-      </span>
-    );
-  }
-
-  return null;
-};
 
 export default function Dashboard() {
   return (
@@ -163,7 +149,7 @@ export default function Dashboard() {
 
       <div className="hidden sm:block">
         <Button
-          color="secondary"
+          color="magenta"
           size={"lg"}
           className="mr-7 self-start mt-8 absolute top-0 right-0"
         >
@@ -174,47 +160,20 @@ export default function Dashboard() {
         </Button>
       </div>
 
-      <div className="flex flex-col md:flex-row mt-4">
-        <div className="flex-1 md:w-1/2 py-4">
-          <div className="w-28">
-            <Badge size="sm" color="yellow">
-              My Business
-            </Badge>
+      <div className="flex flex-col md:flex-row mt-4 w-full gap-3">
+        <SectionWrapper title="Proprietors" morelink="">
+          <Proprietor />
+        </SectionWrapper>
+
+        <SectionWrapper title="Documents" morelink="">
+          <div className="pl-7 pr-8">
+            <DocumentComponent files={files} />
           </div>
+        </SectionWrapper>
 
-          <h2 className="text-lg font-bold mb-2">Ayomide Constructions</h2>
-          <div className="flex items-center justify-between">
-            <p>Manage all your business registrations in one place</p>
-            <div className="flex items-center">
-              <h4 className="text-primary mr-2">See details</h4>
-              <span>
-                <Image src={DetailIcon} alt="" />
-              </span>
-            </div>
-          </div>
-
-          <div className="flex justify-between items-start">
-            <DateBar />
-
-            <div className="mt-12">
-              <div className="space-y-6">
-                {files.map((file) => (
-                  <h3
-                    className="text-lg leading-normal font-semibold border rounded-4xl p-3"
-                    key={file.id}
-                  >
-                    {renderFile(file)}
-                  </h3>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex-1 md:w-1/2 p-4">
-          <h2 className="text-lg font-bold mb-2">My Activities</h2>
+        <SectionWrapper title="My Activities" morelink="">
           <Activity />
-        </div>
+        </SectionWrapper>
       </div>
 
       <div className="max-w-12xl">

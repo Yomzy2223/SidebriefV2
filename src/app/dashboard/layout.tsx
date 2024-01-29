@@ -6,7 +6,7 @@ const Dashboardlayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<div>
 			<Navbar />
-			<Message />
+			{/* <Message /> */}
 			{children}
 		</div>
 	);
