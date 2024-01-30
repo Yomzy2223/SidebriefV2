@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utiils";
+import { cn } from "@/lib/utils";
 import { Button } from "flowbite-react";
 import Image from "next/image";
 import React, { MouseEventHandler } from "react";

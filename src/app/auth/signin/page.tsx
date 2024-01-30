@@ -7,17 +7,20 @@ import { ArrowRightCircle } from "lucide-react";
 import React from "react";
 import * as z from "zod";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const SignIn = () => {
-	const session = useSession();
+  const session = useSession();
+  const router = useRouter();
 
-	const handleSignIn = async (values: any) => {
-		const response = await signIn("signIn", {
-			redirect: true,
-			email: values.email,
-			password: values.password,
-		});
-	};
+  const handleSignIn = async (values: any) => {
+    const response = await signIn("signIn", {
+      redirect: true,
+      email: values.email,
+      password: values.password,
+    });
+    router.push("/auth/signup/select-service");
+  };
 
 	const handleSignInWithGoogle = async () => {
 		const response = await signIn("google");
