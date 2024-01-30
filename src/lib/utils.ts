@@ -11,8 +11,8 @@ interface FileTypeImage {
 }
 
 export function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
-  }
+  return twMerge(clsx(inputs));
+}
 
 export const imageTypeImage: FileTypeImage[] = [
   {

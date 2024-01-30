@@ -19,6 +19,7 @@ import DetailIcon from "./DetailIcon.svg";
 import CalcIcon from "./calc.svg";
 import Settings from "./cog.svg";
 import EllipsisVertical from "./ElpVertical.svg";
+import LaunchIcon from "./launch_icon.svg"
 export {
   AuthPattern,
   BankIcon,
@@ -41,4 +42,5 @@ export {
   CalcIcon,
   Settings,
   EllipsisVertical,
+  LaunchIcon
 };
