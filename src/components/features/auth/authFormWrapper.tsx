@@ -9,9 +9,10 @@ import React, { ReactNode } from "react";
 interface propTypes {
   children: ReactNode;
   login?: boolean;
+  handlers: { google: () => void; yahoo: () => void };
 }
 
-const AuthFormWrapper = ({ children, login }: propTypes) => {
+const AuthFormWrapper = ({ children, login, handlers }: propTypes) => {
   const title = login ? "Welcome back👋" : "Create an account for free";
 
   const description = login
@@ -26,12 +27,16 @@ const AuthFormWrapper = ({ children, login }: propTypes) => {
     <div>
       <div className="mb-10">
         <h2 className="sb-text-32 font-semibold mb-2">{title}</h2>
-        <p className="sb-text-18 font-normal text-foreground-3">
+        <p className="sb-text-16 font-normal text-foreground-3">
           {description}
         </p>
       </div>
-      <div className="flex gap-8 mb-6">
-        <Button color="outline" className="!sb-text-18">
+      <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:gap-8">
+        <Button
+          className="!sb-text-18 font-semibold"
+          outline
+          onClick={handlers.google}
+        >
           <Image
             src={GoogleIcon}
             alt="Google icon"
@@ -39,7 +44,7 @@ const AuthFormWrapper = ({ children, login }: propTypes) => {
           />
           {google}
         </Button>
-        <Button color="outline">
+        <Button className="font-semibold" outline onClick={handlers.yahoo}>
           <Image
             src={YahooIcon}
             alt="Yahoo icon"

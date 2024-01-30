@@ -68,7 +68,6 @@ export const authOptions: AuthOptions = {
 
                         const user = res.data;
 
-
                     }
                 } catch (error) {
                     
@@ -78,4 +77,23 @@ export const authOptions: AuthOptions = {
 
         })
     ],
+    callbacks: {
+        jwt({ user, token }) {
+          if (user) {
+            token = { ...user };
+            return token;
+          }
+          return token;
+        },
+        // session({ session, token }) {
+        //   session.token = token.token;
+        //   session.user = {
+        //     id: token.id || "",
+        //     email: token.email || "",
+        //     name: token.name || "",
+        //     lastname: token.lastname || "",
+        //   }
+        //   return session;
+        // },
+      },
 }

@@ -1,8 +1,9 @@
 
-import axios, { AxiosInstance } from "axios";
-import { getSession, Session } from "next-auth/react";
+import axios from "axios";
+import type { Session } from "next-auth";
+import { getSession } from "next-auth/react";
 
-export const Client = async (): Promise<AxiosInstance> => {
+export const Client = async () => {
     try {
         const session = await getSession();
 
@@ -13,13 +14,19 @@ export const Client = async (): Promise<AxiosInstance> => {
                     : "https://h2rwx2fbhm.us-east-1.awsapprunner.com/",
             headers: {
                 "Content-Type": "application/json",
-                // Authorization: session?.token ? `Bearer ${session.token}` : "",
             },
         });
-
         return apiClient;
+
     } catch (error) {
         console.error("Error creating API client:", error);
         throw error;
     }
 };
+
+
+
+
+  
+
+

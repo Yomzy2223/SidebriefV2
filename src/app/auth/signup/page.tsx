@@ -5,17 +5,37 @@ import DynamicForm from "@/components/form/dynamicForm";
 import { AuthStepper } from "@/components/stepper/auth";
 import { Button } from "flowbite-react";
 import { ArrowRight, ArrowRightCircle } from "lucide-react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import * as z from "zod";
 
 const SignUp = () => {
+  const router = useRouter();
+
   const handleSignUp = (values: any) => {
     console.log(values);
+    router.push("/auth/signup/select-service");
+  };
+
+  const handleSignUpWithGoogle = async () => {
+    const response = await signIn("google");
+    console.log(response);
+  };
+
+  const handleSignUpWithYahoo = async () => {
+    const response = await signIn("yahoo");
+    console.log(response);
   };
 
   return (
-    <AuthFormWrapper>
+    <AuthFormWrapper
+      handlers={{
+        google: handleSignUpWithGoogle,
+        yahoo: handleSignUpWithYahoo,
+      }}
+    >
       <DynamicForm
         formInfo={formInfo}
         defaultValues={defaultValues}
@@ -32,13 +52,23 @@ const SignUp = () => {
             Privacy Policy
           </Link>
         </p>
+
         <AuthStepper />
+
         <div className="flex items-center gap-14">
-          <Button type="submit" color="magenta">
+          <Button type="submit" color="secondary">
             Click to create account <ArrowRightCircle className="ml-1" />
           </Button>
-          <p className="sb-text-18 text-foreground-3">
-            Have an account? <span className="text-primary">Sign In</span>
+          <p className="sb-text-16 text-foreground-3">
+            Have an account?{" "}
+            <Button
+              color="plain"
+              size="fit"
+              className="text-secondary"
+              href="/auth/signin"
+            >
+              Sign In
+            </Button>
           </p>
         </div>
       </DynamicForm>
