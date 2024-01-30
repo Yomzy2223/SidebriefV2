@@ -5,11 +5,15 @@ import DynamicForm from "@/components/form/dynamicForm";
 import * as z from "zod";
 import { Button } from "flowbite-react";
 import { ArrowRightCircle } from "lucide-react";
+import { useResetPassword } from "@/services/auth";
 
 export default function ForgotPassword() {
+	const resetPassword = useResetPassword();
+
 	const handleForgot = (values: { password: string }) => {
 		console.log("Reset Password");
 		console.log(values);
+		resetPassword.mutate({ password: values.password, token: "" });
 	};
 
 	return (
@@ -20,7 +24,11 @@ export default function ForgotPassword() {
 				formSchema={resetSchema}
 				onFormSubmit={handleForgot}
 			>
-				<Button type="submit" color="secondary">
+				<Button
+					type="submit"
+					color="secondary"
+					isProcessing={resetPassword.isPending}
+				>
 					Reset password <ArrowRightCircle className="ml-1" />
 				</Button>
 			</DynamicForm>
