@@ -5,6 +5,7 @@ import { ServiceLoadingSkeleton } from "./serviceSkeletonLoader";
 import { Rocket } from "@/assets/images";
 import Image from "next/image";
 import Link from "next/link";
+import slugify from "slugify";
 
 export const Services = () => {
 	const { data, isLoading } = useGetServices();
@@ -27,7 +28,7 @@ export const Services = () => {
 					<>
 						{services?.map((service) => (
 							<Link
-								href={`/dashboard/${service.id}`}
+								href={`/dashboard/${slugify(service.name)}`}
 								key={service.id}
 							>
 								<li className="rounded-2xl border border-gray-200 p-8">
@@ -37,11 +38,10 @@ export const Services = () => {
 											alt=""
 											className="h-8 w-8"
 										/>
-										<h4 className="text-primary">
+										{/* <h4 className="text-primary">
 											See process details
-										</h4>
+										</h4> */}
 									</div>
-
 									<h3 className="mt-6 font-semibold text-gray-900">
 										{service.name}
 									</h3>

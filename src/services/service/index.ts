@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getServices } from "./operations";
+import { getServices, getService, getServiceForms } from "./operations";
 
 export const useGetServices = () => {
 	return useQuery({
@@ -7,3 +7,16 @@ export const useGetServices = () => {
 		queryFn: getServices,
 	});
 };
+
+export const useGetService = (id: string) => {
+	return useQuery({
+		queryKey: ["service", id],
+		queryFn: () => getService({ id }),
+	});
+};
+
+export const useGetServiceForm = (serviceId: string) =>
+	useQuery({
+		queryKey: ["serviceForm", serviceId],
+		queryFn: () => getServiceForms({ serviceId }),
+	});
