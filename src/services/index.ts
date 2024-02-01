@@ -6,3 +6,8 @@ export const axios = defaultAxios.create({
 });
 
 export default axios;
+
+export type rootType<T> = {
+	message: string;
+	data: T;
+};
