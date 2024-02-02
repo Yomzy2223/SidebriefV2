@@ -13,8 +13,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
-    "@tanstack/react-query": "^5.17.19",
-    "@tanstack/react-query-devtools": "^5.17.21",
+    "@tanstack/react-query": "^5.18.1",
     "axios": "^1.6.7",
     "canvas-confetti": "^1.9.2",
     "clsx": "^2.0.0",
@@ -29,8 +28,10 @@
     "react-file-icon": "^1.4.0",
     "react-hook-form": "^7.48.2",
     "react-hot-toast": "^2.4.1",
+    "react-loading-icons": "^1.1.0",
     "swiper": "^11.0.4",
     "tailwind-merge": "^2.0.0",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -42,7 +43,8 @@
     "@storybook/nextjs": "^7.5.3",
     "@storybook/react": "^7.5.3",
     "@storybook/testing-library": "^0.2.2",
-    "@tanstack/eslint-plugin-query": "^5.17.22",
+    "@tanstack/eslint-plugin-query": "^5.18.1",
+    "@tanstack/react-query-devtools": "^5.18.1",
     "@testing-library/react": "^14.1.0",
     "@types/canvas-confetti": "^1.6.4",
     "@types/node": "^20",
