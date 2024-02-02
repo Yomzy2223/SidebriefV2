@@ -1,6 +1,6 @@
 import slugify from "slugify";
 import { LaunchForm1 } from "./form";
-import { getServices } from "@/services/service/operations";
+import { getServices, getServiceForms } from "@/services/service/operations";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -24,6 +24,10 @@ export default async function LaunchStart({
 		redirect("/dashboard");
 	}
 
+	const serviceData = await getServiceForms({ serviceId: service.id });
+
+	const serviceForm1 = serviceData.data.data[0];
+
 	return (
 		<div className="flex flex-col gap-6 max-w-[500px]">
 			<div className="flex flex-col">
@@ -31,13 +35,13 @@ export default async function LaunchStart({
 					STEP 1
 				</h4>
 				<h6 className="text-2xl leading-normal font-semibold">
-					Business profile
+					{serviceForm1.title}
 				</h6>
 				<p className="font-medium leading-normal text-primary">
-					Give the business a face
+					{serviceForm1.description}
 				</p>
 			</div>
-			<LaunchForm1 serviceId={service.id} />
+			<LaunchForm1 serviceFormId={serviceForm1.id} />
 		</div>
 	);
 }
