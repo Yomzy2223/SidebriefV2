@@ -25,8 +25,8 @@ export default function CountryInput({
 						name={country.name}
 						code={country.code}
 						key={i}
-						active={value === country.code}
-						select={() => setValue(country.code)}
+						active={value === country.name}
+						select={() => setValue(country.name)}
 					/>
 				))}
 			</div>
