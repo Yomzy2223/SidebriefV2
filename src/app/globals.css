@@ -1,73 +1,76 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ 
 @layer base {
-	:root {
-		--background: 0 0% 100%; /* General pages background */
-		--foreground: 200 4% 15%; /* Main text color - Grey 1 */
-		--foreground-3: 195 2% 31%; /* Text color - Grey 3 */
-		--foreground-4: 180 1% 45%; /* Text color - Grey 4*/
-		--foreground-5: 220 9% 46%; /* Text color - Grey 500 */
-		--foreground-6: 0 0% 84%; /* Text color - Grey 6 */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-		--primary: 194 100% 42%; /* Sidebrief's primary color - Blue */
-		--primary-foreground: 0 0% 100%; /* For primary background's foreground */
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
 
-		--card: 194 100% 90%; /* Cards background color when active */
-		--card-2: 0 0% 100% / 0.12; /* Card background 2 - used in auth layout */
-
-		--border: 216 37% 95%; /* Cards border color */
-		--input: 216 12% 84%; /* Inputs border color */
-
-		--secondary: 325 100% 46%; /* Sidebrief's secondary color - Magenta */
-		--secondary-foreground: 0 0% 100%; /* For secondary background's foreground */
-
-		--label: 200 4% 15%; /* Label color - Grey 1 */
-
-		--accent: 210 20% 98%; /* Accent background color */
-		--accent-foreground: 220 9% 46%; /* Accent foreground color */
-
-		--destructive: 7 61% 95%; /* Destructive background color */
-		--destructive-foreground: 7 61% 48%; /* Destructive foreground color */
-
-		--success: 140 100% 42%;
-		--success-foreground: 0 0% 100%;
-
-		/* cmyk base colors */
-		--sb-cyan: 100%, 0%, 0%, 0%;
-		--sb-cyan-light: 38%, 0%, 0%, 0%;
-		--sb-magenta: 0%, 100%, 0%, 0%;
-		--sb-magenta-light: 0%, 34%, 0%, 0%;
-		--magenta: 325 100% 46%; /* #EB008B */
-		--magenta-dark: 325 100% 32%; /* #A3005F */
-		--magenta-foreground: 0 0% 100%; /* #ffffff */
-		--magenta-light: 325, 59%, 58%, 1; /* #D3549E */
-
-		--sb-blue-light: 194 100% 90%; /* #CCF3FF */
-	}
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+ 
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
 }
-
-@layer utilities {
-	.sb-text-40 {
-		@apply text-2xl sm:text-[28px] md:text-3xl xl:text-4xl 2xl:text-[40px];
-	}
-	.sb-text-24 {
-		@apply text-base sm:text-lg md:text-xl xl:text-2xl;
-	}
-	.sb-text-32 {
-		@apply text-2xl sm:text-[26px] md:text-[28px] xl:text-[30px];
-	}
-	.sb-text-24 {
-		@apply text-lg md:text-xl xl:text-2xl;
-	}
-	.sb-text-18 {
-		@apply text-base lg:text-lg;
-	}
-	.sb-text-16 {
-		@apply text-sm lg:text-base;
-	}
-	.sb-text-14 {
-		@apply text-xs lg:text-sm;
-	}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
