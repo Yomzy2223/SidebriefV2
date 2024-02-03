@@ -13,9 +13,11 @@ import {
 } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useCreateNewProduct } from "@/services/product";
 
 export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 	const router = useRouter();
+	const createProduct = useCreateNewProduct();
 
 	const { data, isLoading } = useGetServiceFormSubForms(serviceFormId);
 
@@ -77,8 +79,24 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 	});
 
 	const submitFormHandler = (values: z.infer<typeof schema>) => {
-		// event.preventDefault();
-		console.log("I am here");
+		createProduct.mutate(
+			{
+				// dummy user Id
+				// TODO: user ID should be changed later
+				userId: "0fe8efaa-161f-4570-8433-1cf8772427c6",
+			},
+			{
+				onSuccess(data, variables, context) {
+					const productId = data.data.data.id;
+					console.log(productId);
+				},
+				onError(error: any, variables, context) {
+					console.log(error);
+					console.log(error.response.data.error);
+					//handle potential error
+				},
+			}
+		);
 		console.log(values);
 		// router.push("/dashboard/launch/plan");
 	};
@@ -141,7 +159,13 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 					})}
 				</>
 			)}
-			<Button color="secondary" size={"lg"} type="submit">
+			<Button
+				color="secondary"
+				size={"lg"}
+				type="submit"
+				isProcessing={createProduct.isPending}
+				disabled={isLoading}
+			>
 				<div className="space-x-2 flex items-center">
 					<p>Continue</p>
 					<ArrowRight />

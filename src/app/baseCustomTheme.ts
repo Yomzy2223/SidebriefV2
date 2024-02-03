@@ -11,7 +11,7 @@ export const customTheme: ThemeProps = {
 			},
 		},
 		button: {
-			base: "transition transition-all focus:!ring-0 hover:opacity-80 active:opacity-90",
+			base: "transition transition-all focus:!ring-0 hover:opacity-80 active:opacity-90 relative",
 			color: {
 				primary:
 					"bg-primary text-primary-foreground border border-transparent enabled:hover:bg-primary-dark",
