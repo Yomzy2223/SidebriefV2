@@ -10,7 +10,7 @@ export type productType = {
 	updatedAt: string;
 	serviceId: string | null;
 	userId: string;
-	productQA: any[]; // You might want to replace `any` with a more specific type if possible
+	productQA: productQAType[];
 };
 
 export type File = {
@@ -41,4 +41,20 @@ export type FormItem = {
 export type saveProductQAPayload = {
 	productId: string;
 	form: FormItem[];
+};
+
+export type productQAType = {
+	id: string;
+	question: string;
+	answer: string[];
+	type: string;
+	compulsory: boolean;
+	isGeneral: boolean;
+	fileName: string | null;
+	fileDescription: string | null;
+	fileType: string | null;
+	fileLink: string | null;
+	createdAt: string;
+	updatedAt: string;
+	productId: string;
 };

@@ -13,31 +13,74 @@ import {
 } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useCreateNewProduct, useSaveProductQA } from "@/services/product";
+import {
+	useCreateNewProduct,
+	useSaveProductQA,
+	useGetProductQA,
+} from "@/services/product";
 import { useActions } from "./actions";
 import { FormItem } from "@/services/product/types";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
+export const LaunchForm1 = ({
+	serviceFormId,
+	urlProductId,
+}: {
+	serviceFormId: string;
+	urlProductId?: string;
+}) => {
 	const router = useRouter();
 	const createProduct = useCreateNewProduct();
-	const saveProductQA = useSaveProductQA();
+
+	const [formset, setFormset] = useState(false);
+
+	const productQA = useGetProductQA(urlProductId);
+
+	const params: { service: string } = useParams();
 
 	const { data, isLoading } = useGetServiceFormSubForms(serviceFormId);
 
 	const subForms = data?.data.data;
 
-	const { schema } = useActions({ isLoading, subForms });
+	const { schema, defaultValues, saveFormProductQA, savingForm } = useActions(
+		{
+			isLoading,
+			subForms,
+		}
+	);
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
-		defaultValues: {
-			"business-name": [],
-			"business-objective": [],
-			country: "",
-		},
+		defaultValues: defaultValues,
 	});
 
+	useEffect(() => {
+		if (
+			urlProductId &&
+			!productQA.isLoading &&
+			productQA.data &&
+			!formset
+		) {
+			const QA = productQA.data.data.data;
+			QA.forEach((qa) => {
+				switch (qa.type) {
+					case "country":
+						form.setValue(qa.type, qa.answer[0]);
+						break;
+					default:
+						form.setValue(qa.type, qa.answer);
+				}
+			});
+			setFormset(true);
+		}
+	}, [urlProductId, productQA, form, formset]);
+
 	const submitFormHandler = (values: { [x: string]: string | string[] }) => {
+		if (urlProductId) {
+			saveFormProductQA(urlProductId, values);
+			return;
+		}
 		createProduct.mutate(
 			{
 				// dummy user Id
@@ -48,45 +91,11 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 				onSuccess(data, variables, context) {
 					const productId = data.data.data.id;
 
-					// prepare QA
-					const formQA: FormItem[] = Object.keys(values).map(
-						(type) => {
-							const subForm = subForms?.find(
-								(el) => el.type === type
-							);
-
-							return {
-								answer: Array.isArray(values[type])
-									? values[type]
-									: [values[type]],
-								compulsory: subForm?.compulsory,
-								isGeneral: true,
-								question: subForm?.question,
-								type: type,
-							} as FormItem;
-						}
-					);
-
-					// save the questions
-					saveProductQA.mutate(
-						{ productId, form: formQA },
-						{
-							onSuccess: (data) => {
-								form.reset();
-								router.push(
-									`/dashboard/launch/plan/${productId}`
-								);
-							},
-							onError: (err) => {
-								console.log(err);
-							},
-						}
-					);
+					saveFormProductQA(productId, values);
 				},
 				onError(error: any, variables, context) {
 					console.log(error);
 					console.log(error.response.data.error);
-					//handle potential error
 				},
 			}
 		);
@@ -97,7 +106,7 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 			onSubmit={form.handleSubmit(submitFormHandler)}
 			className="flex flex-col gap-20 items-start"
 		>
-			{isLoading ? (
+			{isLoading || productQA.isLoading ? (
 				<>
 					{[1, 2, 3]?.map((number) => (
 						<LoadingSkeleton key={number} />
@@ -113,7 +122,7 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 										key={input.id}
 										id={input.id}
 										question={input.question}
-										value={form.watch(input.type)}
+										value={form.watch(input.type) || []}
 										setValue={(value: string[]) =>
 											form.setValue(input.type, value)
 										}
@@ -126,7 +135,7 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 										id={input.id}
 										question={input.question}
 										options={input.options}
-										value={form.watch(input.type)}
+										value={form.watch(input.type) || []}
 										setValue={(value: string[]) =>
 											form.setValue(input.type, value)
 										}
@@ -138,7 +147,7 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 										id={input.id}
 										question={input.question}
 										key={input.id}
-										value={form.watch(input.type)}
+										value={form.watch(input.type) || ""}
 										setValue={(value: string) =>
 											form.setValue(input.type, value)
 										}
@@ -154,9 +163,7 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 				color="secondary"
 				size={"lg"}
 				type="submit"
-				isProcessing={
-					createProduct.isPending || saveProductQA.isPending
-				}
+				isProcessing={createProduct.isPending || savingForm}
 				disabled={isLoading}
 			>
 				<div className="space-x-2 flex items-center">

@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { LaunchForm1 } from "./form";
+import { LaunchForm1 } from "../form";
 import { getServices, getServiceForms } from "@/services/service/operations";
 import { redirect } from "next/navigation";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function LaunchStart({
 	params,
 }: {
-	params: { service: string };
+	params: { service: string; productId: string[] };
 }) {
 	const data = await getServices();
 
@@ -28,6 +28,8 @@ export default async function LaunchStart({
 
 	const serviceForm1 = serviceData.data.data[0];
 
+	const productId = params.productId?.at(0) || undefined;
+
 	return (
 		<div className="flex flex-col gap-6 max-w-[500px]">
 			<div className="flex flex-col">
@@ -41,7 +43,10 @@ export default async function LaunchStart({
 					{serviceForm1.description}
 				</p>
 			</div>
-			<LaunchForm1 serviceFormId={serviceForm1.id} />
+			<LaunchForm1
+				serviceFormId={serviceForm1.id}
+				urlProductId={productId}
+			/>
 		</div>
 	);
 }

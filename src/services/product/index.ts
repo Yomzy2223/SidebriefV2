@@ -1,5 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
-import { createNewProduct, saveProductQA } from "./operations";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createNewProduct, saveProductQA, getproductQA } from "./operations";
 import { saveProductQAPayload } from "./types";
 
 export const useCreateNewProduct = () =>
@@ -13,4 +13,11 @@ export const useSaveProductQA = () =>
 	useMutation({
 		mutationKey: ["save product QA"],
 		mutationFn: (payload: saveProductQAPayload) => saveProductQA(payload),
+	});
+
+export const useGetProductQA = (productId: string | undefined) =>
+	useQuery({
+		queryKey: ["get product QA", productId],
+		queryFn: () => getproductQA({ productId }),
+		enabled: !!productId,
 	});

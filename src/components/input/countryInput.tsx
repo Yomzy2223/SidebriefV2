@@ -14,8 +14,6 @@ export default function CountryInput({
 	value: string;
 	setValue: (value: string) => void;
 }) {
-	// const [selectedCountry, setSelectedCountry] = useState<string>("");
-
 	return (
 		<div className="flex flex-col gap-4">
 			<p>{question}</p>

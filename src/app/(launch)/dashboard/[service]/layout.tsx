@@ -4,18 +4,23 @@ import { ReactNode } from "react";
 import { RequestInfoPanel } from "@/components/features/requestInfoPanel";
 import { LaunchStepper } from "@/components/stepper/launch";
 import { usePathname } from "next/navigation";
+import { isValidUUID } from "@/lib/utils";
 
 export default function LaunchLayout({ children }: { children: ReactNode }) {
 	const pathname = usePathname();
 
-	const path = pathname.split("/")[pathname.split("/").length - 1];
+	let path = pathname.split("/")[pathname.split("/").length - 1];
+
+	if (isValidUUID(path)) {
+		path = pathname.split("/")[pathname.split("/").length - 2];
+	}
 
 	let progress: number;
 
 	switch (path) {
-		case "launch":
-			progress = 1;
-			break;
+		// case "launch":
+		// 	progress = 1;
+		// 	break;
 		case "plan":
 			progress = 2;
 			break;
@@ -29,7 +34,7 @@ export default function LaunchLayout({ children }: { children: ReactNode }) {
 			progress = 5;
 			break;
 		default:
-			progress = 0;
+			progress = 1;
 			break;
 	}
 

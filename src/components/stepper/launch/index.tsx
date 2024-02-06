@@ -53,7 +53,7 @@ export const LaunchStepper = ({ progress = 1 }: { progress?: number }) => {
 							</div>
 						</span>
 						<h3 className="font-medium leading-tight">{el.name}</h3>
-						<p className="text-sm">{el.description}</p>
+						{/* <p className="text-sm">{el.description}</p> */}
 					</li>
 				))}
 			</ol>
