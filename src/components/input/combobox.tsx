@@ -42,7 +42,7 @@ export function Combobox({
 					{placeholder || "Select an option..."}
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-max p-0 bg-white">
+			<PopoverContent className="w-full p-0 bg-white">
 				<Command>
 					<CommandInput placeholder="Search options..." />
 					<CommandEmpty>No Option found.</CommandEmpty>

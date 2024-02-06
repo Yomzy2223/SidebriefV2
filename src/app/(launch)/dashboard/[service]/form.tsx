@@ -13,61 +13,20 @@ import {
 } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useCreateNewProduct } from "@/services/product";
+import { useCreateNewProduct, useSaveProductQA } from "@/services/product";
+import { useActions } from "./actions";
+import { FormItem } from "@/services/product/types";
 
 export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 	const router = useRouter();
 	const createProduct = useCreateNewProduct();
+	const saveProductQA = useSaveProductQA();
 
 	const { data, isLoading } = useGetServiceFormSubForms(serviceFormId);
 
 	const subForms = data?.data.data;
 
-	// generate a zod schema based on the subforms data
-
-	const schema =
-		isLoading || subForms === undefined
-			? z.object({})
-			: z.object(
-					Object.fromEntries(
-						subForms.map((field) => {
-							switch (field.type) {
-								case "business-name":
-									return [
-										field.type,
-										z
-											.array(
-												z
-													.string()
-													.min(
-														1,
-														"Name must have at least one character"
-													)
-											)
-											.length(
-												4,
-												"Enter 4 business names"
-											),
-									];
-								case "business-objective":
-									return [
-										field.type,
-										z
-											.array(z.string())
-											.length(
-												4,
-												"Enter 4 business objectives"
-											),
-									];
-								case "country":
-									return [field.type, z.string()];
-								// Add more cases as needed
-								default:
-									return [field.type, z.any()]; // Default validation if no specific type matches
-							}
-						})
-					)
-			  );
+	const { schema } = useActions({ isLoading, subForms });
 
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -78,7 +37,7 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 		},
 	});
 
-	const submitFormHandler = (values: z.infer<typeof schema>) => {
+	const submitFormHandler = (values: { [x: string]: string | string[] }) => {
 		createProduct.mutate(
 			{
 				// dummy user Id
@@ -88,7 +47,41 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 			{
 				onSuccess(data, variables, context) {
 					const productId = data.data.data.id;
-					console.log(productId);
+
+					// prepare QA
+					const formQA: FormItem[] = Object.keys(values).map(
+						(type) => {
+							const subForm = subForms?.find(
+								(el) => el.type === type
+							);
+
+							return {
+								answer: Array.isArray(values[type])
+									? values[type]
+									: [values[type]],
+								compulsory: subForm?.compulsory,
+								isGeneral: true,
+								question: subForm?.question,
+								type: type,
+							} as FormItem;
+						}
+					);
+
+					// save the questions
+					saveProductQA.mutate(
+						{ productId, form: formQA },
+						{
+							onSuccess: (data) => {
+								form.reset();
+								router.push(
+									`/dashboard/launch/plan/${productId}`
+								);
+							},
+							onError: (err) => {
+								console.log(err);
+							},
+						}
+					);
 				},
 				onError(error: any, variables, context) {
 					console.log(error);
@@ -97,8 +90,6 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 				},
 			}
 		);
-		console.log(values);
-		// router.push("/dashboard/launch/plan");
 	};
 
 	return (
@@ -163,7 +154,9 @@ export const LaunchForm1 = ({ serviceFormId }: { serviceFormId: string }) => {
 				color="secondary"
 				size={"lg"}
 				type="submit"
-				isProcessing={createProduct.isPending}
+				isProcessing={
+					createProduct.isPending || saveProductQA.isPending
+				}
 				disabled={isLoading}
 			>
 				<div className="space-x-2 flex items-center">

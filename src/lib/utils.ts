@@ -62,3 +62,9 @@ export const ConfettiDesign = (): void => {
 		// confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
 	}, 250);
 };
+
+function isValidUUID(uuid: string): boolean {
+	const uuidPattern =
+		/^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+	return uuidPattern.test(uuid);
+}
