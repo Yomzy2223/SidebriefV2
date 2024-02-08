@@ -1,13 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { Plans } from "../plans";
+import { Plans } from "./plans";
 import { Button, Card } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { BankIcon, CardIcon, CreditCardIcon } from "@/assets/svg";
 import Image from "next/image";
 import { ServicesModal } from "@/components/services/ServicesModal";
 import { X } from "lucide-react";
-import { ProceedPayModal } from "../ProceedPayModal";
+import { ProceedPayModal } from "./ProceedPayModal";
 const tabs = [
 	{ name: "Bank Transfer", href: "#", icon: BankIcon, current: false },
 	{ name: "Card Payment", href: "#", icon: CardIcon, current: false },
@@ -42,9 +42,7 @@ export default function RegistrationPlan() {
 				<h4 className="text-sm leading-normal text-foreground-3 mb-1">
 					STEP 2
 				</h4>
-				<h6 className="text-2xl leading-normal font-semibold">
-					Registration Plan
-				</h6>
+				<h6 className="text-2xl leading-normal font-semibold">Plan</h6>
 			</div>
 			<Plans />
 

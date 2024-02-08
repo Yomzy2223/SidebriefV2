@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { LaunchForm1 } from "../form";
+import { LaunchForm1 } from "./form";
 import { getServices, getServiceForms } from "@/services/service/operations";
 import { redirect } from "next/navigation";
 

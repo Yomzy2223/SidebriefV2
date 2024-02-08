@@ -12,15 +12,8 @@ import {
 	LoadingSkeleton,
 } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import {
-	useCreateNewProduct,
-	useSaveProductQA,
-	useGetProductQA,
-} from "@/services/product";
+import { useCreateNewProduct, useGetProductQA } from "@/services/product";
 import { useActions } from "./actions";
-import { FormItem } from "@/services/product/types";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const LaunchForm1 = ({
@@ -30,14 +23,11 @@ export const LaunchForm1 = ({
 	serviceFormId: string;
 	urlProductId?: string;
 }) => {
-	const router = useRouter();
 	const createProduct = useCreateNewProduct();
 
 	const [formset, setFormset] = useState(false);
 
 	const productQA = useGetProductQA(urlProductId);
-
-	const params: { service: string } = useParams();
 
 	const { data, isLoading } = useGetServiceFormSubForms(serviceFormId);
 

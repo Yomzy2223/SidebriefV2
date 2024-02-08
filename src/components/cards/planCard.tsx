@@ -1,35 +1,83 @@
 import { Button, Card } from "@/components/flowbite";
 import { CheckBullet } from "../reuseables/checkBullet";
+import { PlanCardEllipse, PlanCardIllustration } from "@/assets/svg";
+import Image from "next/image";
+import getCurrencySymbol from "currency-symbol-map";
 
 export const PlanCard = () => {
 	return (
-		<Card className="w-full md:max-w-[500px]">
-			<div className="space-y-6">
-				<div className="flex justify-between items-start">
-					<div className="space-y-1.5">
-						<h3 className="text-lg leading-normal font-semibold">
-							Basic business registration
-						</h3>
-						<p className="text-sm text-gray-500 leading-normal">
-							Approval within 2-3 days
+		<Card className="w-full bg-primary relative overflow-hidden">
+			<Image
+				src={PlanCardEllipse}
+				alt=""
+				className="absolute top-0 left-0 z-0"
+			/>
+			<Image
+				src={PlanCardIllustration}
+				alt=""
+				className="absolute bottom-0 right-0 z-0"
+			/>
+			<div className="flex gap-12 relative z-10">
+				<div>
+					<h6 className="text-white text-xs font-semibold leading-[24px] underline">
+						Features
+					</h6>
+					<div className="space-y-2">
+						{mock.map((feature, i) => (
+							<p
+								key={i}
+								className="text-sm text-white font-medium leading-[21px]"
+							>
+								{feature}
+							</p>
+						))}
+					</div>
+				</div>
+				<div>
+					<h6 className="text-white text-xs font-semibold leading-[24px] underline">
+						Documents
+					</h6>
+					<div className="space-y-2">
+						{mock.map((document, i) => (
+							<p
+								key={i}
+								className="text-sm text-white font-medium leading-[21px]"
+							>
+								{document}
+							</p>
+						))}
+					</div>
+				</div>
+				<div className="mt-4 ml-auto text-right space-y-5">
+					<div>
+						<h6 className="text-white text-sm font-medium leading-normal">
+							Total amount
+						</h6>
+						<p className="text-white font-semibold text-xl leading-normal">
+							{getCurrencySymbol("NGN") || "$"}72,000
 						</p>
 					</div>
-					<p className="text-2xl font-semibold text-primary leading-normal">
-						N15,000
-					</p>
-				</div>
-				<div className="flex justify-between items-start">
-					<ol className="space-y-2">
-						<CheckBullet>Private company</CheckBullet>
-						<CheckBullet>Local Shareholders Only</CheckBullet>
-						<CheckBullet active={false}>10000 shares</CheckBullet>
-						<CheckBullet active={false}>Standard</CheckBullet>
-					</ol>
-					<Button color="link" size={"fit"} className="self-end">
-						See details
-					</Button>
+					<div>
+						<h6 className="text-white text-sm font-medium leading-normal">
+							Total time required
+						</h6>
+						<p className="text-white font-semibold text-xl leading-normal">
+							20-30 Days
+						</p>
+					</div>
 				</div>
 			</div>
 		</Card>
 	);
 };
+
+const mock = [
+	"standard",
+	"standard",
+	"standard",
+	"standard",
+	"standard",
+	"standard",
+	"standard",
+	"standard",
+];

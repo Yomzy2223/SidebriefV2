@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/flowbite";
+import { Button, Label } from "@/components/flowbite";
 import {
 	Command,
 	CommandEmpty,
@@ -16,16 +16,17 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import { ChevronDown } from "lucide-react";
 
 export function Combobox({
 	placeholder,
-	id,
 	options,
 	selectValue,
+	label,
 }: {
-	placeholder: string;
-	id: string;
+	placeholder?: string;
 	options: string[];
+	label?: string;
 	selectValue: (value: string) => void;
 }) {
 	const [open, setOpen] = React.useState(false);
@@ -33,14 +34,20 @@ export function Combobox({
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
-				<Button
-					color="input"
-					role="combobox"
-					aria-expanded={open}
-					className=""
-				>
-					{placeholder || "Select an option..."}
-				</Button>
+				<div className="space-y-1.5">
+					{label ? <Label value={label} /> : null}
+					<Button
+						color="input"
+						role="combobox"
+						aria-expanded={open}
+						className=""
+					>
+						<div className="flex w-full justify-between">
+							{placeholder || "Select an option..."}
+							<ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+						</div>
+					</Button>
+				</div>
 			</PopoverTrigger>
 			<PopoverContent className="w-full p-0 bg-white">
 				<Command>

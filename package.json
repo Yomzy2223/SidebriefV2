@@ -22,6 +22,7 @@
 		"canvas-confetti": "^1.9.2",
 		"clsx": "^2.0.0",
 		"cmdk": "^0.2.1",
+		"currency-symbol-map": "^5.1.0",
 		"flowbite": "^2.1.1",
 		"flowbite-react": "^0.7.2",
 		"lucide-react": "^0.292.0",
