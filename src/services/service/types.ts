@@ -27,3 +27,12 @@ export type serviceFormSubFormType = {
 	updatedAt: string;
 	formId: string;
 };
+
+export type countryType = {
+	id: string;
+	name: string;
+	iso: string;
+	currency: string;
+	code: string;
+	flagUrl: string;
+};

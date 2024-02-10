@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/flowbite";
-import { ArrowRight } from "@/assets/icons";
+import { ArrowRight, CogOutline } from "@/assets/icons";
 import { useGetServiceFormSubForms } from "@/services/service";
 import {
 	BusinessNameInput,
@@ -13,6 +13,7 @@ import {
 } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateNewProduct, useGetProductQA } from "@/services/product";
+import { useGetCountries } from "@/services/service";
 import { useActions } from "./actions";
 import { useEffect, useState } from "react";
 
@@ -30,6 +31,8 @@ export const LaunchForm1 = ({
 	const productQA = useGetProductQA(urlProductId);
 
 	const { data, isLoading } = useGetServiceFormSubForms(serviceFormId);
+
+	const countries = useGetCountries();
 
 	const subForms = data?.data.data;
 
@@ -140,6 +143,10 @@ export const LaunchForm1 = ({
 										value={form.watch(input.type) || ""}
 										setValue={(value: string) =>
 											form.setValue(input.type, value)
+										}
+										loading={countries.isLoading}
+										countries={
+											countries.data?.data.data || []
 										}
 									/>
 								);

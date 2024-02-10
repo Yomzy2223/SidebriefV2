@@ -4,6 +4,7 @@ import {
 	getService,
 	getServiceForms,
 	getServiceFormSubForms,
+	getCountries,
 } from "./operations";
 
 export const useGetServices = () => {
@@ -30,4 +31,10 @@ export const useGetServiceFormSubForms = (serviceFormId: string) =>
 	useQuery({
 		queryKey: ["serviceFormSubForms", serviceFormId],
 		queryFn: () => getServiceFormSubForms({ serviceFormId }),
+	});
+
+export const useGetCountries = () =>
+	useQuery({
+		queryKey: ["countries"],
+		queryFn: getCountries,
 	});

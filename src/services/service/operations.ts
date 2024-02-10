@@ -1,5 +1,10 @@
 import { axios, rootType } from "../index";
-import { serviceType, serviceFormType, serviceFormSubFormType } from "./types";
+import {
+	serviceType,
+	serviceFormType,
+	serviceFormSubFormType,
+	countryType,
+} from "./types";
 
 export const getServices = () =>
 	axios.get<rootType<serviceType[]>>("/services");
@@ -18,3 +23,6 @@ export const getServiceFormSubForms = ({
 	axios.get<rootType<serviceFormSubFormType[]>>(
 		`/services/subforms/${serviceFormId}`
 	);
+
+export const getCountries = () =>
+	axios.get<rootType<countryType[]>>("/countries");

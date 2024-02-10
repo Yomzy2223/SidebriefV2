@@ -40,7 +40,9 @@ export const CountryCard = ({
 					fill
 				/>
 			</div>
-			<p className="font-medium text-lg leading-snug">{name}</p>
+			<p className="font-medium text-lg leading-snug capitalize">
+				{name}
+			</p>
 		</div>
 	);
 };
