@@ -8,6 +8,11 @@ import Image from "next/image";
 import { ServicesModal } from "@/components/services/ServicesModal";
 import { X } from "lucide-react";
 import { ProceedPayModal } from "./ProceedPayModal";
+import { useGetServiceproduct, useGetServices } from "@/services/service";
+import { useAddServiceToProduct } from "@/services/product";
+import { redirect } from "next/navigation";
+import slugify from "slugify";
+
 const tabs = [
 	{ name: "Bank Transfer", href: "#", icon: BankIcon, current: false },
 	{ name: "Card Payment", href: "#", icon: CardIcon, current: false },
@@ -17,13 +22,60 @@ const tabs = [
 function classNames(...classes: any[]) {
 	return classes.filter(Boolean).join(" ");
 }
-export default function RegistrationPlan() {
+export default function RegistrationPlan({
+	params,
+}: {
+	params: { productId: string; service: string };
+}) {
+	const getServices = useGetServices();
+	const addServiceToProduct = useAddServiceToProduct();
+	const services = getServices.data?.data.data;
+	const serviceSlug = params.service;
+
+	let serviceId: string | undefined;
+
+	if (!getServices.isLoading) {
+		if (!services) {
+			redirect("/dashboard");
+		}
+
+		const service = services.find(
+			(service) => slugify(service.name) === serviceSlug
+		);
+
+		if (!service) {
+			redirect("/dashboard");
+		}
+
+		serviceId = service.id;
+	}
+
 	const [openModal, setOpenModal] = useState(false);
 
 	const [openDiv, setOpenDiv] = useState(false);
 
+	const [selectedService, setSelectedService] = useState<string>();
+
+	const getServiceProduct = useGetServiceproduct(serviceId);
+
 	const handleRemoveDiv = () => {
 		setOpenDiv(false);
+	};
+
+	const handleSubmit = async () => {
+		const selectedPlan = serviceProducts?.find(
+			(el) => el.name === selectedService
+		);
+		if (!selectedPlan) {
+			console.log("plan does not exist");
+			return;
+		}
+		const planId = selectedPlan.id;
+		const productId = params.productId;
+
+		await addServiceToProduct.mutateAsync({ productId, serviceId: planId });
+
+		// setOpenModal(true);
 	};
 
 	const closeModal = () => {
@@ -32,6 +84,10 @@ export default function RegistrationPlan() {
 	const [currentTab, setCurrentTab] = useState(
 		tabs.find((tab) => tab.current)
 	);
+
+	const loading = getServices.isLoading || getServiceProduct.isLoading;
+
+	const serviceProducts = getServiceProduct.data?.data.data;
 
 	// const handleTabChange = (selectedTab) => {
 	// 	setCurrentTab(selectedTab);
@@ -44,13 +100,22 @@ export default function RegistrationPlan() {
 				</h4>
 				<h6 className="text-2xl leading-normal font-semibold">Plan</h6>
 			</div>
-			<Plans />
+			<Plans
+				loading={loading}
+				serviceProducts={serviceProducts || []}
+				selectPlan={(value: string) => setSelectedService(value)}
+				selectedPlan={serviceProducts?.find(
+					(el) => el.name === selectedService
+				)}
+			/>
 
 			<Button
 				color="secondary"
 				size={"lg"}
 				className="self-start"
-				onClick={() => setOpenModal(true)}
+				onClick={handleSubmit}
+				disabled={loading || !selectedService}
+				isProcessing={addServiceToProduct.isPending}
 			>
 				<div className="space-x-2 flex items-center">
 					<p>Continue</p>

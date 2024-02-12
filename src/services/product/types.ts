@@ -58,3 +58,23 @@ export type productQAType = {
 	updatedAt: string;
 	productId: string;
 };
+
+export type addServiceToProductPayload = {
+	serviceId: string;
+	productId: string;
+};
+
+export type addServiceToProductType = {
+	address?: string;
+	completed: boolean;
+	createdAt: string;
+	currentState: "START";
+	email?: string;
+	id: string;
+	paid: boolean;
+	productQA: productQAType[];
+	serviceId: string;
+	status: "pending";
+	updated: string;
+	userId: string;
+};

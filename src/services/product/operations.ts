@@ -1,5 +1,11 @@
 import { axios, rootType, errorType } from "../index";
-import { productType, saveProductQAPayload, productQAType } from "./types";
+import {
+	productType,
+	saveProductQAPayload,
+	productQAType,
+	addServiceToProductPayload,
+	addServiceToProductType,
+} from "./types";
 
 export const createNewProduct = ({ userId }: { userId: string }) =>
 	axios.post<rootType<productType>>("/product", {
@@ -16,3 +22,12 @@ export const getproductQA = ({
 }: {
 	productId: string | undefined;
 }) => axios.get<rootType<productQAType[]>>(`/product/form/${productId}`);
+
+export const addServiceToProduct = ({
+	productId,
+	serviceId,
+}: addServiceToProductPayload) =>
+	axios.post<rootType<addServiceToProductType>>("/product/serviceId", {
+		serviceId,
+		productId,
+	});

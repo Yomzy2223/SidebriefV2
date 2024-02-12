@@ -5,6 +5,7 @@ import {
 	getServiceForms,
 	getServiceFormSubForms,
 	getCountries,
+	getServiceProductsById,
 } from "./operations";
 
 export const useGetServices = () => {
@@ -37,4 +38,11 @@ export const useGetCountries = () =>
 	useQuery({
 		queryKey: ["countries"],
 		queryFn: getCountries,
+	});
+
+export const useGetServiceproduct = (serviceId?: string) =>
+	useQuery({
+		queryKey: ["serviceproduct", serviceId],
+		queryFn: () => getServiceProductsById({ serviceId }),
+		enabled: !!serviceId,
 	});

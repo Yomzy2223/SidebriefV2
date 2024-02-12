@@ -17,17 +17,22 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { ChevronDown } from "lucide-react";
+import { ThreeDots } from "react-loading-icons";
 
 export function Combobox({
 	placeholder,
 	options,
 	selectValue,
 	label,
+	isLoading = false,
+	value,
 }: {
 	placeholder?: string;
 	options: string[];
 	label?: string;
 	selectValue: (value: string) => void;
+	isLoading: boolean;
+	value?: string | number;
 }) {
 	const [open, setOpen] = React.useState(false);
 
@@ -42,8 +47,8 @@ export function Combobox({
 						aria-expanded={open}
 						className=""
 					>
-						<div className="flex w-full justify-between">
-							{placeholder || "Select an option..."}
+						<div className="flex w-full justify-between capitalize">
+							{value || placeholder || "Select an option..."}
 							<ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 						</div>
 					</Button>
@@ -51,22 +56,28 @@ export function Combobox({
 			</PopoverTrigger>
 			<PopoverContent className="w-full p-0 bg-white">
 				<Command>
-					<CommandInput placeholder="Search options..." />
-					<CommandEmpty>No Option found.</CommandEmpty>
-					<CommandGroup>
-						{options.map((option, i) => (
-							<CommandItem
-								key={i}
-								value={option}
-								onSelect={(currentValue) => {
-									selectValue(currentValue);
-									setOpen(false);
-								}}
-							>
-								{option}
-							</CommandItem>
-						))}
-					</CommandGroup>
+					{isLoading ? (
+						<ThreeDots fill="#00A2D4" />
+					) : (
+						<>
+							<CommandInput placeholder="Search options..." />
+							<CommandEmpty>No Option found.</CommandEmpty>
+							<CommandGroup>
+								{options.map((option, i) => (
+									<CommandItem
+										key={i}
+										value={option}
+										onSelect={(currentValue) => {
+											selectValue(currentValue);
+											setOpen(false);
+										}}
+									>
+										{option}
+									</CommandItem>
+								))}
+							</CommandGroup>
+						</>
+					)}
 				</Command>
 			</PopoverContent>
 		</Popover>

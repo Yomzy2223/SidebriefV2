@@ -36,3 +36,24 @@ export type countryType = {
 	code: string;
 	flagUrl: string;
 };
+
+export type serviceProductType = {
+	id: string;
+	name: string;
+	description: string;
+	country: string;
+	currency: string;
+	amount: number;
+	timeline: string;
+	feature: string[];
+	// hasShares: boolean;
+	// hasAgent: boolean;
+	// hasOwner: boolean;
+	// hasController: boolean;
+	// controllerIsCalled: string | null;
+	// ownerIsCalled: string | null;
+	// agentIsCalled: string | null;
+	// createdAt: string;
+	// updatedAt: string;
+	// serviceCategoryId: string;
+};
