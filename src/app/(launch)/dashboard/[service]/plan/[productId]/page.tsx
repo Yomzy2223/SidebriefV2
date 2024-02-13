@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plans } from "./plans";
 import { Button, Card } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
@@ -9,9 +9,10 @@ import { ServicesModal } from "@/components/services/ServicesModal";
 import { X } from "lucide-react";
 import { ProceedPayModal } from "./ProceedPayModal";
 import { useGetServiceproduct, useGetServices } from "@/services/service";
-import { useAddServiceToProduct } from "@/services/product";
+import { useAddServiceToProduct, useGetProduct } from "@/services/product";
 import { redirect } from "next/navigation";
 import slugify from "slugify";
+import { useRouter } from "next/navigation";
 
 const tabs = [
 	{ name: "Bank Transfer", href: "#", icon: BankIcon, current: false },
@@ -31,6 +32,8 @@ export default function RegistrationPlan({
 	const addServiceToProduct = useAddServiceToProduct();
 	const services = getServices.data?.data.data;
 	const serviceSlug = params.service;
+	const router = useRouter();
+	const product = useGetProduct(params.productId);
 
 	let serviceId: string | undefined;
 
@@ -62,6 +65,12 @@ export default function RegistrationPlan({
 		setOpenDiv(false);
 	};
 
+	useEffect(() => {
+		if (!product.isLoading) {
+			setSelectedService(product.data?.data.data.service.name);
+		}
+	}, [product.isLoading, product.data?.data.data.service.name]);
+
 	const handleSubmit = async () => {
 		const selectedPlan = serviceProducts?.find(
 			(el) => el.name === selectedService
@@ -76,6 +85,9 @@ export default function RegistrationPlan({
 		await addServiceToProduct.mutateAsync({ productId, serviceId: planId });
 
 		// setOpenModal(true);
+
+		// should rote to payment but for now will go to KYC page
+		router.push(`/dashboard/${params.service}/kyc/${productId}`);
 	};
 
 	const closeModal = () => {
@@ -85,7 +97,10 @@ export default function RegistrationPlan({
 		tabs.find((tab) => tab.current)
 	);
 
-	const loading = getServices.isLoading || getServiceProduct.isLoading;
+	const loading =
+		getServices.isLoading ||
+		getServiceProduct.isLoading ||
+		product.isLoading;
 
 	const serviceProducts = getServiceProduct.data?.data.data;
 

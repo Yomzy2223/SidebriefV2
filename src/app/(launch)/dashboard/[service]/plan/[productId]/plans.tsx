@@ -3,6 +3,7 @@
 import { PlanCard } from "@/components/cards/planCard";
 import { Combobox } from "@/components/input/combobox";
 import { serviceProductType } from "@/services/service/types";
+import { Puff } from "react-loading-icons";
 
 export const Plans = ({
 	loading,
@@ -24,15 +25,21 @@ export const Plans = ({
 				isLoading={loading}
 				value={selectedPlan?.name}
 			/>
-			{selectedPlan && (
-				<PlanCard
-					features={selectedPlan?.feature}
-					price={{
-						amount: selectedPlan?.amount,
-						currency: selectedPlan?.currency,
-					}}
-					timeline={selectedPlan.timeline}
-				/>
+			{loading ? (
+				<div className="w-[500px] h-[200px] grid place-items-center">
+					<Puff stroke="#00A2D4" />
+				</div>
+			) : (
+				selectedPlan && (
+					<PlanCard
+						features={selectedPlan?.feature}
+						price={{
+							amount: selectedPlan?.amount,
+							currency: selectedPlan?.currency,
+						}}
+						timeline={selectedPlan.timeline}
+					/>
+				)
 			)}
 		</div>
 	);

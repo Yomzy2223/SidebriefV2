@@ -4,6 +4,7 @@ import {
 	saveProductQA,
 	getproductQA,
 	addServiceToProduct,
+	getProduct,
 } from "./operations";
 import { saveProductQAPayload, addServiceToProductPayload } from "./types";
 
@@ -32,4 +33,10 @@ export const useAddServiceToProduct = () =>
 		mutationKey: ["add service too product"],
 		mutationFn: (payload: addServiceToProductPayload) =>
 			addServiceToProduct(payload),
+	});
+
+export const useGetProduct = (productId: string) =>
+	useQuery({
+		queryKey: ["get product by id", productId],
+		queryFn: () => getProduct({ productId }),
 	});

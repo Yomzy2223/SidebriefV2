@@ -4,7 +4,6 @@ import {
 	saveProductQAPayload,
 	productQAType,
 	addServiceToProductPayload,
-	addServiceToProductType,
 } from "./types";
 
 export const createNewProduct = ({ userId }: { userId: string }) =>
@@ -27,7 +26,10 @@ export const addServiceToProduct = ({
 	productId,
 	serviceId,
 }: addServiceToProductPayload) =>
-	axios.post<rootType<addServiceToProductType>>("/product/serviceId", {
+	axios.post<rootType<productType>>("/product/serviceId", {
 		serviceId,
 		productId,
 	});
+
+export const getProduct = ({ productId }: { productId: string }) =>
+	axios.get<rootType<productType>>(`/product/${productId}`);

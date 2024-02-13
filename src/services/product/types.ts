@@ -1,16 +1,19 @@
+import type { serviceProductType } from "../service/types";
+
 export type productType = {
 	id: string;
 	email: string | null;
 	address: string | null;
 	paid: boolean;
 	completed: boolean;
-	status: string;
-	currentState: string;
+	currentState: "START";
+	status: "pending";
 	createdAt: string;
 	updatedAt: string;
 	serviceId: string | null;
 	userId: string;
 	productQA: productQAType[];
+	service: serviceProductType;
 };
 
 export type File = {
@@ -62,19 +65,4 @@ export type productQAType = {
 export type addServiceToProductPayload = {
 	serviceId: string;
 	productId: string;
-};
-
-export type addServiceToProductType = {
-	address?: string;
-	completed: boolean;
-	createdAt: string;
-	currentState: "START";
-	email?: string;
-	id: string;
-	paid: boolean;
-	productQA: productQAType[];
-	serviceId: string;
-	status: "pending";
-	updated: string;
-	userId: string;
 };
