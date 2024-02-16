@@ -43,6 +43,8 @@ export const LaunchForm1 = ({
 		}
 	);
 
+	// console.log(subForms);
+
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: defaultValues,
@@ -151,7 +153,7 @@ export const LaunchForm1 = ({
 									/>
 								);
 							default:
-								return null; // Or some fallback component
+								return <div>Empty</div>; // Or some fallback component
 						}
 					})}
 				</>
