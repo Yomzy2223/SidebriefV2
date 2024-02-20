@@ -12,13 +12,15 @@ export default function BusinessObjectiveInput({
 	options,
 	value,
 	setValue,
+	error,
 }: {
 	id: string;
-	question: string;
+	question?: string;
 	placeholder?: string;
 	options: string[];
 	value: string[];
 	setValue: (value: string[]) => void;
+	error: string | undefined;
 }) {
 	// const [value, setValue] = useState<string[]>([]);
 
@@ -34,14 +36,19 @@ export default function BusinessObjectiveInput({
 
 	return (
 		<div className="flex flex-col gap-2">
-			<Label className="text-sm font-medium leading-normal" htmlFor={id}>
-				{question}
-			</Label>
+			{question && (
+				<Label
+					className="text-sm font-medium leading-normal"
+					htmlFor={id}
+				>
+					{question}
+				</Label>
+			)}
 			<Combobox
 				placeholder={placeholder || ""}
-				id={id}
 				options={options}
 				selectValue={handleSelect}
+				error={error}
 			/>
 			{/* <TextInput placeholder={placeholder || ""} id={id} /> */}
 			<div className="flex flex-wrap gap-2.5">

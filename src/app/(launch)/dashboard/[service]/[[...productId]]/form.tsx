@@ -16,6 +16,7 @@ import { useCreateNewProduct, useGetProductQA } from "@/services/product";
 import { useGetCountries } from "@/services/service";
 import { useActions } from "./actions";
 import { useEffect, useState } from "react";
+import DynamicForm from "@/components/form/dynamicForm";
 
 export const LaunchForm1 = ({
 	serviceFormId,
@@ -97,8 +98,8 @@ export const LaunchForm1 = ({
 	};
 
 	return (
-		<form
-			onSubmit={form.handleSubmit(submitFormHandler)}
+		<div
+			// onSubmit={form.handleSubmit(submitFormHandler)}
 			className="flex flex-col gap-20 items-start"
 		>
 			{isLoading || productQA.isLoading ? (
@@ -109,56 +110,41 @@ export const LaunchForm1 = ({
 				</>
 			) : (
 				<>
-					{subForms?.map((input) => {
-						switch (input.type) {
-							case "business-name":
-								return (
-									<BusinessNameInput
-										key={input.id}
-										id={input.id}
-										question={input.question}
-										value={form.watch(input.type) || []}
-										setValue={(value: string[]) =>
-											form.setValue(input.type, value)
-										}
-									/>
-								);
-							case "business-objective":
-								return (
-									<BusinessObjectiveInput
-										key={input.id}
-										id={input.id}
-										question={input.question}
-										options={input.options}
-										value={form.watch(input.type) || []}
-										setValue={(value: string[]) =>
-											form.setValue(input.type, value)
-										}
-									/>
-								);
-							case "country":
-								return (
-									<CountryInput
-										id={input.id}
-										question={input.question}
-										key={input.id}
-										value={form.watch(input.type) || ""}
-										setValue={(value: string) =>
-											form.setValue(input.type, value)
-										}
-										loading={countries.isLoading}
-										countries={
-											countries.data?.data.data || []
-										}
-									/>
-								);
-							default:
-								return <div>Empty</div>; // Or some fallback component
+					<DynamicForm
+						formInfo={
+							subForms
+								?.slice()
+								.reverse()
+								.map((input) => {
+									return {
+										name: input.id,
+										type: input.type,
+										id: input.id,
+										label: input.question,
+										selectOptions: input.options,
+									};
+								})!
 						}
-					})}
+						onFormSubmit={submitFormHandler}
+						formSchema={schema}
+						defaultValues={defaultValues}
+					>
+						<Button
+							color="secondary"
+							size={"lg"}
+							type="submit"
+							isProcessing={createProduct.isPending || savingForm}
+							disabled={isLoading}
+						>
+							<div className="space-x-2 flex items-center">
+								<p>Continue</p>
+								<ArrowRight />
+							</div>
+						</Button>
+					</DynamicForm>
 				</>
 			)}
-			<Button
+			{/* <Button
 				color="secondary"
 				size={"lg"}
 				type="submit"
@@ -169,7 +155,7 @@ export const LaunchForm1 = ({
 					<p>Continue</p>
 					<ArrowRight />
 				</div>
-			</Button>
-		</form>
+			</Button> */}
+		</div>
 	);
 };

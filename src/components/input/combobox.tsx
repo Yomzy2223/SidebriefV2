@@ -26,13 +26,15 @@ export function Combobox({
 	label,
 	isLoading = false,
 	value,
+	error,
 }: {
 	placeholder?: string;
 	options: string[];
 	label?: string;
 	selectValue: (value: string) => void;
-	isLoading: boolean;
+	isLoading?: boolean;
 	value?: string | number;
+	error: string | undefined;
 }) {
 	const [open, setOpen] = React.useState(false);
 
@@ -42,10 +44,11 @@ export function Combobox({
 				<div className="space-y-1.5">
 					{label ? <Label value={label} /> : null}
 					<Button
-						color="input"
+						color={error ? "failure" : "input"}
 						role="combobox"
 						aria-expanded={open}
 						className=""
+						// outline={!!error}
 					>
 						<div className="flex w-full justify-between capitalize">
 							{value || placeholder || "Select an option..."}

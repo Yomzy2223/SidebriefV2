@@ -11,12 +11,14 @@ export default function BusinessNameInput({
 	placeholder,
 	value,
 	setValue,
+	error,
 }: {
 	id: string;
-	question: string;
+	question?: string;
 	placeholder?: string;
 	value: string[];
 	setValue: (value: string[]) => void;
+	error?: string;
 }) {
 	const [inputValue, setInputValue] = useState("");
 
@@ -40,15 +42,22 @@ export default function BusinessNameInput({
 
 	return (
 		<div className="flex flex-col gap-2">
-			<Label className="text-sm font-medium leading-normal" htmlFor={id}>
-				{question}
-			</Label>
+			{question && (
+				<Label
+					className="text-sm font-medium leading-normal"
+					htmlFor={id}
+				>
+					{question}
+				</Label>
+			)}
 			<TextInput
 				placeholder={placeholder || ""}
 				id={id}
 				value={inputValue}
 				onChange={(e) => setInputValue(e.target.value)}
 				onKeyDown={handleKeyPress}
+				helperText={error}
+				color={error && "failure"}
 			/>
 			<div className="flex flex-wrap gap-2.5">
 				{value.map((name, i) => (

@@ -5,10 +5,10 @@ import { FormItem } from "@/services/product/types";
 import { useRouter, useParams } from "next/navigation";
 
 export const useActions = ({
-	isLoading,
+	isLoading = false,
 	subForms,
 }: {
-	isLoading: boolean;
+	isLoading?: boolean;
 	subForms?: serviceFormSubFormType[];
 }) => {
 	const saveProductQA = useSaveProductQA();
@@ -23,7 +23,7 @@ export const useActions = ({
 					Object.fromEntries(
 						subForms.map((field) => {
 							switch (field.type) {
-								case "business-name":
+								case "business name":
 									return [
 										field.type,
 										z
@@ -40,7 +40,16 @@ export const useActions = ({
 												"Enter 4 business names"
 											),
 									];
-								case "business-objective":
+								case "objectives":
+									// let objectivesSchema = z.array(z.string());
+									// if (field.compulsory) {
+									// 	objectivesSchema =
+									// 		objectivesSchema.length(
+									// 			4,
+									// 			"Enter  4 business objectives"
+									// 		);
+									// }
+									// return [field.type, objectivesSchema];
 									return [
 										field.type,
 										z
@@ -66,9 +75,9 @@ export const useActions = ({
 			: Object.entries(
 					subForms.map((field) => {
 						switch (field.type) {
-							case "business-name":
+							case "business name":
 								return [field.type, []];
-							case "business-objective":
+							case "objectives":
 								return [field.type, []];
 							default:
 								return [field.type, ""];
