@@ -5,12 +5,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/flowbite";
 import { ArrowRight, CogOutline } from "@/assets/icons";
 import { useGetServiceFormSubForms } from "@/services/service";
-import {
-	BusinessNameInput,
-	BusinessObjectiveInput,
-	CountryInput,
-	LoadingSkeleton,
-} from "@/components/input";
+import { LoadingSkeleton } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateNewProduct, useGetProductQA } from "@/services/product";
 import { useGetCountries } from "@/services/service";
@@ -29,27 +24,21 @@ export const LaunchForm1 = ({
 
 	const [formset, setFormset] = useState(false);
 
+	const [values, setValues] = useState<{ [key: string]: string | string[] }>(
+		{}
+	);
+
 	const productQA = useGetProductQA(urlProductId);
 
 	const { data, isLoading } = useGetServiceFormSubForms(serviceFormId);
 
-	const countries = useGetCountries();
-
 	const subForms = data?.data.data;
 
-	const { schema, defaultValues, saveFormProductQA, savingForm } = useActions(
-		{
-			isLoading,
-			subForms,
-		}
-	);
+	const { saveFormProductQA, savingForm } = useActions({
+		subForms,
+	});
 
 	// console.log(subForms);
-
-	const form = useForm<z.infer<typeof schema>>({
-		resolver: zodResolver(schema),
-		defaultValues: defaultValues,
-	});
 
 	useEffect(() => {
 		if (
@@ -62,15 +51,21 @@ export const LaunchForm1 = ({
 			QA.forEach((qa) => {
 				switch (qa.type) {
 					case "country":
-						form.setValue(qa.type, qa.answer[0]);
+						setValues((prev) => ({
+							...prev,
+							[qa.type]: qa.answer[0],
+						}));
 						break;
 					default:
-						form.setValue(qa.type, qa.answer);
+						setValues((prev) => ({
+							...prev,
+							[qa.type]: qa.answer,
+						}));
 				}
 			});
 			setFormset(true);
 		}
-	}, [urlProductId, productQA, form, formset]);
+	}, [urlProductId, productQA, formset]);
 
 	const submitFormHandler = (values: { [x: string]: string | string[] }) => {
 		if (urlProductId) {
@@ -112,22 +107,18 @@ export const LaunchForm1 = ({
 				<>
 					<DynamicForm
 						formInfo={
-							subForms
-								?.slice()
-								.reverse()
-								.map((input) => {
-									return {
-										name: input.id,
-										type: input.type,
-										id: input.id,
-										label: input.question,
-										selectOptions: input.options,
-									};
-								})!
+							subForms?.map((input) => {
+								return {
+									name: input.id,
+									type: input.type,
+									id: input.id,
+									label: input.question,
+									selectOptions: input.options,
+									value: values[input.type],
+								};
+							})!
 						}
 						onFormSubmit={submitFormHandler}
-						formSchema={schema}
-						defaultValues={defaultValues}
 					>
 						<Button
 							color="secondary"
