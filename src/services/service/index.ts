@@ -42,7 +42,7 @@ export const useGetCountries = () =>
 
 export const useGetServiceproduct = (serviceId?: string) =>
 	useQuery({
-		queryKey: ["serviceproduct", serviceId],
+		queryKey: ["product", serviceId],
 		queryFn: () => getServiceProductsById({ serviceId }),
 		enabled: !!serviceId,
 	});

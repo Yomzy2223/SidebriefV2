@@ -34,7 +34,7 @@ export function Combobox({
 	selectValue: (value: string) => void;
 	isLoading?: boolean;
 	value?: string | number;
-	error: string | undefined;
+	error?: string;
 }) {
 	const [open, setOpen] = React.useState(false);
 

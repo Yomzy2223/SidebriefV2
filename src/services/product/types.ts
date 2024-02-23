@@ -66,3 +66,8 @@ export type addServiceToProductPayload = {
 	serviceId: string;
 	productId: string;
 };
+
+export type createProductPayload = {
+	userId: string;
+	productId: string;
+};

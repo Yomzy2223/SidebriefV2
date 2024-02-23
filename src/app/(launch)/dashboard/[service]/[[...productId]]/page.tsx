@@ -1,80 +1,194 @@
-import slugify from "slugify";
-import { LaunchForm1 } from "./form";
-import { getServices, getServiceForms } from "@/services/service/operations";
+"use client";
+import React, { useEffect, useState } from "react";
+import { Plans } from "./plans";
+import { Button, Card } from "@/components/flowbite";
+import { ArrowRight } from "@/assets/icons";
+import { BankIcon, CardIcon, CreditCardIcon } from "@/assets/svg";
+import Image from "next/image";
+import { ServicesModal } from "@/components/services/ServicesModal";
+import { X } from "lucide-react";
+import { ProceedPayModal } from "./ProceedPayModal";
+import { useGetServiceproduct, useGetServices } from "@/services/service";
+import {
+	useAddServiceToProduct,
+	useGetProduct,
+	useCreateNewProduct,
+} from "@/services/product";
 import { redirect } from "next/navigation";
-import { Tabs, TabItem } from "@/components/flowbite";
+import slugify from "slugify";
+import { useRouter } from "next/navigation";
+import { CountryInput } from "@/components/input";
+import { TCountryCode, countries, getCountryCode } from "countries-list";
 
-export const dynamic = "force-dynamic";
+// const tabs = [
+// 	{ name: "Bank Transfer", href: "#", icon: BankIcon, current: false },
+// 	{ name: "Card Payment", href: "#", icon: CardIcon, current: false },
+// 	{ name: "Bank USSD", href: "#", icon: CreditCardIcon, current: false },
+// ];
 
-export default async function LaunchStart({
+function classNames(...classes: any[]) {
+	return classes.filter(Boolean).join(" ");
+}
+export default function RegistrationPlan({
 	params,
 }: {
-	params: { service: string; productId: string[] };
+	params: { productId: string[]; service: string };
 }) {
-	const data = await getServices();
-
-	const services = data.data.data;
-
+	const getServices = useGetServices();
+	const createNewProduct = useCreateNewProduct();
+	const services = getServices.data?.data.data;
 	const serviceSlug = params.service;
+	const router = useRouter();
+	// const product = useGetProduct(params.productId[0]);
 
-	const service = services.find(
-		(service) => slugify(service.name) === serviceSlug
-	);
+	let serviceId: string | undefined;
 
-	if (!service) {
-		redirect("/dashboard");
+	if (!getServices.isLoading) {
+		if (!services) {
+			redirect("/dashboard");
+		}
+
+		const service = services.find(
+			(service) => slugify(service.name) === serviceSlug
+		);
+
+		if (!service) {
+			redirect("/dashboard");
+		}
+
+		serviceId = service.id;
 	}
 
-	const serviceData = await getServiceForms({ serviceId: service.id });
+	const [openModal, setOpenModal] = useState(false);
 
-	const allServiceForms = serviceData.data.data;
+	const [openDiv, setOpenDiv] = useState(false);
 
-	const serviceForm1 = allServiceForms[0];
+	const [selectedService, setSelectedService] = useState<string>();
+	const [selectedCountry, setSelectedCountry] = useState<string>("");
 
-	const productId = params.productId?.at(0) || undefined;
+	const getServiceProduct = useGetServiceproduct(serviceId);
+
+	const handleRemoveDiv = () => {
+		setOpenDiv(false);
+	};
+
+	// useEffect(() => {
+	// 	if (!product.isLoading) {
+	// 		setSelectedService(product.data?.data.data.service.name);
+	// 	}
+	// }, [product.isLoading, product.data?.data.data.service.name]);
+
+	const handleSubmit = async () => {
+		console.log(selectedService);
+		console.log(selectedCountry);
+		const selectedPlan = serviceProducts?.find(
+			(el) => el.name === selectedService
+		);
+
+		if (!selectedPlan?.id) {
+			console.log("Product does not exist");
+			return;
+		}
+
+		const res = await createNewProduct.mutateAsync({
+			productId: selectedPlan?.id,
+			userId: "5c99014f-4d5f-4771-9c6e-8e56d3afd819",
+		});
+
+		console.log(res);
+
+		router.push(`/dashboard/${params.service}/info/${res.data.data.id}`);
+
+		// const planId = selectedPlan.id;
+		// const productId = params.productId;
+		// await addServiceToProduct.mutateAsync({
+		// 	productId: productId[0],
+		// 	serviceId: planId,
+		// });
+		// setOpenModal(true);
+		// should rote to payment but for now will go to KYC page
+	};
+
+	const closeModal = () => {
+		setOpenModal(false);
+	};
+	// const [currentTab, setCurrentTab] = useState(
+	// 	tabs.find((tab) => tab.current)
+	// );
+
+	const loading = getServices.isLoading || getServiceProduct.isLoading;
+	// ||	product.isLoading;
+
+	const serviceProducts = getServiceProduct.data?.data.data;
+
+	const filteredServiceProducts = serviceProducts?.filter(
+		(product) =>
+			product.country.toLowerCase() === selectedCountry.toLowerCase()
+	);
+
+	// const handleTabChange = (selectedTab) => {
+	// 	setCurrentTab(selectedTab);
+	// };
 
 	return (
-		<div className="flex flex-col gap-2 max-w-[500px] w-full">
-			<h4 className="text-sm leading-normal text-foreground-3 mb-1">
-				STEP 1
-			</h4>
-			{allServiceForms.length > 1 ? (
-				<Tabs aria-label="Form tabs" style="underline">
-					{allServiceForms.map((el) => (
-						<TabItem active title={el.title} key={el.id}>
-							<div className="space-y-5 w-full">
-								<div className="flex flex-col">
-									<h6 className="text-2xl leading-normal font-semibold">
-										{el.title}
-									</h6>
-									<p className="font-medium leading-normal text-primary">
-										{el.description}
-									</p>
-								</div>
-								<LaunchForm1
-									subForms={el.subForm}
-									urlProductId={productId}
-								/>
-							</div>
-						</TabItem>
-					))}
-				</Tabs>
-			) : (
-				<div className="space-y-5 w-full">
-					<div className="flex flex-col">
-						<h6 className="text-2xl leading-normal font-semibold">
-							{serviceForm1.title}
-						</h6>
-						<p className="font-medium leading-normal text-primary">
-							{serviceForm1.description}
-						</p>
-					</div>
-					<LaunchForm1
-						subForms={serviceForm1.subForm}
-						urlProductId={productId}
-					/>
+		<div className="flex flex-col gap-6 md:max-w-[500px] w-full">
+			<div className="flex flex-col">
+				<h4 className="text-sm leading-normal text-foreground-3 mb-1">
+					STEP 1
+				</h4>
+				<h6 className="text-2xl leading-normal font-semibold">Plan</h6>
+			</div>
+
+			<CountryInput
+				question="Select a Country"
+				value={selectedCountry}
+				setValue={(value) => setSelectedCountry(value)}
+			/>
+			<Plans
+				loading={loading}
+				serviceProducts={filteredServiceProducts || []}
+				selectPlan={(value: string) => setSelectedService(value)}
+				selectedPlan={serviceProducts?.find(
+					(el) => el.name === selectedService
+				)}
+			/>
+
+			<Button
+				color="secondary"
+				size={"lg"}
+				className="self-start"
+				onClick={handleSubmit}
+				disabled={loading || !selectedService}
+				isProcessing={createNewProduct.isPending}
+			>
+				<div className="space-x-2 flex items-center">
+					<p>Continue</p>
+					<ArrowRight />
 				</div>
-			)}
+			</Button>
+
+			{/* <div className='p-5 border'>
+				<div className="flex justify-between w-full">
+					<div className="flex flex-col">
+						<h6 className="text-2xl leading-normal font-semibold text-primary">
+							Before you proceed to payment
+						</h6>
+						<p className='py-4'>See other things you can do alongside side your business registration to save time. It may require additional documents and increase in payment</p>
+					</div>
+				</div>
+
+
+				<Button color="secondary" size={"lg"} className="self-start" onClick={() => setOpenModal(true)}>
+					<div className="space-x-2 flex items-center">
+						<p>Continue</p>
+						<ArrowRight />
+					</div>
+				</Button>
+
+			</div> */}
+
+			{/* <ProceedPayModal open={openModal} close={closeModal}/> */}
+			<ServicesModal open={openModal} close={closeModal} />
 		</div>
 	);
 }

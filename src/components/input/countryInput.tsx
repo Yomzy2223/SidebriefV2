@@ -35,7 +35,7 @@ export default function CountryInput({
 					: countries?.map((country, i) => (
 							<CountryCard
 								name={country.name}
-								code={country.iso}
+								code={country.iso.toLowerCase()}
 								key={i}
 								active={value === country.name}
 								select={() => setValue(country.name)}

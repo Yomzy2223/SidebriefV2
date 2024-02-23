@@ -6,12 +6,16 @@ import {
 	addServiceToProduct,
 	getProduct,
 } from "./operations";
-import { saveProductQAPayload, addServiceToProductPayload } from "./types";
+import {
+	saveProductQAPayload,
+	addServiceToProductPayload,
+	createProductPayload,
+} from "./types";
 
 export const useCreateNewProduct = () =>
 	useMutation({
-		mutationFn: ({ userId }: { userId: string }) =>
-			createNewProduct({ userId }),
+		mutationFn: (payload: createProductPayload) =>
+			createNewProduct(payload),
 		mutationKey: ["create new product"],
 	});
 
