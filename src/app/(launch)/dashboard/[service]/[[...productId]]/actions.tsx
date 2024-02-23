@@ -3,6 +3,7 @@ import { serviceFormSubFormType } from "@/services/service/types";
 import { useSaveProductQA } from "@/services/product";
 import { FormItem } from "@/services/product/types";
 import { useRouter, useParams } from "next/navigation";
+import slugify from "slugify";
 
 export const useActions = ({
 	subForms,
@@ -17,17 +18,19 @@ export const useActions = ({
 		productId: string,
 		values: { [x: string]: string | string[] }
 	) => {
-		const formQA: FormItem[] = Object.keys(values).map((type) => {
-			const subForm = subForms?.find((el) => el.type === type);
+		const formQA: FormItem[] = Object.keys(values).map((slug) => {
+			const subForm = subForms?.find(
+				(el) => slugify(el.question) === slug
+			);
 
 			return {
-				answer: Array.isArray(values[type])
-					? values[type]
-					: [values[type]],
+				answer: Array.isArray(values[slug])
+					? values[slug]
+					: [values[slug]],
 				compulsory: subForm?.compulsory,
 				isGeneral: true,
 				question: subForm?.question,
-				type: type,
+				type: subForm?.type,
 			} as FormItem;
 		});
 

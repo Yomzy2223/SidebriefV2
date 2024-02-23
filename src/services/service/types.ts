@@ -15,6 +15,7 @@ export type serviceFormType = {
 	createdAt: string;
 	updatedAt: string;
 	serviceCategoryId: string;
+	subForm: serviceFormSubFormType[];
 };
 
 export type serviceFormSubFormType = {

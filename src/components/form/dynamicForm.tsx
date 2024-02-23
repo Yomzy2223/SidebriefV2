@@ -45,11 +45,12 @@ const DynamicForm = ({
 
 	// Submit handler
 	function onSubmit(values: formType) {
+		// console.log(values);
 		onFormSubmit && onFormSubmit(values);
 	}
 
 	useEffect(() => {
-		formInfo.forEach((form) => {
+		(formInfo || []).forEach((form) => {
 			if (form.value) {
 				setValue(form.name, form.value);
 			}
@@ -58,7 +59,7 @@ const DynamicForm = ({
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-			{formInfo.map((el, i: number) => {
+			{(formInfo || []).map((el, i: number) => {
 				const isTextInput =
 					el.type === "text" ||
 					el.type === "password" ||
@@ -145,12 +146,12 @@ const DynamicForm = ({
 							<BusinessNameInput
 								id={el.id!}
 								// question={el.}
-								value={watch(el.type) || []}
+								value={watch(el.name) || []}
 								setValue={(value: string[]) =>
-									setValue(el.type, value)
+									setValue(el.name, value)
 								}
 								error={
-									errors[el.type as keyof typeof errors]
+									errors[el.name as keyof typeof errors]
 										?.message as string | undefined
 								}
 							/>
@@ -161,12 +162,12 @@ const DynamicForm = ({
 								id={el.id!}
 								// question={el.question}
 								options={el.selectOptions || []}
-								value={watch(el.type) || []}
+								value={watch(el.name) || []}
 								setValue={(value: string[]) =>
-									setValue(el.type, value)
+									setValue(el.name, value)
 								}
 								error={
-									errors[el.type as keyof typeof errors]
+									errors[el.name as keyof typeof errors]
 										?.message as string | undefined
 								}
 							/>
@@ -175,9 +176,9 @@ const DynamicForm = ({
 						{el.type === "countries" && (
 							<CountryInput
 								id={el.id}
-								value={watch(el.type) || []}
+								value={watch(el.name) || []}
 								setValue={(value: string) =>
-									setValue(el.type, value)
+									setValue(el.name, value)
 								}
 							/>
 						)}

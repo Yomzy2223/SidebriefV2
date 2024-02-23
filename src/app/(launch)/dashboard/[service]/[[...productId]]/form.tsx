@@ -12,12 +12,15 @@ import { useGetCountries } from "@/services/service";
 import { useActions } from "./actions";
 import { useEffect, useState } from "react";
 import DynamicForm from "@/components/form/dynamicForm";
+import slugify from "slugify";
+import { serviceFormSubFormType } from "@/services/service/types";
 
 export const LaunchForm1 = ({
-	serviceFormId,
+	subForms,
 	urlProductId,
 }: {
-	serviceFormId: string;
+	subForms: serviceFormSubFormType[];
+	// serviceFormId: string;
 	urlProductId?: string;
 }) => {
 	const createProduct = useCreateNewProduct();
@@ -30,9 +33,9 @@ export const LaunchForm1 = ({
 
 	const productQA = useGetProductQA(urlProductId);
 
-	const { data, isLoading } = useGetServiceFormSubForms(serviceFormId);
+	// const { data, isLoading } = useGetServiceFormSubForms(serviceFormId);
 
-	const subForms = data?.data.data;
+	// const subForms = data?.data.data;
 
 	const { saveFormProductQA, savingForm } = useActions({
 		subForms,
@@ -53,13 +56,13 @@ export const LaunchForm1 = ({
 					case "country":
 						setValues((prev) => ({
 							...prev,
-							[qa.type]: qa.answer[0],
+							[slugify(qa.question)]: qa.answer[0],
 						}));
 						break;
 					default:
 						setValues((prev) => ({
 							...prev,
-							[qa.type]: qa.answer,
+							[slugify(qa.question)]: qa.answer,
 						}));
 				}
 			});
@@ -76,7 +79,7 @@ export const LaunchForm1 = ({
 			{
 				// dummy user Id
 				// TODO: user ID should be changed later
-				userId: "0fe8efaa-161f-4570-8433-1cf8772427c6",
+				userId: "5c99014f-4d5f-4771-9c6e-8e56d3afd819",
 			},
 			{
 				onSuccess(data, variables, context) {
@@ -95,9 +98,9 @@ export const LaunchForm1 = ({
 	return (
 		<div
 			// onSubmit={form.handleSubmit(submitFormHandler)}
-			className="flex flex-col gap-20 items-start"
+			className="flex flex-col gap-20 items-stretch"
 		>
-			{isLoading || productQA.isLoading ? (
+			{productQA.isLoading ? (
 				<>
 					{[1, 2, 3]?.map((number) => (
 						<LoadingSkeleton key={number} />
@@ -109,7 +112,7 @@ export const LaunchForm1 = ({
 						formInfo={
 							subForms?.map((input) => {
 								return {
-									name: input.id,
+									name: slugify(input.question),
 									type: input.type,
 									id: input.id,
 									label: input.question,
@@ -125,7 +128,7 @@ export const LaunchForm1 = ({
 							size={"lg"}
 							type="submit"
 							isProcessing={createProduct.isPending || savingForm}
-							disabled={isLoading}
+							// disabled={isLoading}
 						>
 							<div className="space-x-2 flex items-center">
 								<p>Continue</p>

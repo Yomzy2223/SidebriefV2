@@ -18,7 +18,7 @@ export const useDynamic = ({
 							switch (field.type) {
 								case "business name":
 									return [
-										field.type,
+										field.name,
 										z
 											.array(
 												z
@@ -44,7 +44,7 @@ export const useDynamic = ({
 									// }
 									// return [field.type, objectivesSchema];
 									return [
-										field.type,
+										field.name,
 										z
 											.array(z.string())
 											.length(
@@ -53,7 +53,10 @@ export const useDynamic = ({
 											),
 									];
 								case "country":
-									return [field.type, z.string()];
+									return [
+										field.name,
+										z.string().min(1, "Pick a country"),
+									];
 								// Add more cases as needed
 								default:
 									return [field.type, z.any()]; // Default validation if no specific type matches
@@ -69,11 +72,11 @@ export const useDynamic = ({
 					subForms.map((field) => {
 						switch (field.type) {
 							case "business name":
-								return [field.type, []];
+								return [field.name, []];
 							case "objectives":
-								return [field.type, []];
+								return [field.name, []];
 							default:
-								return [field.type, ""];
+								return [field.name, ""];
 						}
 					})
 			  );
