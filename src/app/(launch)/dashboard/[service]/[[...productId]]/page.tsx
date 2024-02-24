@@ -95,8 +95,6 @@ export default function RegistrationPlan({
 			userId: "5c99014f-4d5f-4771-9c6e-8e56d3afd819",
 		});
 
-		console.log(res);
-
 		router.push(`/dashboard/${params.service}/info/${res.data.data.id}`);
 
 		// const planId = selectedPlan.id;

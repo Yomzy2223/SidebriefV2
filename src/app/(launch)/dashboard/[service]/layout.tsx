@@ -21,7 +21,7 @@ export default function LaunchLayout({ children }: { children: ReactNode }) {
 		// case "launch":
 		// 	progress = 1;
 		// 	break;
-		case "plan":
+		case "info":
 			progress = 2;
 			break;
 		case "payment":
