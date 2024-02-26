@@ -5,8 +5,6 @@ export const useLaunchSteps = () => {
 	const params: { service: string; productId: string | string[] } =
 		useParams();
 
-	console.log(params);
-
 	let productId = Array.isArray(params.productId)
 		? params.productId[0]
 		: params.productId;

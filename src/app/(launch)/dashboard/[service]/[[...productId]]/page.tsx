@@ -39,7 +39,8 @@ export default function RegistrationPlan({
 	const services = getServices.data?.data.data;
 	const serviceSlug = params.service;
 	const router = useRouter();
-	// const product = useGetProduct(params.productId[0]);
+
+	const product = useGetProduct(params.productId[0]);
 
 	let serviceId: string | undefined;
 
@@ -63,7 +64,7 @@ export default function RegistrationPlan({
 
 	const [openDiv, setOpenDiv] = useState(false);
 
-	const [selectedService, setSelectedService] = useState<string>();
+	const [selectedService, setSelectedService] = useState<string>("");
 	const [selectedCountry, setSelectedCountry] = useState<string>("");
 
 	const getServiceProduct = useGetServiceproduct(serviceId);
@@ -72,15 +73,15 @@ export default function RegistrationPlan({
 		setOpenDiv(false);
 	};
 
-	// useEffect(() => {
-	// 	if (!product.isLoading) {
-	// 		setSelectedService(product.data?.data.data.service.name);
-	// 	}
-	// }, [product.isLoading, product.data?.data.data.service.name]);
+	useEffect(() => {
+		if (!product.isLoading) {
+			const productservice = product.data?.data.data.product;
+			setSelectedService(productservice?.name || "");
+			setSelectedCountry(productservice?.country || "");
+		}
+	}, [product.isLoading, product.data?.data.data.product]);
 
 	const handleSubmit = async () => {
-		console.log(selectedService);
-		console.log(selectedCountry);
 		const selectedPlan = serviceProducts?.find(
 			(el) => el.name === selectedService
 		);
@@ -90,12 +91,20 @@ export default function RegistrationPlan({
 			return;
 		}
 
-		const res = await createNewProduct.mutateAsync({
-			productId: selectedPlan?.id,
-			userId: "5c99014f-4d5f-4771-9c6e-8e56d3afd819",
-		});
+		let productId = params.productId[0];
 
-		router.push(`/dashboard/${params.service}/info/${res.data.data.id}`);
+		if (!productId) {
+			const res = await createNewProduct.mutateAsync({
+				productId: selectedPlan?.id,
+				userId: "5c99014f-4d5f-4771-9c6e-8e56d3afd819",
+			});
+
+			productId = res.data.data.id;
+		}
+
+		// add country to QA
+
+		router.push(`/dashboard/${params.service}/info/${productId}`);
 
 		// const planId = selectedPlan.id;
 		// const productId = params.productId;
@@ -114,8 +123,10 @@ export default function RegistrationPlan({
 	// 	tabs.find((tab) => tab.current)
 	// );
 
-	const loading = getServices.isLoading || getServiceProduct.isLoading;
-	// ||	product.isLoading;
+	const loading =
+		getServices.isLoading ||
+		getServiceProduct.isLoading ||
+		product.isLoading;
 
 	const serviceProducts = getServiceProduct.data?.data.data;
 

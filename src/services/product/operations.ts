@@ -31,4 +31,4 @@ export const addServiceToProduct = ({
 	});
 
 export const getProduct = ({ productId }: { productId: string }) =>
-	axios.get<rootType<productType>>(`/product/${productId}`);
+	axios.get<rootType<productType>>(`/productRequest/${productId}`);

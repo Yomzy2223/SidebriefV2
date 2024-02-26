@@ -10,10 +10,10 @@ export type productType = {
 	status: "pending";
 	createdAt: string;
 	updatedAt: string;
-	serviceId: string | null;
+	productId: string | null;
 	userId: string;
 	productQA: productQAType[];
-	service: serviceProductType;
+	product: serviceProductType;
 };
 
 export type File = {
