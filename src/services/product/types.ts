@@ -1,4 +1,7 @@
-import type { serviceProductType } from "../service/types";
+import type {
+	serviceProductType,
+	serviceFormSubFormType,
+} from "../service/types";
 
 export type productType = {
 	id: string;
@@ -18,7 +21,7 @@ export type productType = {
 
 export type File = {
 	name: string;
-	description: string;
+	description?: string;
 	link: string;
 	type: string;
 };
@@ -43,7 +46,14 @@ export type FormItem = {
 
 export type saveProductQAPayload = {
 	productId: string;
-	form: FormItem[];
+	form: {
+		title: string;
+		description: string;
+		type: string;
+		compulsory: boolean;
+		isGeneral: boolean;
+		subForm: FormItem[];
+	};
 };
 
 export type productQAType = {

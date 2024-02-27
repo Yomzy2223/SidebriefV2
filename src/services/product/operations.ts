@@ -11,15 +11,16 @@ export const createNewProduct = (payload: createProductPayload) =>
 	axios.post<rootType<productType>>("/productRequest", payload);
 
 export const saveProductQA = ({ productId, form }: saveProductQAPayload) =>
-	axios.post<rootType<productQAType[]>>(`/product/form/${productId}`, {
-		form,
-	});
+	axios.post<rootType<productQAType[]>>(
+		`/productRequest/form/${productId}`,
+		form
+	);
 
 export const getproductQA = ({
 	productId,
 }: {
 	productId: string | undefined;
-}) => axios.get<rootType<productQAType[]>>(`/product/form/${productId}`);
+}) => axios.get<rootType<productQAType[]>>(`/productRequest/form/${productId}`);
 
 export const addServiceToProduct = ({
 	productId,

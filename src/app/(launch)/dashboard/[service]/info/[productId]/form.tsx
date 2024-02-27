@@ -13,15 +13,16 @@ import { useActions } from "./actions";
 import { useEffect, useState } from "react";
 import DynamicForm from "@/components/form/dynamicForm";
 import slugify from "slugify";
-import { serviceFormSubFormType } from "@/services/service/types";
+import { serviceFormType } from "@/services/service/types";
 
 export const LaunchForm1 = ({
-	subForms,
+	form,
 	urlProductId,
 }: {
-	subForms: serviceFormSubFormType[];
+	// subForms: serviceFormSubFormType[];
 	// serviceFormId: string;
-	urlProductId?: string;
+	urlProductId: string;
+	form: serviceFormType;
 }) => {
 	const createProduct = useCreateNewProduct();
 
@@ -33,66 +34,47 @@ export const LaunchForm1 = ({
 
 	const productQA = useGetProductQA(urlProductId);
 
-	// const { data, isLoading } = useGetServiceFormSubForms(serviceFormId);
+	console.log(productQA.data?.data);
 
-	// const subForms = data?.data.data;
+	const subForms = form.subForm;
 
 	const { saveFormProductQA, savingForm } = useActions({
-		subForms,
+		form,
 	});
 
 	// console.log(subForms);
 
-	useEffect(() => {
-		if (
-			urlProductId &&
-			!productQA.isLoading &&
-			productQA.data &&
-			!formset
-		) {
-			const QA = productQA.data.data.data;
-			QA.forEach((qa) => {
-				switch (qa.type) {
-					case "country":
-						setValues((prev) => ({
-							...prev,
-							[slugify(qa.question)]: qa.answer[0],
-						}));
-						break;
-					default:
-						setValues((prev) => ({
-							...prev,
-							[slugify(qa.question)]: qa.answer,
-						}));
-				}
-			});
-			setFormset(true);
-		}
-	}, [urlProductId, productQA, formset]);
+	// useEffect(() => {
+	// 	if (
+	// 		urlProductId &&
+	// 		!productQA.isLoading &&
+	// 		productQA.data &&
+	// 		!formset
+	// 	) {
+	// 		const QA = productQA.data.data.data;
+	// 		QA.forEach((qa) => {
+	// 			switch (qa.type) {
+	// 				case "country":
+	// 					setValues((prev) => ({
+	// 						...prev,
+	// 						[slugify(qa.question)]: qa.answer[0],
+	// 					}));
+	// 					break;
+	// 				default:
+	// 					setValues((prev) => ({
+	// 						...prev,
+	// 						[slugify(qa.question)]: qa.answer,
+	// 					}));
+	// 			}
+	// 		});
+	// 		setFormset(true);
+	// 	}
+	// }, [urlProductId, productQA, formset]);
 
-	const submitFormHandler = (values: { [x: string]: string | string[] }) => {
-		if (urlProductId) {
-			saveFormProductQA(urlProductId, values);
-			return;
-		}
-		createProduct.mutate(
-			{
-				// dummy user Id
-				// TODO: user ID should be changed later
-				userId: "5c99014f-4d5f-4771-9c6e-8e56d3afd819",
-			},
-			{
-				onSuccess(data, variables, context) {
-					const productId = data.data.data.id;
-
-					saveFormProductQA(productId, values);
-				},
-				onError(error: any, variables, context) {
-					console.log(error);
-					console.log(error.response.data.error);
-				},
-			}
-		);
+	const submitFormHandler = async (values: {
+		[x: string]: string | string[];
+	}) => {
+		const res = await saveFormProductQA(urlProductId, values, true);
 	};
 
 	return (
