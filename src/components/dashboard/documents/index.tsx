@@ -37,7 +37,7 @@ const renderFile = (file: File) => {
 
 export const DocumentComponent = ({ files }: { files: File[] }) => {
 	return (
-		<Tabs.Group style="underline">
+		<Tabs style="underline">
 			<Tabs.Item active title="Uploaded">
 				<div className="space-y-6">
 					{files.map((file) => (
@@ -50,6 +50,6 @@ export const DocumentComponent = ({ files }: { files: File[] }) => {
 					))}
 				</div>
 			</Tabs.Item>
-		</Tabs.Group>
+		</Tabs>
 	);
 };

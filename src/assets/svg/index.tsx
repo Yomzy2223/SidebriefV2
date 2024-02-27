@@ -19,28 +19,33 @@ import DetailIcon from "./DetailIcon.svg";
 import CalcIcon from "./calc.svg";
 import Settings from "./cog.svg";
 import EllipsisVertical from "./ElpVertical.svg";
-import LaunchIcon from "./launch_icon.svg"
+import LaunchIcon from "./launch_icon.svg";
+import PlanCardEllipse from "./PlanCardEllipse.svg";
+import PlanCardIllustration from "./PlanCardIllustration.svg";
+
 export {
-  AuthPattern,
-  BankIcon,
-  CardIcon,
-  CreditCardIcon,
-  Copy,
-  DetailIcon,
-  GoogleIcon,
-  YahooIcon,
-  BadgeCheck,
-  AngleIcon,
-  LinkIcon,
-  Timer,
-  DotsIcon,
-  AppliedImage,
-  ApprovedImage,
-  Download,
-  ProgressImage,
-  CompletedImage,
-  CalcIcon,
-  Settings,
-  EllipsisVertical,
-  LaunchIcon
+	AuthPattern,
+	BankIcon,
+	CardIcon,
+	CreditCardIcon,
+	Copy,
+	DetailIcon,
+	GoogleIcon,
+	YahooIcon,
+	BadgeCheck,
+	AngleIcon,
+	LinkIcon,
+	Timer,
+	DotsIcon,
+	AppliedImage,
+	ApprovedImage,
+	Download,
+	ProgressImage,
+	CompletedImage,
+	CalcIcon,
+	Settings,
+	EllipsisVertical,
+	LaunchIcon,
+	PlanCardEllipse,
+	PlanCardIllustration,
 };
