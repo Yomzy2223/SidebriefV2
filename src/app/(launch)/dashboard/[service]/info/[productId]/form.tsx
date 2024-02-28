@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/flowbite";
+import { Button, TabsRef } from "@/components/flowbite";
 import { ArrowRight, CogOutline } from "@/assets/icons";
 import { useGetServiceFormSubForms } from "@/services/service";
 import { LoadingSkeleton } from "@/components/input";
@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateNewProduct, useGetProductQA } from "@/services/product";
 import { useGetCountries } from "@/services/service";
 import { useActions } from "./actions";
-import { useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import DynamicForm from "@/components/form/dynamicForm";
 import slugify from "slugify";
 import { serviceFormType } from "@/services/service/types";
@@ -18,11 +18,17 @@ import { serviceFormType } from "@/services/service/types";
 export const LaunchForm1 = ({
   form,
   urlProductId,
+  tabsRef,
+  currentTab = 0,
+  totalNumOfTabs = 1,
 }: {
   // subForms: serviceFormSubFormType[];
   // serviceFormId: string;
   urlProductId: string;
   form: serviceFormType;
+  tabsRef?: MutableRefObject<any>;
+  currentTab?: number;
+  totalNumOfTabs?: number;
 }) => {
   const createProduct = useCreateNewProduct();
 
@@ -32,7 +38,7 @@ export const LaunchForm1 = ({
 
   const productQA = useGetProductQA(urlProductId);
 
-  const latestProductState = productQA.data?.data.data[productQA.data?.data.data.length - 1];
+  const prevFormstates = productQA.data?.data.data.filter((el) => el.title === form.title);
 
   const subForms = form.subForm;
 
@@ -43,7 +49,11 @@ export const LaunchForm1 = ({
   // console.log(subForms);
 
   useEffect(() => {
-    if (urlProductId && !productQA.isLoading && latestProductState && !formset) {
+    if (urlProductId && !productQA.isLoading && prevFormstates && !formset) {
+      const latestProductState = prevFormstates[prevFormstates?.length - 1];
+      if (latestProductState === undefined) {
+        return;
+      }
       latestProductState.subForm.forEach((qa) => {
         switch (qa.type) {
           case "country":
@@ -61,10 +71,16 @@ export const LaunchForm1 = ({
       });
       setFormset(true);
     }
-  }, [urlProductId, productQA, formset, latestProductState]);
+  }, [urlProductId, productQA, formset, form.title, prevFormstates]);
 
   const submitFormHandler = async (values: { [x: string]: string | string[] }) => {
     await saveFormProductQA(urlProductId, values, true);
+    if (tabsRef && currentTab !== totalNumOfTabs - 1) {
+      tabsRef.current.setActiveTab(currentTab + 1);
+    }
+    if (currentTab === totalNumOfTabs - 1) {
+      // check for form completion then proceed or proceed
+    }
   };
 
   return (
