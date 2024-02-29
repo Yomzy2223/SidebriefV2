@@ -16,111 +16,101 @@ import slugify from "slugify";
 import { serviceFormType } from "@/services/service/types";
 
 export const LaunchForm1 = ({
-	form,
-	urlProductId,
+  form,
+  urlProductId,
 }: {
-	// subForms: serviceFormSubFormType[];
-	// serviceFormId: string;
-	urlProductId: string;
-	form: serviceFormType;
+  // subForms: serviceFormSubFormType[];
+  // serviceFormId: string;
+  urlProductId: string;
+  form: serviceFormType;
 }) => {
-	const createProduct = useCreateNewProduct();
+  const createProduct = useCreateNewProduct();
 
-	const [formset, setFormset] = useState(false);
+  const [formset, setFormset] = useState(false);
 
-	const [values, setValues] = useState<{ [key: string]: string | string[] }>(
-		{}
-	);
+  const [values, setValues] = useState<{ [key: string]: string | string[] }>({});
 
-	const productQA = useGetProductQA(urlProductId);
+  const productQA = useGetProductQA(urlProductId);
 
-	console.log(productQA.data?.data);
+  const latestProductState = productQA.data?.data.data[productQA.data?.data.data.length - 1];
 
-	const subForms = form.subForm;
+  const subForms = form.subForm;
 
-	const { saveFormProductQA, savingForm } = useActions({
-		form,
-	});
+  const { saveFormProductQA, savingForm } = useActions({
+    form,
+  });
 
-	// console.log(subForms);
+  // console.log(subForms);
 
-	// useEffect(() => {
-	// 	if (
-	// 		urlProductId &&
-	// 		!productQA.isLoading &&
-	// 		productQA.data &&
-	// 		!formset
-	// 	) {
-	// 		const QA = productQA.data.data.data;
-	// 		QA.forEach((qa) => {
-	// 			switch (qa.type) {
-	// 				case "country":
-	// 					setValues((prev) => ({
-	// 						...prev,
-	// 						[slugify(qa.question)]: qa.answer[0],
-	// 					}));
-	// 					break;
-	// 				default:
-	// 					setValues((prev) => ({
-	// 						...prev,
-	// 						[slugify(qa.question)]: qa.answer,
-	// 					}));
-	// 			}
-	// 		});
-	// 		setFormset(true);
-	// 	}
-	// }, [urlProductId, productQA, formset]);
+  useEffect(() => {
+    if (urlProductId && !productQA.isLoading && latestProductState && !formset) {
+      latestProductState.subForm.forEach((qa) => {
+        switch (qa.type) {
+          case "country":
+            setValues((prev) => ({
+              ...prev,
+              [slugify(qa.question)]: qa.answer[0],
+            }));
+            break;
+          default:
+            setValues((prev) => ({
+              ...prev,
+              [slugify(qa.question)]: qa.answer,
+            }));
+        }
+      });
+      setFormset(true);
+    }
+  }, [urlProductId, productQA, formset, latestProductState]);
 
-	const submitFormHandler = async (values: {
-		[x: string]: string | string[];
-	}) => {
-		const res = await saveFormProductQA(urlProductId, values, true);
-	};
+  const submitFormHandler = async (values: { [x: string]: string | string[] }) => {
+    await saveFormProductQA(urlProductId, values, true);
+  };
 
-	return (
-		<div
-			// onSubmit={form.handleSubmit(submitFormHandler)}
-			className="flex flex-col gap-20 items-stretch"
-		>
-			{productQA.isLoading ? (
-				<>
-					{[1, 2, 3]?.map((number) => (
-						<LoadingSkeleton key={number} />
-					))}
-				</>
-			) : (
-				<>
-					<DynamicForm
-						formInfo={
-							subForms?.map((input) => {
-								return {
-									name: slugify(input.question),
-									type: input.type,
-									id: input.id,
-									label: input.question,
-									selectOptions: input.options,
-									value: values[input.type],
-								};
-							})!
-						}
-						onFormSubmit={submitFormHandler}
-					>
-						<Button
-							color="secondary"
-							size={"lg"}
-							type="submit"
-							isProcessing={createProduct.isPending || savingForm}
-							// disabled={isLoading}
-						>
-							<div className="space-x-2 flex items-center">
-								<p>Continue</p>
-								<ArrowRight />
-							</div>
-						</Button>
-					</DynamicForm>
-				</>
-			)}
-			{/* <Button
+  return (
+    <div
+      // onSubmit={form.handleSubmit(submitFormHandler)}
+      className="flex flex-col gap-20 items-stretch"
+    >
+      {productQA.isLoading ? (
+        <>
+          {[1, 2, 3]?.map((number) => (
+            <LoadingSkeleton key={number} />
+          ))}
+        </>
+      ) : (
+        <>
+          <DynamicForm
+            formInfo={
+              subForms?.map((input) => {
+                return {
+                  name: slugify(input.question),
+                  type: input.type,
+                  id: input.id,
+                  label: input.question,
+                  selectOptions: input.options,
+                  value: values[slugify(input.question)],
+                };
+              })!
+            }
+            onFormSubmit={submitFormHandler}
+          >
+            <Button
+              color="secondary"
+              size={"lg"}
+              type="submit"
+              isProcessing={createProduct.isPending || savingForm}
+              // disabled={isLoading}
+            >
+              <div className="space-x-2 flex items-center">
+                <p>Continue</p>
+                <ArrowRight />
+              </div>
+            </Button>
+          </DynamicForm>
+        </>
+      )}
+      {/* <Button
 				color="secondary"
 				size={"lg"}
 				type="submit"
@@ -132,6 +122,6 @@ export const LaunchForm1 = ({
 					<ArrowRight />
 				</div>
 			</Button> */}
-		</div>
-	);
+    </div>
+  );
 };
