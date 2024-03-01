@@ -12,8 +12,9 @@ import { useGetCountries } from "@/services/service";
 import { useActions } from "./actions";
 import { MutableRefObject, useEffect, useState } from "react";
 import DynamicForm from "@/components/form/dynamicForm";
-import slugify from "slugify";
+import { sluggify } from "@/lib/utils";
 import { serviceFormType } from "@/services/service/types";
+import { useRouter, useParams } from "next/navigation";
 
 export const LaunchForm1 = ({
   form,
@@ -31,6 +32,10 @@ export const LaunchForm1 = ({
   totalNumOfTabs?: number;
 }) => {
   const createProduct = useCreateNewProduct();
+
+  const router = useRouter();
+
+  const params: { service: string } = useParams();
 
   const [formset, setFormset] = useState(false);
 
@@ -57,15 +62,17 @@ export const LaunchForm1 = ({
       latestProductState.subForm.forEach((qa) => {
         switch (qa.type) {
           case "country":
+          case "address":
+          case "email address":
             setValues((prev) => ({
               ...prev,
-              [slugify(qa.question)]: qa.answer[0],
+              [sluggify(qa.question || "")]: qa.answer[0],
             }));
             break;
           default:
             setValues((prev) => ({
               ...prev,
-              [slugify(qa.question)]: qa.answer,
+              [sluggify(qa.question || "")]: qa.answer,
             }));
         }
       });
@@ -79,7 +86,7 @@ export const LaunchForm1 = ({
       tabsRef.current.setActiveTab(currentTab + 1);
     }
     if (currentTab === totalNumOfTabs - 1) {
-      // check for form completion then proceed or proceed
+      router.push(`/dashboard/${params.service}/kyc/${urlProductId}`);
     }
   };
 
@@ -100,12 +107,12 @@ export const LaunchForm1 = ({
             formInfo={
               subForms?.map((input) => {
                 return {
-                  name: slugify(input.question),
+                  name: sluggify(input.question),
                   type: input.type,
                   id: input.id,
                   label: input.question,
                   selectOptions: input.options,
-                  value: values[slugify(input.question)],
+                  value: values[sluggify(input.question)],
                 };
               })!
             }

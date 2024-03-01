@@ -22,23 +22,25 @@ export const ProductTabs = ({
       ref={tabsRef}
       onActiveTabChange={(tab) => setActiveTab(tab)}
     >
-      {allServiceForms.map((el, i, arr) => (
-        <Tabs.Item active title={el.title} key={el.id}>
-          <div className="space-y-5 w-full">
-            <div className="flex flex-col">
-              <h6 className="text-2xl leading-normal font-semibold">{el.title}</h6>
-              <p className="font-medium leading-normal text-primary">{el.description}</p>
+      {allServiceForms.map((el, i, arr) => {
+        return (
+          <Tabs.Item active title={el.title} key={el.id}>
+            <div className="space-y-5 w-full">
+              <div className="flex flex-col">
+                <h6 className="text-2xl leading-normal font-semibold">{el.title}</h6>
+                <p className="font-medium leading-normal text-primary">{el.description}</p>
+              </div>
+              <LaunchForm1
+                urlProductId={productId}
+                form={el}
+                tabsRef={tabsRef}
+                currentTab={i}
+                totalNumOfTabs={arr.length}
+              />
             </div>
-            <LaunchForm1
-              urlProductId={productId}
-              form={el}
-              tabsRef={tabsRef}
-              currentTab={i}
-              totalNumOfTabs={arr.length}
-            />
-          </div>
-        </Tabs.Item>
-      ))}
+          </Tabs.Item>
+        );
+      })}
     </Tabs>
   );
 };
