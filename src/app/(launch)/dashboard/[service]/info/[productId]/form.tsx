@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/flowbite";
+import { Button, TabsRef } from "@/components/flowbite";
 import { ArrowRight, CogOutline } from "@/assets/icons";
 import { useGetServiceFormSubForms } from "@/services/service";
 import { LoadingSkeleton } from "@/components/input";
@@ -10,21 +10,32 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateNewProduct, useGetProductQA } from "@/services/product";
 import { useGetCountries } from "@/services/service";
 import { useActions } from "./actions";
-import { useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import DynamicForm from "@/components/form/dynamicForm";
-import slugify from "slugify";
+import { sluggify } from "@/lib/utils";
 import { serviceFormType } from "@/services/service/types";
+import { useRouter, useParams } from "next/navigation";
 
 export const LaunchForm1 = ({
   form,
   urlProductId,
+  tabsRef,
+  currentTab = 0,
+  totalNumOfTabs = 1,
 }: {
   // subForms: serviceFormSubFormType[];
   // serviceFormId: string;
   urlProductId: string;
   form: serviceFormType;
+  tabsRef?: MutableRefObject<any>;
+  currentTab?: number;
+  totalNumOfTabs?: number;
 }) => {
   const createProduct = useCreateNewProduct();
+
+  const router = useRouter();
+
+  const params: { service: string } = useParams();
 
   const [formset, setFormset] = useState(false);
 
@@ -32,7 +43,7 @@ export const LaunchForm1 = ({
 
   const productQA = useGetProductQA(urlProductId);
 
-  const latestProductState = productQA.data?.data.data[productQA.data?.data.data.length - 1];
+  const prevFormstates = productQA.data?.data.data.filter((el) => el.title === form.title);
 
   const subForms = form.subForm;
 
@@ -43,28 +54,40 @@ export const LaunchForm1 = ({
   // console.log(subForms);
 
   useEffect(() => {
-    if (urlProductId && !productQA.isLoading && latestProductState && !formset) {
+    if (urlProductId && !productQA.isLoading && prevFormstates && !formset) {
+      const latestProductState = prevFormstates[prevFormstates?.length - 1];
+      if (latestProductState === undefined) {
+        return;
+      }
       latestProductState.subForm.forEach((qa) => {
         switch (qa.type) {
           case "country":
+          case "address":
+          case "email address":
             setValues((prev) => ({
               ...prev,
-              [slugify(qa.question)]: qa.answer[0],
+              [sluggify(qa.question || "")]: qa.answer[0],
             }));
             break;
           default:
             setValues((prev) => ({
               ...prev,
-              [slugify(qa.question)]: qa.answer,
+              [sluggify(qa.question || "")]: qa.answer,
             }));
         }
       });
       setFormset(true);
     }
-  }, [urlProductId, productQA, formset, latestProductState]);
+  }, [urlProductId, productQA, formset, form.title, prevFormstates]);
 
   const submitFormHandler = async (values: { [x: string]: string | string[] }) => {
     await saveFormProductQA(urlProductId, values, true);
+    if (tabsRef && currentTab !== totalNumOfTabs - 1) {
+      tabsRef.current.setActiveTab(currentTab + 1);
+    }
+    if (currentTab === totalNumOfTabs - 1) {
+      router.push(`/dashboard/${params.service}/kyc/${urlProductId}`);
+    }
   };
 
   return (
@@ -84,12 +107,12 @@ export const LaunchForm1 = ({
             formInfo={
               subForms?.map((input) => {
                 return {
-                  name: slugify(input.question),
+                  name: sluggify(input.question),
                   type: input.type,
                   id: input.id,
                   label: input.question,
                   selectOptions: input.options,
-                  value: values[slugify(input.question)],
+                  value: values[sluggify(input.question)],
                 };
               })!
             }

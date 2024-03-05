@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { pdf, png, jpg } from "@/assets/images";
 import { StaticImageData } from "next/image";
 import * as confetti from "canvas-confetti";
+import slugify from "slugify";
 
 interface FileTypeImage {
   id: string;
@@ -66,4 +67,10 @@ export const ConfettiDesign = (): void => {
 export function isValidUUID(uuid: string): boolean {
   const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   return uuidPattern.test(uuid);
+}
+
+const slugOptions = { remove: /[*+~.()'"!:@]/g, strict: true, lower: true };
+
+export function sluggify(s: string) {
+  return slugify(s, slugOptions);
 }
