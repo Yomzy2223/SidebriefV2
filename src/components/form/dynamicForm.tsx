@@ -1,28 +1,18 @@
 "use client";
 
-import {
-  Checkbox,
-  FileInput,
-  Label,
-  Radio,
-  Select,
-  TextInput,
-  ToggleSwitch,
-} from "flowbite-react";
-import React from "react";
-import { useForm } from "react-hook-form";
+import { Checkbox, FileInput, Label, Radio, Select, TextInput, ToggleSwitch } from "flowbite-react";
+import React, { ChangeEvent, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DynamicFormProps } from "./constants";
+import { BusinessNameInput, BusinessObjectiveInput, CountryInput } from "../input";
+import { useDynamic } from "@/hooks/useDynamic";
 
-const DynamicForm = ({
-  children,
-  formInfo,
-  defaultValues = {},
-  formSchema,
-  onFormSubmit,
-}: DynamicFormProps) => {
-  type formType = z.infer<typeof formSchema>;
+const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => {
+  const { defaultValues, schema } = useDynamic({ subForms: formInfo });
+
+  type formType = z.infer<typeof schema>;
 
   // Form definition
   const {
@@ -32,21 +22,30 @@ const DynamicForm = ({
     formState: { errors },
     getValues,
     setValue,
+    control,
   } = useForm<formType>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(schema),
     defaultValues,
   });
 
   // Submit handler
   function onSubmit(values: formType) {
+    // console.log(values);
     onFormSubmit && onFormSubmit(values);
   }
 
+  useEffect(() => {
+    (formInfo || []).forEach((form) => {
+      if (form.value) {
+        setValue(form.name, form.value);
+      }
+    });
+  }, [formInfo, setValue]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      {formInfo.map((el, i: number) => {
-        const isTextInput =
-          el.type === "text" || el.type === "password" || el.type === "email";
+      {(formInfo || []).map((el, i: number) => {
+        const isTextInput = el.type === "text" || el.type === "password" || el.type === "email";
 
         return (
           <div key={i}>
@@ -61,10 +60,44 @@ const DynamicForm = ({
                 id={el.name}
                 type={el.type}
                 sizing="md"
-                helperText={<>{errors[el.name]?.message}</>}
-                color={errors[el.name] && "failure"}
+                helperText={<>{errors[el.name as keyof typeof errors]?.message}</>}
+                color={errors[el.name as keyof typeof errors] && "failure"}
                 {...el.textInputProp}
                 {...register(el.name)}
+              />
+            )}
+
+            {el.type === "email address" && (
+              <TextInput
+                id={el.name}
+                type={"text"}
+                sizing="md"
+                helperText={<>{errors[el.name as keyof typeof errors]?.message}</>}
+                color={errors[el.name as keyof typeof errors] && "failure"}
+                {...register(el.name)}
+                // value={watch(el.name) || ""}
+                // onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                //   setValue(el.name, event.target.value)
+                // }
+              />
+            )}
+
+            {el.type === "address" && (
+              <Controller
+                name={el.name}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <TextInput
+                      id={el.name}
+                      type={"text"}
+                      sizing="md"
+                      helperText={<>{errors[el.name as keyof typeof errors]?.message}</>}
+                      color={errors[el.name as keyof typeof errors] && "failure"}
+                      {...field}
+                    />
+                  );
+                }}
               />
             )}
 
@@ -72,9 +105,7 @@ const DynamicForm = ({
               <Checkbox id={el.name} defaultChecked {...register(el.name)} />
             )}
 
-            {el.type === "radio" && (
-              <Radio id={el.name} {...register(el.name)} />
-            )}
+            {el.type === "radio" && <Radio id={el.name} {...register(el.name)} />}
 
             {el.type === "file" && (
               <FileInput
@@ -88,8 +119,8 @@ const DynamicForm = ({
               <Select
                 id={el.name}
                 placeholder="dkcdslcj"
-                color={errors[el.name] && "failure"}
-                helperText={<>{errors[el.name]?.message}</>}
+                color={errors[el.name as keyof typeof errors] && "failure"}
+                helperText={<>{errors[el.name as keyof typeof errors]?.message}</>}
                 {...el.selectProp}
                 {...register(el.name)}
               >
@@ -97,6 +128,35 @@ const DynamicForm = ({
                   <option key={option}>{option}</option>
                 ))}
               </Select>
+            )}
+
+            {el.type === "business name" && (
+              <BusinessNameInput
+                id={el.id!}
+                // question={el.}
+                value={watch(el.name) || []}
+                setValue={(value: string[]) => setValue(el.name, value)}
+                error={errors[el.name as keyof typeof errors]?.message as string | undefined}
+              />
+            )}
+
+            {el.type === "objectives" && (
+              <BusinessObjectiveInput
+                id={el.id!}
+                // question={el.question}
+                options={el.selectOptions || []}
+                value={watch(el.name) || []}
+                setValue={(value: string[]) => setValue(el.name, value)}
+                error={errors[el.name as keyof typeof errors]?.message as string | undefined}
+              />
+            )}
+
+            {el.type === "countries" && (
+              <CountryInput
+                id={el.id}
+                value={watch(el.name) || []}
+                setValue={(value: string) => setValue(el.name, value)}
+              />
             )}
           </div>
         );
