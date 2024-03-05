@@ -89,3 +89,38 @@ export type SubformQAType = {
   requestQAId: string;
   type: string;
 };
+
+export type productSubFormType = {
+  id: string;
+  question: string;
+  type: string;
+  options: string[];
+  formId: string;
+  compulsory: true;
+  fileName: string | null;
+  fileLink: string | null;
+  fileType: string | null;
+  fileSize: string | null;
+  allowOther: boolean;
+  documentType: string;
+  dependsOn: {
+    field: string;
+    options: string[];
+  };
+  createdAt: string;
+  updatedAt: string;
+  isDeprecated: boolean;
+};
+
+export type productFormType = {
+  id: string;
+  title: string;
+  type: string;
+  description: string;
+  compulsory: boolean;
+  createdAt: string;
+  isDeprecated: boolean;
+  updatedAt: string;
+  productId: string;
+  productSubForm: productSubFormType[];
+};

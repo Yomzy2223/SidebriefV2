@@ -7,7 +7,7 @@ import { ArrowRight, CogOutline } from "@/assets/icons";
 import { useGetServiceFormSubForms } from "@/services/service";
 import { LoadingSkeleton } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateNewProduct, useGetProductQA } from "@/services/product";
+import { useGetProductQA } from "@/services/product";
 import { useGetCountries } from "@/services/service";
 import { useActions } from "./actions";
 import { MutableRefObject, useEffect, useState } from "react";
@@ -31,7 +31,7 @@ export const LaunchForm1 = ({
   currentTab?: number;
   totalNumOfTabs?: number;
 }) => {
-  const createProduct = useCreateNewProduct();
+  // const createProduct = useCreateNewProduct();
 
   const router = useRouter();
 
@@ -122,7 +122,7 @@ export const LaunchForm1 = ({
               color="secondary"
               size={"lg"}
               type="submit"
-              isProcessing={createProduct.isPending || savingForm}
+              isProcessing={savingForm}
               // disabled={isLoading}
             >
               <div className="space-x-2 flex items-center">
