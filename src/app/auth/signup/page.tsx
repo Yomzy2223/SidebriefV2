@@ -5,7 +5,7 @@ import DynamicForm from "@/components/form/dynamicForm";
 import { AuthStepper } from "@/components/stepper/auth";
 import { useResponse } from "@/hooks/useResponse";
 import { Button } from "flowbite-react";
-import { ArrowRight, ArrowRightCircle } from "lucide-react";
+import { ArrowRightCircle } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -34,17 +34,12 @@ const SignUp = () => {
     if (response?.error) handleError({ error: response?.error });
     else {
       handleSuccess({ data: "Sign up successfully" });
-      push("/");
+      push("/auth/signup/select-service");
     }
   };
 
   const handleSignUpWithGoogle = async () => {
     await signIn("google", { redirect: true });
-  };
-
-  const handleSignUpWithYahoo = async () => {
-    // const response = await signIn("yahoo");
-    // console.log(response);
   };
 
   return (
@@ -53,7 +48,6 @@ const SignUp = () => {
       description="Join our 500+ customers to scale your business."
       handlers={{
         google: handleSignUpWithGoogle,
-        yahoo: handleSignUpWithYahoo,
       }}
     >
       <DynamicForm

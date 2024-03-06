@@ -1,7 +1,7 @@
 "use client";
 
-import { Checkbox, FileInput, Label, Radio, Select, TextInput, ToggleSwitch } from "flowbite-react";
-import React, { ChangeEvent, useEffect } from "react";
+import { Checkbox, FileInput, Label, Radio, Select, TextInput } from "flowbite-react";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -9,8 +9,17 @@ import { DynamicFormProps } from "./constants";
 import { BusinessNameInput, BusinessObjectiveInput, CountryInput } from "../input";
 import { useDynamic } from "@/hooks/useDynamic";
 
-const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => {
-  const { defaultValues, schema } = useDynamic({ subForms: formInfo });
+const DynamicForm = ({
+  children,
+  formInfo,
+  defaultValues,
+  formSchema,
+  onFormSubmit,
+}: DynamicFormProps) => {
+  const dynamic = useDynamic({ subForms: formInfo });
+
+  const schema = formSchema || dynamic.schema;
+  const dValues = defaultValues || dynamic.defaultValues;
 
   type formType = z.infer<typeof schema>;
 
@@ -25,7 +34,7 @@ const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => 
     control,
   } = useForm<formType>({
     resolver: zodResolver(schema),
-    defaultValues,
+    defaultValues: dValues,
   });
 
   // Submit handler
@@ -35,17 +44,16 @@ const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => 
   }
 
   useEffect(() => {
-    (formInfo || []).forEach((form) => {
-      if (form.value) {
-        setValue(form.name, form.value);
-      }
-    });
+    if (dValues) {
+      formInfo.forEach((el) => setValue(el.name, defaultValues[el.name] || el.value));
+    }
   }, [formInfo, setValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       {(formInfo || []).map((el, i: number) => {
         const isTextInput = el.type === "text" || el.type === "password" || el.type === "email";
+        const errorMsg = errors[el.name]?.message;
 
         return (
           <div key={i}>
@@ -60,8 +68,8 @@ const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => 
                 id={el.name}
                 type={el.type}
                 sizing="md"
-                helperText={<>{errors[el.name as keyof typeof errors]?.message}</>}
-                color={errors[el.name as keyof typeof errors] && "failure"}
+                helperText={<>{errorMsg}</>}
+                color={errorMsg && "failure"}
                 {...el.textInputProp}
                 {...register(el.name)}
               />
@@ -72,8 +80,8 @@ const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => 
                 id={el.name}
                 type={"text"}
                 sizing="md"
-                helperText={<>{errors[el.name as keyof typeof errors]?.message}</>}
-                color={errors[el.name as keyof typeof errors] && "failure"}
+                helperText={<>{errorMsg}</>}
+                color={errorMsg && "failure"}
                 {...register(el.name)}
                 // value={watch(el.name) || ""}
                 // onChange={(event: ChangeEvent<HTMLInputElement>) =>
@@ -92,8 +100,8 @@ const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => 
                       id={el.name}
                       type={"text"}
                       sizing="md"
-                      helperText={<>{errors[el.name as keyof typeof errors]?.message}</>}
-                      color={errors[el.name as keyof typeof errors] && "failure"}
+                      helperText={<>{errorMsg}</>}
+                      color={errorMsg && "failure"}
                       {...field}
                     />
                   );
@@ -119,8 +127,8 @@ const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => 
               <Select
                 id={el.name}
                 placeholder="dkcdslcj"
-                color={errors[el.name as keyof typeof errors] && "failure"}
-                helperText={<>{errors[el.name as keyof typeof errors]?.message}</>}
+                color={errorMsg && "failure"}
+                helperText={<>{errorMsg}</>}
                 {...el.selectProp}
                 {...register(el.name)}
               >
@@ -136,7 +144,7 @@ const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => 
                 // question={el.}
                 value={watch(el.name) || []}
                 setValue={(value: string[]) => setValue(el.name, value)}
-                error={errors[el.name as keyof typeof errors]?.message as string | undefined}
+                error={errorMsg as string | undefined}
               />
             )}
 
@@ -147,7 +155,7 @@ const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => 
                 options={el.selectOptions || []}
                 value={watch(el.name) || []}
                 setValue={(value: string[]) => setValue(el.name, value)}
-                error={errors[el.name as keyof typeof errors]?.message as string | undefined}
+                error={errorMsg as string | undefined}
               />
             )}
 

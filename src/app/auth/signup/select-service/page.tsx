@@ -25,9 +25,7 @@ const SelectService = () => {
 
   return (
     <div>
-      <h2 className="hidden sb-text-32 font-semibold mb-2 sm:flex">
-        Create an account for free
-      </h2>
+      <h2 className="hidden sb-text-32 font-semibold mb-2 sm:flex">Create an account for free</h2>
 
       <h3 className="mb-7 text-foreground-3 sm:mt-10">WELCOME TO SIDEBRIEF</h3>
       <div className="sb-text-16 font-semibold mb-6">
@@ -38,8 +36,8 @@ const SelectService = () => {
           className="border-none outline-none placeholder:font-normal placeholder:italic"
           onChange={(e) => setName(e.target.value)}
         />
-        , You’re welcome to Sidebrief, where we handle everything about your
-        business. Tell us why you are here.
+        , You’re welcome to Sidebrief, where we handle all your businesses' legal works. Tell us why
+        you are here.
       </div>
 
       <div className="grid grid-cols-2 gap-2 mb-12 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 lg:mb-6">
@@ -58,11 +56,7 @@ const SelectService = () => {
       <AuthStepper progress={2} />
 
       <div className="flex justify-between">
-        <Button
-          color="plain"
-          size="fit"
-          className="text-destructive-foreground"
-        >
+        <Button color="plain" size="fit" className="text-destructive-foreground">
           Skip to Dashboard <ChevronRight />
         </Button>
         <Button color="secondary" onClick={handleContinue}>
@@ -79,37 +73,31 @@ const services = [
   {
     icon: LaunchIcon,
     name: "Register a Business",
-    description:
-      "Register your business without the need for any physical paperwork.",
+    description: "Register your business without the need for any physical paperwork.",
   },
   {
     icon: LaunchIcon,
     name: "Onboard",
-    description:
-      "Register your business without the need for any physical paperwork.",
+    description: "Register your business without the need for any physical paperwork.",
   },
   {
     icon: LaunchIcon,
     name: "Manage a Business",
-    description:
-      "Register your business without the need for any physical paperwork.",
+    description: "Register your business without the need for any physical paperwork.",
   },
   {
     icon: LaunchIcon,
     name: "Tax",
-    description:
-      "Register your business without the need for any physical paperwork.",
+    description: "Register your business without the need for any physical paperwork.",
   },
   {
     icon: LaunchIcon,
     name: "Compliance",
-    description:
-      "Register your business without the need for any physical paperwork.",
+    description: "Register your business without the need for any physical paperwork.",
   },
   {
     icon: LaunchIcon,
     name: "Intellectual",
-    description:
-      "Register your business without the need for any physical paperwork.",
+    description: "Register your business without the need for any physical paperwork.",
   },
 ];

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Sidebrief from "@/assets/Sidebrief.png";
 import { SearchIcon, BellOutline, CogOutline } from "@/assets/icons";
@@ -46,7 +48,7 @@ const IconNav = () => {
           <CogOutline />
         </Button>
       </div>
-      {/* <Popover>
+      <Popover>
         <PopoverTrigger asChild>
           <Button color="ghost" size="fit" className="flex items-center">
             <Avatar placeholderInitials="OG" rounded />
@@ -63,7 +65,7 @@ const IconNav = () => {
             Logout
           </Button>
         </PopoverContent>
-      </Popover> */}
+      </Popover>
     </div>
   );
 };

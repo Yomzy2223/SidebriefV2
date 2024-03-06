@@ -9,7 +9,7 @@ import React, { ReactNode } from "react";
 interface propType {
   children: ReactNode;
   login?: boolean;
-  handlers?: { google: () => void; yahoo: () => void };
+  handlers?: { google: () => void };
   title: string;
   description?: string;
   hideSocials?: boolean;

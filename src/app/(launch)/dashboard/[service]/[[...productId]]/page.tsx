@@ -9,7 +9,11 @@ import { ServicesModal } from "@/components/services/ServicesModal";
 import { X } from "lucide-react";
 import { ProceedPayModal } from "./ProceedPayModal";
 import { useGetServiceproduct, useGetServices } from "@/services/service";
-import { useAddServiceToProduct, useGetProduct, useCreateNewProduct } from "@/services/product";
+import {
+  useAddServiceToProduct,
+  useGetProductRequest,
+  useCreateNewProductRequest,
+} from "@/services/product";
 import { redirect } from "next/navigation";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
@@ -31,12 +35,12 @@ export default function RegistrationPlan({
   params: { productId: string[]; service: string };
 }) {
   const getServices = useGetServices();
-  const createNewProduct = useCreateNewProduct();
+  const createNewProduct = useCreateNewProductRequest();
   const services = getServices.data?.data.data;
   const serviceSlug = params.service;
   const router = useRouter();
 
-  const product = useGetProduct(params.productId?.[0] || "");
+  const product = useGetProductRequest(params.productId?.[0]);
 
   let serviceId: string | undefined;
 
@@ -83,7 +87,7 @@ export default function RegistrationPlan({
       return;
     }
 
-    let productId = params.productId[0];
+    let productId = params.productId?.[0];
 
     if (!productId) {
       const res = await createNewProduct.mutateAsync({
