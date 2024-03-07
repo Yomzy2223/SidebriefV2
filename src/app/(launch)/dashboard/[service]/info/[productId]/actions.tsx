@@ -4,11 +4,15 @@ import { useSaveProductQA } from "@/services/product";
 import { FormItem } from "@/services/product/types";
 import { useRouter, useParams } from "next/navigation";
 import { sluggify } from "@/lib/utils";
+import { productFormType } from "@/services/product/types";
 
-export const useActions = ({ form }: { form: serviceFormType }) => {
+// typescript type guard
+function isServiceFormType(form: any): form is serviceFormType {
+  return "serviceCategoryId" in form;
+}
+
+export const useActions = ({ form }: { form: serviceFormType | productFormType }) => {
   const saveProductQA = useSaveProductQA();
-  const router = useRouter();
-  const params: { service: string } = useParams();
 
   const saveFormProductQA = async (
     productId: string,
@@ -16,7 +20,9 @@ export const useActions = ({ form }: { form: serviceFormType }) => {
     isGeneral?: boolean
   ) => {
     const formQA: FormItem[] = Object.keys(values).map((slug) => {
-      const subForm = form.subForm?.find((el) => sluggify(el.question) === slug);
+      const subForm = isServiceFormType(form)
+        ? form.subForm?.find((el) => sluggify(el.question) === slug)
+        : form.productSubForm?.find((el) => sluggify(el.question) === slug);
 
       return {
         question: subForm?.question,
