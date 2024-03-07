@@ -39,7 +39,9 @@ export const useDynamic = ({
                 case "address":
                   return [field.name, z.string().min(1, "cannot be empty")];
                 case "email address":
-                  return [field.name, z.string().min(1, "Cannot be empty")];
+                  return [field.name, z.string().email().min(1, "Cannot be empty")];
+                case "short answer":
+                  return [field.name, z.string().min(1, "cannot be empty")];
                 // Add more cases as needed
                 default:
                   return [field.type, z.any()]; // Default validation if no specific type matches
@@ -55,7 +57,6 @@ export const useDynamic = ({
           subForms.map((field) => {
             switch (field.type) {
               case "business name":
-                return [field.name, []];
               case "objectives":
                 return [field.name, []];
               default:

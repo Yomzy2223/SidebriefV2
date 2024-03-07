@@ -9,7 +9,7 @@ import { LoadingSkeleton } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGetProductQA } from "@/services/product";
 import { useGetCountries } from "@/services/service";
-import { useActions } from "./actions";
+import { useActions, useRemember } from "./actions";
 import { MutableRefObject, useEffect, useState } from "react";
 import DynamicForm from "@/components/form/dynamicForm";
 import { sluggify } from "@/lib/utils";
@@ -37,48 +37,13 @@ export const LaunchForm1 = ({
 
   const params: { service: string } = useParams();
 
-  const [formset, setFormset] = useState(false);
-
-  const [values, setValues] = useState<{ [key: string]: string | string[] }>({});
-
-  const productQA = useGetProductQA(urlProductId);
-
-  const prevFormstates = productQA.data?.data.data.filter((el) => el.title === form.title);
-
   const subForms = form.subForm;
 
   const { saveFormProductQA, savingForm } = useActions({
     form,
   });
 
-  // console.log(subForms);
-
-  useEffect(() => {
-    if (urlProductId && !productQA.isLoading && prevFormstates && !formset) {
-      const latestProductState = prevFormstates[prevFormstates?.length - 1];
-      if (latestProductState === undefined) {
-        return;
-      }
-      latestProductState.subForm.forEach((qa) => {
-        switch (qa.type) {
-          case "country":
-          case "address":
-          case "email address":
-            setValues((prev) => ({
-              ...prev,
-              [sluggify(qa.question || "")]: qa.answer[0],
-            }));
-            break;
-          default:
-            setValues((prev) => ({
-              ...prev,
-              [sluggify(qa.question || "")]: qa.answer,
-            }));
-        }
-      });
-      setFormset(true);
-    }
-  }, [urlProductId, productQA, formset, form.title, prevFormstates]);
+  const { values, isLoading } = useRemember({ productId: urlProductId, form: form });
 
   const submitFormHandler = async (values: { [x: string]: string | string[] }) => {
     await saveFormProductQA(urlProductId, values, true);
@@ -95,7 +60,7 @@ export const LaunchForm1 = ({
       // onSubmit={form.handleSubmit(submitFormHandler)}
       className="flex flex-col gap-20 items-stretch"
     >
-      {productQA.isLoading ? (
+      {isLoading ? (
         <>
           {[1, 2, 3]?.map((number) => (
             <LoadingSkeleton key={number} />

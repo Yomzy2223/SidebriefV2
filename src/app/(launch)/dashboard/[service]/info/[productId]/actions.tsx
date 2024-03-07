@@ -5,6 +5,9 @@ import { FormItem } from "@/services/product/types";
 import { useRouter, useParams } from "next/navigation";
 import { sluggify } from "@/lib/utils";
 import { productFormType } from "@/services/product/types";
+import { useEffect } from "react";
+import { useGetProductQA } from "@/services/product";
+import { useState } from "react";
 
 // typescript type guard
 function isServiceFormType(form: any): form is serviceFormType {
@@ -62,5 +65,50 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
   return {
     saveFormProductQA,
     savingForm: saveProductQA.isPending,
+  };
+};
+
+export const useRemember = ({
+  productId,
+  form,
+}: {
+  productId: string;
+  form: serviceFormType | productFormType;
+}) => {
+  const productQA = useGetProductQA(productId);
+
+  const prevFormstates = productQA.data?.data.data.filter((el) => el.title === form.title);
+
+  const [values, setValues] = useState<{ [key: string]: string | string[] }>({});
+
+  useEffect(() => {
+    if (productId && !productQA.isLoading && prevFormstates) {
+      const latestProductState = prevFormstates[prevFormstates?.length - 1];
+      if (latestProductState === undefined) {
+        return;
+      }
+      const newValues: { [key: string]: string | string[] } = {};
+
+      latestProductState.subForm.forEach((qa) => {
+        switch (qa.type) {
+          case "country":
+          case "address":
+          case "email address":
+            newValues[sluggify(qa.question || "")] = qa.answer[0];
+            break;
+          default:
+            newValues[sluggify(qa.question || "")] = qa.answer;
+        }
+      });
+
+      if (JSON.stringify(newValues) !== JSON.stringify(values)) {
+        setValues(newValues);
+      }
+    }
+  }, [productId, productQA.isLoading, values, prevFormstates]);
+
+  return {
+    values,
+    isLoading: productQA.isPending,
   };
 };

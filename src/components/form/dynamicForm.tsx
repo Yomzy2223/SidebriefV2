@@ -67,22 +67,9 @@ const DynamicForm = ({ children, formInfo, onFormSubmit }: DynamicFormProps) => 
               />
             )}
 
-            {el.type === "email address" && (
-              <TextInput
-                id={el.name}
-                type={"text"}
-                sizing="md"
-                helperText={<>{errors[el.name as keyof typeof errors]?.message}</>}
-                color={errors[el.name as keyof typeof errors] && "failure"}
-                {...register(el.name)}
-                // value={watch(el.name) || ""}
-                // onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                //   setValue(el.name, event.target.value)
-                // }
-              />
-            )}
-
-            {el.type === "address" && (
+            {(el.type === "address" ||
+              el.type === "email address" ||
+              el.type === "short answer") && (
               <Controller
                 name={el.name}
                 control={control}

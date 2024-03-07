@@ -5,8 +5,8 @@ import DynamicForm from "@/components/form/dynamicForm";
 import { productFormType, productSubFormType } from "@/services/product/types";
 import { sluggify } from "@/lib/utils";
 import { ArrowRight } from "@/assets/icons";
-import { useRef, useState } from "react";
-import { useActions } from "../../info/[productId]/actions";
+import { useRef, useState, useEffect } from "react";
+import { useActions, useRemember } from "../../info/[productId]/actions";
 import { useParams } from "next/navigation";
 
 export const Forms = ({ forms }: { forms: productFormType[] }) => {
@@ -16,6 +16,8 @@ export const Forms = ({ forms }: { forms: productFormType[] }) => {
   const params: { service: string; productId: string } = useParams();
 
   const { saveFormProductQA, savingForm } = useActions({ form: forms[activeTab] });
+
+  // console.log(forms[activeTab]);
 
   const submitform = async (values: { [key: string]: string }) => {
     await saveFormProductQA(params.productId, values, false);
@@ -27,6 +29,11 @@ export const Forms = ({ forms }: { forms: productFormType[] }) => {
   const noDocuments: (form: productFormType) => productSubFormType[] = (form: productFormType) => {
     return form.productSubForm.filter((subform) => subform.type !== "document upload");
   };
+
+  const { values, isLoading } = useRemember({
+    productId: params.productId,
+    form: forms[activeTab],
+  });
 
   return (
     <Tabs
@@ -65,23 +72,54 @@ export const Forms = ({ forms }: { forms: productFormType[] }) => {
                 formInfo={noDocuments(form).map((subform) => ({
                   name: sluggify(subform.question),
                   type: subform.type,
-                  selectOptions: subform.options,
+                  id: subform.id,
                   label: subform.question,
+                  selectOptions: subform.options,
+                  value: values[sluggify(subform.question)],
                 }))}
                 onFormSubmit={submitform}
               >
-                <Button
-                  color="secondary"
-                  size={"lg"}
-                  type="submit"
-                  isProcessing={savingForm}
-                  // disabled={isLoading}
-                >
-                  <div className="space-x-2 flex items-center">
-                    <p>Continue</p>
-                    <ArrowRight />
+                <div className="flex justify-between">
+                  <div className="flex space-x-[18px]">
+                    <Button
+                      color="secondary"
+                      size={"lg"}
+                      type="submit"
+                      isProcessing={savingForm}
+                      // disabled={isLoading}
+                    >
+                      <div className="space-x-2 flex items-center">
+                        <p>Continue</p>
+                        <ArrowRight />
+                      </div>
+                    </Button>
+                    {/* <Button
+                      color="primary"
+                      size={"lg"}
+                      type="button"
+                      outline
+                      // isProcessing={savingForm}
+                      // disabled={isLoading}
+                    >
+                      <div className="space-x-2 flex items-center">
+                        <p className="text-primary">Upload documents</p>
+                      </div>
+                    </Button> */}
                   </div>
-                </Button>
+                  {form.type === "person" && (
+                    <Button
+                      color="ghost2"
+                      size={"lg"}
+                      type="button"
+                      // isProcessing={savingForm}
+                      // disabled={isLoading}
+                    >
+                      <div className="space-x-2 flex items-center">
+                        <p className="text-primary">Add new {form.title.toLowerCase()}</p>
+                      </div>
+                    </Button>
+                  )}
+                </div>
               </DynamicForm>
             )}
           </Tabs.Item>
