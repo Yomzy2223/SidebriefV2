@@ -2,7 +2,7 @@
 
 import AuthFormWrapper from "@/components/features/auth/authFormWrapper";
 import DynamicForm from "@/components/form/dynamicForm";
-import { Button } from "flowbite-react";
+import { Button, Checkbox, Label } from "flowbite-react";
 import { ArrowRightCircle } from "lucide-react";
 import React, { useState } from "react";
 import * as z from "zod";
@@ -57,6 +57,23 @@ const SignIn = () => {
         formSchema={signInSchema}
         onFormSubmit={handleSignIn}
       >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Checkbox id="remember" />
+            <Label htmlFor="remember" className="flex">
+              Remember me
+            </Label>
+          </div>
+          <Button
+            color="link"
+            size="fit"
+            className="text-foreground hover:underline"
+            href="/auth/forgot-password"
+          >
+            Forgotten password
+          </Button>
+        </div>
+
         <div className="flex items-center justify-between gap-10">
           <div className="flex items-center flex-wrap gap-1">
             <p className="sb-text-16 text-foreground-3">Don&#39;t have an account? </p>
@@ -109,21 +126,3 @@ const defaultValues = {
   email: "",
   password: "",
 };
-{
-  /* <div className="flex items-center justify-between">
-					<div className="flex items-center gap-2">
-						<Checkbox id="remember" />
-						<Label htmlFor="remember" className="flex">
-							Remember me
-						</Label>
-					</div>
-					<Button
-						color="link"
-						size="fit"
-						className="text-foreground hover:underline"
-						href="/auth/forgot-password"
-					>
-						Forgotten password
-					</Button>
-				</div>  */
-}

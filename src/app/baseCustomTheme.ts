@@ -36,6 +36,7 @@ export const customTheme: ThemeProps = {
         fit: "p-0",
         icon: "p-1",
       },
+      disabled: "cursor-not-allowed opacity-50 hover:opacity-50 active:opacity-50",
     },
   },
 };

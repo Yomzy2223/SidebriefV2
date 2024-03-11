@@ -3,9 +3,10 @@
 import AuthFormWrapper from "@/components/features/auth/authFormWrapper";
 import DynamicForm from "@/components/form/dynamicForm";
 import { AuthStepper } from "@/components/stepper/auth";
+import { useGlobalFucntions } from "@/hooks/globalFunctions";
 import { useResponse } from "@/hooks/useResponse";
 import { Button } from "flowbite-react";
-import { ArrowRight, ArrowRightCircle } from "lucide-react";
+import { ArrowRightCircle } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,6 +18,7 @@ const SignUp = () => {
   const [isPending, setIsPending] = useState(false);
   const { push } = useRouter();
   const { handleError, handleSuccess } = useResponse();
+  const { isDesktop } = useGlobalFucntions();
 
   const handleSignUp = async (values: signUpType) => {
     setIsPending(true);
@@ -34,17 +36,12 @@ const SignUp = () => {
     if (response?.error) handleError({ error: response?.error });
     else {
       handleSuccess({ data: "Sign up successfully" });
-      push("/");
+      push("/welcome/select-service");
     }
   };
 
   const handleSignUpWithGoogle = async () => {
     await signIn("google", { redirect: true });
-  };
-
-  const handleSignUpWithYahoo = async () => {
-    // const response = await signIn("yahoo");
-    // console.log(response);
   };
 
   return (
@@ -53,7 +50,6 @@ const SignUp = () => {
       description="Join our 500+ customers to scale your business."
       handlers={{
         google: handleSignUpWithGoogle,
-        yahoo: handleSignUpWithYahoo,
       }}
     >
       <DynamicForm
@@ -77,7 +73,7 @@ const SignUp = () => {
 
         <div className="flex items-center justify-between gap-14">
           <p className="sb-text-16 text-foreground-3">
-            Have an account?{" "}
+            {isDesktop && <span>Have an account? </span>}
             <Button color="plain" size="fit" className="text-primary" href="/auth/signin">
               Sign In
             </Button>
@@ -89,7 +85,10 @@ const SignUp = () => {
             disabled={isPending}
             processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
           >
-            Click to create account {!isPending && <ArrowRightCircle className="ml-1" />}
+            <span className="first-letter:capitalize">
+              {isDesktop && "Click to"} create account{" "}
+            </span>
+            {!isPending && <ArrowRightCircle className="ml-1" />}
           </Button>
         </div>
       </DynamicForm>

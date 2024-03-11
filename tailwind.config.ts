@@ -69,6 +69,10 @@ const config: Config = {
         sb: {
           "blue-light": "hsl(var(--sb-blue-light))",
         },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
 
         // sb: {
         // 	cyan: "hsl(var(--sb-cyan)",
