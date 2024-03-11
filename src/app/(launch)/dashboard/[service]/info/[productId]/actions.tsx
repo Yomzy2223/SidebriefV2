@@ -4,11 +4,18 @@ import { useSaveProductQA } from "@/services/product";
 import { FormItem } from "@/services/product/types";
 import { useRouter, useParams } from "next/navigation";
 import { sluggify } from "@/lib/utils";
+import { productFormType } from "@/services/product/types";
+import { useEffect } from "react";
+import { useGetProductQA } from "@/services/product";
+import { useState } from "react";
 
-export const useActions = ({ form }: { form: serviceFormType }) => {
+// typescript type guard
+function isServiceFormType(form: any): form is serviceFormType {
+  return "serviceCategoryId" in form;
+}
+
+export const useActions = ({ form }: { form: serviceFormType | productFormType }) => {
   const saveProductQA = useSaveProductQA();
-  const router = useRouter();
-  const params: { service: string } = useParams();
 
   const saveFormProductQA = async (
     productId: string,
@@ -16,7 +23,9 @@ export const useActions = ({ form }: { form: serviceFormType }) => {
     isGeneral?: boolean
   ) => {
     const formQA: FormItem[] = Object.keys(values).map((slug) => {
-      const subForm = form.subForm?.find((el) => sluggify(el.question) === slug);
+      const subForm = isServiceFormType(form)
+        ? form.subForm?.find((el) => sluggify(el.question) === slug)
+        : form.productSubForm?.find((el) => sluggify(el.question) === slug);
 
       return {
         question: subForm?.question,
@@ -56,5 +65,50 @@ export const useActions = ({ form }: { form: serviceFormType }) => {
   return {
     saveFormProductQA,
     savingForm: saveProductQA.isPending,
+  };
+};
+
+export const useRemember = ({
+  productId,
+  form,
+}: {
+  productId: string;
+  form: serviceFormType | productFormType;
+}) => {
+  const productQA = useGetProductQA(productId);
+
+  const prevFormstates = productQA.data?.data.data.filter((el) => el.title === form.title);
+
+  const [values, setValues] = useState<{ [key: string]: string | string[] }>({});
+
+  useEffect(() => {
+    if (productId && !productQA.isLoading && prevFormstates) {
+      const latestProductState = prevFormstates[prevFormstates?.length - 1];
+      if (latestProductState === undefined) {
+        return;
+      }
+      const newValues: { [key: string]: string | string[] } = {};
+
+      latestProductState.subForm.forEach((qa) => {
+        switch (qa.type) {
+          case "country":
+          case "address":
+          case "email address":
+            newValues[sluggify(qa.question || "")] = qa.answer[0];
+            break;
+          default:
+            newValues[sluggify(qa.question || "")] = qa.answer;
+        }
+      });
+
+      if (JSON.stringify(newValues) !== JSON.stringify(values)) {
+        setValues(newValues);
+      }
+    }
+  }, [productId, productQA.isLoading, values, prevFormstates]);
+
+  return {
+    values,
+    isLoading: productQA.isPending,
   };
 };
