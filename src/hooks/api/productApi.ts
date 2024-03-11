@@ -1,4 +1,5 @@
 import { Client } from "@/lib/axios";
+import { ICountryServiceProduct } from "./types";
 
 // Product endpoints
 export const getProduct = async (id: string) => {
@@ -9,6 +10,11 @@ export const getProduct = async (id: string) => {
 export const getServiceProducts = async (serviceId: string) => {
   const client = await Client();
   return await client.get(`/products/service/${serviceId}`);
+};
+
+export const getCountryServiceProducts = async ({ serviceId, country }: ICountryServiceProduct) => {
+  const client = await Client();
+  return await client.get(`/products/service/country/${serviceId}/${country}`);
 };
 
 // Product form endpoints

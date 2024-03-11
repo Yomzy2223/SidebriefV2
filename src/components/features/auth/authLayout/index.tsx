@@ -13,7 +13,7 @@ interface authLayoutProps {
 export const AuthLayout = ({ children, login }: authLayoutProps) => {
   return (
     <div className="flex min-h-screen max-h-screen overflow-auto">
-      <div className="flex justify-center w-full h-max lg:w-3/5">
+      <div className="flex justify-center w-full h-full lg:w-3/5">
         <div className="w-full my-[10%] px-6 h-max lg:w-4/5">
           <Image
             src={SidebriefLogo}
@@ -32,8 +32,8 @@ export const AuthLayout = ({ children, login }: authLayoutProps) => {
               Quick launch your business without stresss
             </h1>
             <p className="sb-text-24 ">
-              Launch your business without stressing on business Launch your
-              business without stress.
+              Launch your business without stressing on business Launch your business without
+              stress.
             </p>
           </div>
 

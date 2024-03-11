@@ -40,10 +40,6 @@ const AuthFormWrapper = ({
               <Image src={GoogleIcon} alt="Google icon" className="mr-2 w-5 h-5 sm:w-6 sm:h-6" />
               {google}
             </Button>
-            {/* <Button className="font-semibold" outline onClick={handlers?.yahoo}>
-              <Image src={YahooIcon} alt="Yahoo icon" className="mr-2 w-5 h-5 sm:w-6 sm:h-6" />
-              {yahoo}
-            </Button> */}
           </div>
           <div className="flex items-center gap-[max(5%,16px)] mb-2">
             <FooterDivider /> <span className="min-w-max text-foreground-3">{other}</span>{" "}
@@ -58,3 +54,9 @@ const AuthFormWrapper = ({
 };
 
 export default AuthFormWrapper;
+{
+  /* <Button className="font-semibold" outline onClick={handlers?.yahoo}>
+              <Image src={YahooIcon} alt="Yahoo icon" className="mr-2 w-5 h-5 sm:w-6 sm:h-6" />
+              {yahoo}
+            </Button> */
+}

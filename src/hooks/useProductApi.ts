@@ -1,4 +1,5 @@
 import {
+  getCountryServiceProducts,
   getProduct,
   getProductForm,
   getProductSubForm,
@@ -6,6 +7,7 @@ import {
   getServiceProducts,
 } from "@/hooks/api/productApi";
 import { useQuery } from "@tanstack/react-query";
+import { ICountryServiceProduct } from "./api/types";
 
 const useProductApi = () => {
   const useGetProductQuery = (id: string) =>
@@ -20,6 +22,13 @@ const useProductApi = () => {
       queryKey: ["product", serviceId],
       queryFn: ({ queryKey }) => getServiceProducts(queryKey[1]),
       enabled: serviceId ? true : false,
+    });
+
+  const useGetCountryServiceProductsQuery = (info: ICountryServiceProduct) =>
+    useQuery({
+      queryKey: ["product", info],
+      queryFn: ({ queryKey }) => getCountryServiceProducts(queryKey[1] as ICountryServiceProduct),
+      enabled: info.serviceId && info.country ? true : false,
     });
 
   const useGetProductFormsQuery = (productId: string) =>
@@ -53,6 +62,7 @@ const useProductApi = () => {
   return {
     useGetProductQuery,
     useGetServiceProductsQuery,
+    useGetCountryServiceProductsQuery,
     useGetProductFormsQuery,
     useGetServiceProductFormsQuery,
     useGetProductSubFormQuery,

@@ -1,6 +1,7 @@
 import { Client } from "@/lib/axios";
 import { IRequest } from "./types";
 
+// Request endpoints
 export const createRequest = async (formInfo: IRequest) => {
   const client = await Client();
   return await client.post("/productRequest", formInfo);
