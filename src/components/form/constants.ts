@@ -17,6 +17,7 @@ export interface DynamicFormProps {
   children: ReactNode;
   formInfo: FormInput[];
   onFormSubmit: (values: any) => void;
-  defaultValues: Record<string, any>;
-  formSchema: ZodType<any, any, any>;
+  defaultValues?: Record<string, any>;
+  formSchema?: ZodType<any, any, any>;
+  watchValues?: (values: { [key: string]: string | string[] }) => void;
 }

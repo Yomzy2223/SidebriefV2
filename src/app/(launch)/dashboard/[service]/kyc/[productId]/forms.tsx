@@ -5,7 +5,7 @@ import DynamicForm from "@/components/form/dynamicForm";
 import { productFormType, productSubFormType } from "@/services/product/types";
 import { sluggify } from "@/lib/utils";
 import { ArrowRight } from "@/assets/icons";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useActions, useRemember } from "../../info/[productId]/actions";
 import { useParams } from "next/navigation";
 
@@ -19,7 +19,7 @@ export const Forms = ({ forms }: { forms: productFormType[] }) => {
 
   // console.log(forms[activeTab]);
 
-  const submitform = async (values: { [key: string]: string }) => {
+  const submitform = async (values: { [key: string]: string | string[] }) => {
     await saveFormProductQA(params.productId, values, false);
     if (tabsRef && activeTab !== forms.length - 1) {
       tabsRef.current?.setActiveTab(activeTab + 1);
@@ -29,6 +29,12 @@ export const Forms = ({ forms }: { forms: productFormType[] }) => {
   const noDocuments: (form: productFormType) => productSubFormType[] = (form: productFormType) => {
     return form.productSubForm.filter((subform) => subform.type !== "document upload");
   };
+
+  const [formState, setFormState] = useState<any>(null);
+
+  const handleFormStateChange = useCallback((values: any) => {
+    setFormState(values);
+  }, []);
 
   const { values, isLoading } = useRemember({
     productId: params.productId,
@@ -78,6 +84,7 @@ export const Forms = ({ forms }: { forms: productFormType[] }) => {
                   value: values[sluggify(subform.question)],
                 }))}
                 onFormSubmit={submitform}
+                watchValues={handleFormStateChange}
               >
                 <div className="flex justify-between">
                   <div className="flex space-x-[18px]">
