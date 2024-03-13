@@ -1,12 +1,14 @@
-import { Badge, Button, Tabs } from "@/components/flowbite";
+import { Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
-import Image, { StaticImageData } from "next/image";
+import { StaticImageData } from "next/image";
 import Activity from "@/components/activiity";
-import DateBar from "@/components/business/business";
-import { Download, DetailIcon, CalcIcon, Settings } from "@/assets/svg";
-import { imageTypeImage } from "@/lib/utils";
-import { SectionWrapper, DocumentComponent, Proprietor } from "@/components/dashboard";
+import {
+  SectionWrapper,
+  DocumentComponent,
+  Proprietor,
+} from "@/components/dashboard/businessMembersSection";
 import { Services } from "./services";
+import WelcomeSection from "@/components/dashboard/welcomeSection";
 
 interface File {
   id?: string;
@@ -72,26 +74,27 @@ const ApplicationBadge: React.FC<BadgeProps> = ({ size = "sm", status }) => {
 
   return (
     <span
-      className={`inline-block px-2 py-1 text-xs font-semibold text-${badgeColor}-800 bg-${badgeColor}-400 rounded ${
+      className={`inline-block px-2 py-1 text-xs font-semibold text-${badgeColor}-800 bg-${badgeColor}-400 rounded first-letter:uppercase ${
         size === "sm" ? "text-sm" : "text-xs"
       }`}
     >
-      {status ? status.charAt(0).toUpperCase() + status.slice(1) : ""}
+      {status || ""}
     </span>
   );
 };
 
 export default function Dashboard() {
   return (
-    <div className="p-8 relative">
-      <div className="flex flex-col sm:flex-row">
+    <div className="p-5 space-y-14 md:p-8">
+      <WelcomeSection />
+      {/* <div className="flex flex-col sm:flex-row">
         <div className="px-0 sm:px-0">
           <div className="flex items-center">
             <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
               Contifery agricultural limited
             </h1>
             <span className="ml-2">
-              <ApplicationBadge size="lg" status="Submitted" />
+              <ApplicationBadge size="lg" status="Pending" />
             </span>
           </div>
           <p className="mt-2 text-sm text-gray-500">
@@ -108,16 +111,16 @@ export default function Dashboard() {
             </div>
           </Button>
         </div>
-      </div>
+      </div> */}
 
-      <div className="hidden sm:block">
+      {/* <div className="hidden sm:block">
         <Button color="magenta" size={"lg"} className="mr-7 self-start mt-8 absolute top-0 right-0">
           <div className="space-x-2 flex items-center">
             <p>Resume</p>
             <ArrowRight />
           </div>
         </Button>
-      </div>
+      </div> */}
 
       <div className="flex flex-col md:flex-row mt-4 w-full gap-3">
         <SectionWrapper title="Proprietors" morelink="">

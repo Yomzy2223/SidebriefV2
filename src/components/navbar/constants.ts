@@ -1,37 +1,14 @@
-export const navroutes = [
-	{
-		name: "Home",
-		to: "/",
-		active: true,
-	},
-	{
-		name: "Business Registration",
-		to: "/",
-		active: false,
-	},
-	{
-		name: "Manage Business",
-		to: "/",
-		active: false,
-	},
-	{
-		name: "Diligence",
-		to: "/",
-		active: false,
-	},
-	{
-		name: "Compliance",
-		to: "/",
-		active: false,
-	},
-	{
-		name: "Bank Account",
-		to: "/",
-		active: false,
-	},
-	{
-		name: "Settings",
-		to: "/",
-		active: false,
-	},
-];
+import { ReactNode } from "react";
+
+export interface IProps {
+  navRoutes: {
+    name: string;
+    to: string;
+    type?: string;
+    options?: { name: string; to: string; icon?: any }[];
+    defaultValue?: string;
+  }[];
+  className?: string;
+  inactiveClassName?: string;
+  others?: ReactNode;
+}
