@@ -1,4 +1,4 @@
-import { axios, rootType, errorType } from "../index";
+import { axios, rootType } from "../index";
 import {
   productType,
   saveProductQAPayload,

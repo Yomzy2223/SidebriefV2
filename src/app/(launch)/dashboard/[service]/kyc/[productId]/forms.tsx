@@ -17,12 +17,13 @@ export const Forms = ({ forms }: { forms: productFormType[] }) => {
 
   const { saveFormProductQA, savingForm } = useActions({ form: forms[activeTab] });
 
-  // console.log(forms[activeTab]);
-
-  const submitform = async (values: { [key: string]: string | string[] }) => {
-    await saveFormProductQA(params.productId, values, false);
-    if (tabsRef && activeTab !== forms.length - 1) {
-      tabsRef.current?.setActiveTab(activeTab + 1);
+  const submitform = async (values: { [key: string]: string | string[] }, isAdd?: boolean) => {
+    // await saveFormProductQA(params.productId, values, false);
+    // if (tabsRef && activeTab !== forms.length - 1 && !isAdd) {
+    //   tabsRef.current?.setActiveTab(activeTab + 1);
+    // }
+    if (isAdd) {
+      console.log(forms[activeTab]);
     }
   };
 
@@ -93,7 +94,7 @@ export const Forms = ({ forms }: { forms: productFormType[] }) => {
                       size={"lg"}
                       type="submit"
                       isProcessing={savingForm}
-                      // disabled={isLoading}
+                      disabled={isLoading}
                     >
                       <div className="space-x-2 flex items-center">
                         <p>Continue</p>
@@ -118,8 +119,9 @@ export const Forms = ({ forms }: { forms: productFormType[] }) => {
                       color="ghost2"
                       size={"lg"}
                       type="button"
-                      // isProcessing={savingForm}
-                      // disabled={isLoading}
+                      isProcessing={savingForm}
+                      disabled={isLoading}
+                      onClick={() => submitform(formState, true)}
                     >
                       <div className="space-x-2 flex items-center">
                         <p className="text-primary">Add new {form.title.toLowerCase()}</p>

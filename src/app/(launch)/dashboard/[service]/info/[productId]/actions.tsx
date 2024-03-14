@@ -11,7 +11,7 @@ import { useState } from "react";
 
 // typescript type guard
 function isServiceFormType(form: any): form is serviceFormType {
-  return "serviceCategoryId" in form;
+  return "serviceId" in form;
 }
 
 export const useActions = ({ form }: { form: serviceFormType | productFormType }) => {
