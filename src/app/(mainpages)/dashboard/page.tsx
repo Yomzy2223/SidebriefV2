@@ -1,21 +1,8 @@
-import { Button } from "@/components/flowbite";
-import { ArrowRight } from "@/assets/icons";
 import { StaticImageData } from "next/image";
-import Activity from "@/components/activiity";
-import {
-  SectionWrapper,
-  DocumentComponent,
-  Proprietor,
-} from "@/components/dashboard/businessMembersSection";
 import { Services } from "./services";
 import WelcomeSection from "@/components/dashboard/welcomeSection";
 import HandpickedSection from "@/components/dashboard/handpickedSection";
-
-interface File {
-  id?: string;
-  name: string;
-  type: string;
-}
+import BusinessMembersSection from "@/components/dashboard/businessMembersSection";
 
 interface FeatureProps {
   name: string;
@@ -27,32 +14,6 @@ interface BadgeProps {
   size?: "sm" | "lg";
   status: "Pending" | "Ongoing" | "Completed" | "Submitted";
 }
-const files: File[] = [
-  {
-    id: "1",
-    name: "Statement of account",
-    type: "application/pdf",
-  },
-
-  {
-    id: "2",
-    name: "National ID Card",
-    type: "image/png",
-  },
-
-  {
-    id: "3",
-    name: "Passport photograph",
-    type: "image/jpeg",
-  },
-
-  {
-    id: "4",
-    name: "Proof of Address",
-    type: "image/png",
-  },
-];
-
 const ApplicationBadge: React.FC<BadgeProps> = ({ size = "sm", status }) => {
   let badgeColor = "";
 
@@ -123,23 +84,7 @@ export default function Dashboard() {
           </div>
         </Button>
       </div> */}
-
-      <div className="flex flex-col md:flex-row mt-4 w-full gap-3">
-        <SectionWrapper title="Proprietors" morelink="">
-          <Proprietor proprietors={[]} />
-        </SectionWrapper>
-
-        <SectionWrapper title="Documents" morelink="">
-          <div className="pl-7 pr-8">
-            <DocumentComponent files={files} />
-          </div>
-        </SectionWrapper>
-
-        <SectionWrapper title="My Activities" morelink="">
-          <Activity />
-        </SectionWrapper>
-      </div>
-
+      <BusinessMembersSection />
       <Services />
     </div>
   );

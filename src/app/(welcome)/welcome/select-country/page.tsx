@@ -4,7 +4,7 @@ import { CountryCard } from "@/components/cards/CountryCard";
 import CountryCardSK from "@/components/cards/CountryCard/CountryCardSK";
 import { AuthStepper } from "@/components/stepper/auth";
 import { ICountry } from "@/hooks/api/types";
-import { useGlobalFucntions } from "@/hooks/globalFunctions";
+import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { useCountryApi } from "@/hooks/useCountryApi";
 import { Button } from "flowbite-react";
 import { ArrowRightCircle } from "lucide-react";
@@ -12,7 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 const SelectCountry = () => {
-  const { setQuery } = useGlobalFucntions();
+  const { setQuery } = useGlobalFunctions();
 
   const router = useRouter();
 

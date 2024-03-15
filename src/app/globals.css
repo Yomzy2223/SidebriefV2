@@ -64,11 +64,11 @@
   .sb-text-24 {
     @apply text-lg md:text-xl xl:text-2xl;
   }
-  .sb-text-18 {
-    @apply text-base lg:text-lg;
-  }
   .sb-text-20 {
     @apply text-lg lg:text-xl;
+  }
+  .sb-text-18 {
+    @apply text-base lg:text-lg;
   }
   .sb-text-16 {
     @apply text-sm lg:text-base;

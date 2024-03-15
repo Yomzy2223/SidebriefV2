@@ -9,11 +9,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useSession } from "next-auth/react";
 import { IServiceFull } from "@/hooks/api/types";
-import { useGlobalFucntions } from "@/hooks/globalFunctions";
+import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import ServiceCardSK from "@/components/cards/ServiceCard/ServiceCardSK";
 
 const SelectService = () => {
-  const { setQuery } = useGlobalFucntions();
+  const { setQuery } = useGlobalFunctions();
 
   const { getAllServicesQuery } = useServiceApi();
   const { data, isLoading } = getAllServicesQuery;
