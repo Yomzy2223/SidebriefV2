@@ -36,11 +36,6 @@ const SignIn = () => {
     await signIn("google", { redirect: true });
   };
 
-  const handleSignInWithYahoo = async () => {
-    // const response = await signIn("yahoo");
-    // console.log(response);
-  };
-
   return (
     <AuthFormWrapper
       title="Welcome back👋"
@@ -48,7 +43,6 @@ const SignIn = () => {
       login
       handlers={{
         google: handleSignInWithGoogle,
-        yahoo: handleSignInWithYahoo,
       }}
     >
       <DynamicForm

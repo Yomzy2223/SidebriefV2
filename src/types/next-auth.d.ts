@@ -16,7 +16,7 @@ interface User {
   userName?: string;
 }
 
-interface JWT {}
+// interface JWT {}
 
 declare module "next-auth" {
   interface User extends User {}

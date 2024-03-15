@@ -1,24 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Plans } from "./plans";
-import { Button, Card } from "@/components/flowbite";
+import { Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
-import { BankIcon, CardIcon, CreditCardIcon } from "@/assets/svg";
-import Image from "next/image";
 import { ServicesModal } from "@/components/services/ServicesModal";
-import { X } from "lucide-react";
-import { ProceedPayModal } from "./ProceedPayModal";
 import { useGetServiceproduct, useGetServices } from "@/services/service";
-import {
-  useAddServiceToProduct,
-  useGetProductRequest,
-  useCreateNewProductRequest,
-} from "@/services/product";
+import { useGetProductRequest, useCreateNewProductRequest } from "@/services/product";
 import { redirect } from "next/navigation";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
 import { CountryInput } from "@/components/input";
-import { TCountryCode, countries, getCountryCode } from "countries-list";
 
 // const tabs = [
 // 	{ name: "Bank Transfer", href: "#", icon: BankIcon, current: false },
@@ -26,9 +17,6 @@ import { TCountryCode, countries, getCountryCode } from "countries-list";
 // 	{ name: "Bank USSD", href: "#", icon: CreditCardIcon, current: false },
 // ];
 
-function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
-}
 export default function RegistrationPlan({
   params,
 }: {

@@ -45,7 +45,7 @@ const DynamicForm = ({
 
   useEffect(() => {
     if (dValues) {
-      formInfo.forEach((el) => setValue(el.name, defaultValues[el.name] || el.value));
+      formInfo.forEach((el) => dValues[el.name] && setValue(el.name, dValues[el.name] || el.value));
     }
   }, [formInfo, setValue]);
 
