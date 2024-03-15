@@ -9,6 +9,7 @@ import {
 } from "@/components/dashboard/businessMembersSection";
 import { Services } from "./services";
 import WelcomeSection from "@/components/dashboard/welcomeSection";
+import HandpickedSection from "@/components/dashboard/handpickedSection";
 
 interface File {
   id?: string;
@@ -87,6 +88,7 @@ export default function Dashboard() {
   return (
     <div className="p-5 space-y-14 md:p-8">
       <WelcomeSection />
+      <HandpickedSection />
       {/* <div className="flex flex-col sm:flex-row">
         <div className="px-0 sm:px-0">
           <div className="flex items-center">
