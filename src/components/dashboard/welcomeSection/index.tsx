@@ -2,7 +2,6 @@ import React from "react";
 import { ArrowRightCircle } from "lucide-react";
 import { Oval } from "react-loading-icons";
 import { Button } from "flowbite-react";
-import { customTheme } from "@/app/baseCustomTheme";
 
 const WelcomeSection = () => {
   return (
@@ -19,9 +18,9 @@ const WelcomeSection = () => {
         <Button
           color="secondary"
           processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
-          theme={customTheme.theme?.button}
         >
-          <span>Register new business</span> <ArrowRightCircle className="ml-1" />
+          <span>Register new business</span>
+          <ArrowRightCircle fill="white" stroke="hsl(var(--secondary))" />
         </Button>
       </div>
     </div>

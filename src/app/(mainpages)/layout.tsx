@@ -5,7 +5,7 @@ const Dashboardlayout = ({ children }: { children: ReactNode }) => {
   return (
     <div>
       <Header />
-      {children}
+      <div className="max-w-full overflow-auto">{children}</div>
     </div>
   );
 };

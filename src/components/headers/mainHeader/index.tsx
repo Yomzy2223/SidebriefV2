@@ -16,7 +16,7 @@ export const Header = () => {
   };
 
   return (
-    <div className="sticky top-0 bg-background border-b z-20 px-5 md:px-8 ">
+    <div className="sticky top-0 left-0 bg-background border-b z-20 px-5 md:px-8 ">
       {/* Desktop header */}
       <div className="hidden items-center w-full h-20 divide-x md:flex">
         <Image
@@ -75,10 +75,7 @@ export const Header = () => {
           />
         </div>
         <div className="flex items-center gap-3">
-          <Button color="ghost" size="fit" className="p-1">
-            <Search color={iconColor} />
-          </Button>
-          <Button color="ghost" size="fit" className="p-1">
+          <Button color="ghost" size="fit" className="p-1 hidden min-[300px]:block">
             <BellRing color={iconColor} />
           </Button>
           <Button color="ghost" size="fit" className="flex items-center">

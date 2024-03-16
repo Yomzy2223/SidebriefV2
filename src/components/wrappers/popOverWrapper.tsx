@@ -7,7 +7,6 @@ const PopOverWrapper = ({ children, content, open, setOpen, disabled, onClose }:
   const { isDesktop } = useGlobalFunctions();
 
   const handleOpenChange = (open: boolean) => {
-    console.log(open);
     setOpen(open);
     // if (open === false && onClose) onClose();
   };
