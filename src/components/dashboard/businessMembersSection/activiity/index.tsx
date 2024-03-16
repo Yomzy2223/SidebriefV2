@@ -5,7 +5,7 @@ import { Timer } from "@/assets/svg";
 
 const Activity = () => {
   return (
-    <div>
+    <div className="max-h-[500px] overflow-auto">
       {NotificationData.map((data, i) => (
         <div key={i} className="flex items-start gap-3 py-4">
           <Image src={data.icon} alt="" quality={100} className="object-contain shrink-0" />
@@ -34,7 +34,46 @@ const NotificationData = [
     message: "New message from {{name}}: Hey, whats up? All set for the presentation? ",
     duration: "a moment ago",
   },
+  {
+    icon: ProfileIcon,
+    name: "Oluwole Sayo",
+    message: "{{name}} registered to become a partner.",
+    duration: "a moment ago",
+  },
 
+  {
+    icon: ProfileIcon,
+    name: "Oluwole Sayo",
+    message: "{{name}} registered to become a partner.",
+    duration: "a moment ago",
+  },
+
+  {
+    icon: ProfileIcon,
+    name: "Oluwole Sayo",
+    message: "New message from {{name}}: Hey, whats up? All set for the presentation? ",
+    duration: "a moment ago",
+  },
+  {
+    icon: ProfileIcon,
+    name: "Oluwole Sayo",
+    message: "{{name}} registered to become a partner.",
+    duration: "a moment ago",
+  },
+
+  {
+    icon: ProfileIcon,
+    name: "Oluwole Sayo",
+    message: "{{name}} registered to become a partner.",
+    duration: "a moment ago",
+  },
+
+  {
+    icon: ProfileIcon,
+    name: "Oluwole Sayo",
+    message: "New message from {{name}}: Hey, whats up? All set for the presentation? ",
+    duration: "a moment ago",
+  },
   {
     icon: ProfileIcon,
     name: "Oluwole Sayo",

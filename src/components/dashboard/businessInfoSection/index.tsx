@@ -13,14 +13,14 @@ import {
 
 const BusinessInfoSecion = () => {
   const [open, setOpen] = useState(false);
-  const [selectedBusiness, setSelectedBusiness] = useState("");
+  const [selectedBusiness, setSelectedBusiness] = useState(businesses[0]);
 
   const handleSelect = (selected?: string) => {
     selected && setSelectedBusiness(selected);
   };
 
   return (
-    <div className="flex flex-col gap-4 md:justify-between md:flex-row">
+    <div className="flex flex-col gap-12 md:justify-between md:flex-row md:gap-3">
       <div className="text-foreground-3">
         <div className="flex items-center gap-4 mb-2.5">
           <PopOverWrapper
@@ -28,32 +28,26 @@ const BusinessInfoSecion = () => {
             setOpen={setOpen}
             onClose={() => console.log("Closed")}
             content={
-              <BusinessList
-                businesses={[
-                  "Lola",
-                  "Ayomide Construction",
-                  "Folagbade & Sons construction company",
-                ]}
-                handleSelect={handleSelect}
-                setOpen={setOpen}
-              />
+              <BusinessList businesses={businesses} handleSelect={handleSelect} setOpen={setOpen} />
             }
           >
-            <Button color="ghost" size="fit">
-              <h2 className="sb-text-24 font-bold max-w-full">{selectedBusiness}</h2>{" "}
+            <Button color="ghost" size="fit" className="text-start [&>span]:justify-start ">
+              <h2 className="sb-text-24 font-bold whitespace-nowrap text-ellipsis overflow-hidden max-w-[200px] sm:max-w-[400px] lg:max-w-[500px] 2xl:max-w-[800px]">
+                {selectedBusiness}
+              </h2>
               <ChevronDown />
             </Button>
           </PopOverWrapper>
           <Badge
             icon={() => <Info size={10} className="shrink-0" />}
             color="yellow"
-            className="hidden px-2.5 py-0.5 rounded-md text-xs font-normal min-[400px]:flex"
+            className="hidden px-2.5 py-0.5 rounded-md text-xs font-normal min-[350px]:flex"
           >
             My business
           </Badge>
         </div>
         <p className="sb-text-18 mb-3">Nō 22 Alamala Rd., Ajanlekoko, Lagos</p>
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <Badge color="green" className="sb-text-14">
             Completed
           </Badge>
@@ -61,7 +55,7 @@ const BusinessInfoSecion = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-7 lg:flex-row md:items-center">
+      <div className="flex flex-col gap-4 lg:flex-row md:items-center md:gap-7">
         <Button outline className="border-foreground">
           <span>Manage this business</span>
           <ArrowRightCircle fill="hsl(var(--foreground))" stroke="white" />
@@ -118,3 +112,5 @@ export const BusinessList = ({
     </Command>
   );
 };
+
+const businesses = ["Lola", "Ayomide Construction", "Folagbade & Sons construction company"];

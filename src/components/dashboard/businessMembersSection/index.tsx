@@ -11,9 +11,9 @@ const BusinessMembersSection = () => {
         <Member />
       </SectionWrapper>
 
-      <SectionWrapper title="Documents" morelink="/">
+      {/* <SectionWrapper title="Documents" morelink="/">
         <DocumentComponent files={files} />
-      </SectionWrapper>
+      </SectionWrapper> */}
 
       <SectionWrapper title="My Activities">
         <Activity />

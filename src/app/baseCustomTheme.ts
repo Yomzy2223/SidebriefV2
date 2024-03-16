@@ -11,7 +11,7 @@ export const customTheme: ThemeProps = {
       },
     },
     button: {
-      base: "w-max focus:!ring-0 hover:opacity-80 active:opacity-90 transition transition-all text-sm",
+      base: "w-max max-w-full focus:!ring-0 hover:opacity-80 active:opacity-90 transition transition-all text-sm",
       color: {
         primary:
           "bg-primary text-primary-foreground border border-transparent enabled:hover:bg-primary-dark",
