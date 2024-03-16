@@ -3,6 +3,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import { saveAs } from "file-saver";
 import { useMediaQuery } from "./useMediaQuery";
+import { pdf, png, jpg } from "@/assets/images";
 
 export const useGlobalFunctions = () => {
   const searchParams = useSearchParams();
@@ -85,4 +86,11 @@ export const downloadFileFromCloudinary = (cloudinaryLink: string, fileName: str
     });
 
   return result;
+};
+
+export const getFileImage = (type: string) => {
+  if (type.includes("pdf")) return pdf;
+  if (type.includes("png")) return png;
+  if (type.includes("jpg")) return jpg;
+  else return pdf;
 };

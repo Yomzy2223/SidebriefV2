@@ -1,50 +1,42 @@
 "use client";
 
 import Image from "next/image";
-import { imageTypeImage } from "@/lib/utils";
 import { Tabs } from "flowbite-react";
+import { getFileImage } from "@/hooks/globalFunctions";
+
+export const DocumentComponent = ({ files }: { files: { received: File[]; uploaded: File[] } }) => {
+  return (
+    <Tabs style="underline">
+      <Tabs.Item active title="Received" className="p-1">
+        {renderFile(files.received)}
+      </Tabs.Item>
+      <Tabs.Item title="Uploaded" className="p-1">
+        {renderFile(files.uploaded)}
+      </Tabs.Item>
+    </Tabs>
+  );
+};
+
+const renderFile = (files: File[]) => {
+  return (
+    <div className="space-y-4 max-h-[380px] overflow-auto">
+      {files.map((file, i) => (
+        <div
+          key={file.name + i}
+          className="sb-text-16 flex items-center leading-normal border rounded-[50px] py-4 px-6"
+        >
+          <Image src={getFileImage(file.type)} alt={file.name} className="mr-2 w-6 h-6" />
+          <span className="underline text-ellipsis whitespace-nowrap overflow-hidden">
+            {file.name}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 interface File {
   id?: string;
   name: string;
   type: string;
 }
-
-const renderFile = (file: File) => {
-  const fileType = imageTypeImage.find((type) => type.type === file.type);
-
-  if (fileType) {
-    return (
-      <span className="flex items-center justify-between" key={file.id}>
-        <Image src={fileType.image} alt={file.name} className="mr-2 w-6 h-6" />
-        <span className="flex items-center flex-grow ">
-          <span className="underline mr-16">{file.name}</span>
-          {/* <p className="text-primary ml-auto">
-						<Image src={Download} alt="Download" />
-					</p> */}
-        </span>
-      </span>
-    );
-  }
-
-  return null;
-};
-
-export const DocumentComponent = ({ files }: { files: File[] }) => {
-  return (
-    <Tabs style="underline">
-      <Tabs.Item active title="Uploaded">
-        <div className="space-y-6">
-          {files.map((file) => (
-            <h3
-              className="text-lg leading-normal font-semibold border rounded-[50px] py-4 px-6"
-              key={file.id}
-            >
-              {renderFile(file)}
-            </h3>
-          ))}
-        </div>
-      </Tabs.Item>
-    </Tabs>
-  );
-};

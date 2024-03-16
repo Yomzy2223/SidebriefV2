@@ -13,7 +13,7 @@ export const SectionWrapper = ({
   morelink?: string;
 }) => {
   return (
-    <div className="flex flex-col gap-3 flex-1 shadow-md rounded-lg p-4 pt-6">
+    <div className="flex flex-col gap-3 flex-1 shadow-md rounded-lg p-4 pt-6 max-w-[700px] lg:min-w-[450px]">
       <div className="flex justify-between">
         <h5 className="sb-text-18 font-semibold leading-normal">{title}</h5>
         {morelink && (

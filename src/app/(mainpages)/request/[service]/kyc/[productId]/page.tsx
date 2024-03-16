@@ -1,5 +1,5 @@
 import { ProductInfoForm } from "./productinfoform";
-import { ProprietorForm } from "./proprietorform";
+import { MemberForm } from "./proprietorform";
 import { Forms } from "./forms";
 import { getProductRequest, getProductForm } from "@/services/product/operations";
 
@@ -32,12 +32,12 @@ export default async function KYCpage({
         </div>
         <div>
           <h6 className="text-2xl leading-normal font-semibold">
-            Proprietors Details
+            Members Details
           </h6>
           <p className="font-medium leading-normal text-primary mb-5">
             Supply stakeholder(s) documents
           </p>
-          <ProprietorForm />
+          <MemberForm />
         </div> */}
       </div>
     </div>

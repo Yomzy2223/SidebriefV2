@@ -2,10 +2,10 @@ import { Badge, Button } from "@/components/flowbite";
 import { SwatchBook } from "@/assets/icons";
 import PopOverWrapper from "@/components/wrappers/popOverWrapper";
 import { MouseEvent, useState } from "react";
-import { EllipsisVertical } from "@/assets/svg";
-import Image from "next/image";
+import { Info } from "lucide-react";
+import EllipsisVertical from "@/assets/icons/ellipsis-vertical";
 
-const MemberCard = ({ info }: { info: ProprietorType }) => {
+const MemberCard = ({ info }: { info: MemberType }) => {
   const [open, setOpen] = useState(false);
 
   const onReminderClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -18,16 +18,27 @@ const MemberCard = ({ info }: { info: ProprietorType }) => {
   return (
     <div className="flex justify-between gap-6">
       <div className="flex gap-2 items-center">
-        <div className="h-[50px] w-[50px] rounded-full bg-primary grid place-items-center">
+        <div className="h-[40px] w-[40px] rounded-full bg-primary grid place-items-center md:h-[50px] md:w-[50px]">
           <p className="text-white font-semibold text-xs leading-normal">{info.initial}</p>
         </div>
-        <div className="">
-          <p className="leading-normal text-gray-900 font-medium">{info.name}</p>
-          <span className="leading-normal text-gray-500 text-sm">{info.email}</span>
+        <div>
+          <div className="flex gap-1">
+            <span className="sb-text-16 leading-normal text-foreground-9 font-mediumn whitespace-nowrap overflow-hidden text-ellipsis">
+              {info.name}
+            </span>
+            {!info?.hasDocs && (
+              <div className="flex items-center gap-1 text-xs text-destructive-foreground bg-destructive rounded-md px-2.5 py-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
+                <Info size={10} /> <span>Awaiting Documents</span>
+              </div>
+            )}
+          </div>
+          <span className="leading-normal text-gray-500 text-xs whitespace-nowrap overflow-hidden text-ellipsis">
+            {info.email}
+          </span>
         </div>
       </div>
-      {false ? (
-        <Badge icon={SwatchBook} color={"green"}>
+      {info?.hasDocs ? (
+        <Badge icon={SwatchBook} color={"green"} className="px-2.5 py-0.5 rounded-md">
           {info.type}
         </Badge>
       ) : (
@@ -36,7 +47,7 @@ const MemberCard = ({ info }: { info: ProprietorType }) => {
           setOpen={setOpen}
           onClose={() => console.log("Closed")}
           content={
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
               <Button color="ghost" onClick={onReminderClick} className="text-foreground-7">
                 Set reminder
               </Button>
@@ -46,8 +57,8 @@ const MemberCard = ({ info }: { info: ProprietorType }) => {
             </div>
           }
         >
-          <Button color="ghost" size="fit">
-            <Image src={EllipsisVertical} alt="" />
+          <Button color="ghost" size="fit" className="text-foreground-5">
+            <EllipsisVertical />
           </Button>
         </PopOverWrapper>
       )}
@@ -57,9 +68,10 @@ const MemberCard = ({ info }: { info: ProprietorType }) => {
 
 export default MemberCard;
 
-type ProprietorType = {
+type MemberType = {
   name: string;
   email: string;
   type: string;
   initial: string;
+  hasDocs?: boolean;
 };

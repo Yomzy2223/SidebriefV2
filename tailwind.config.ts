@@ -20,6 +20,7 @@ const config: Config = {
           4: "hsl(var(--foreground-4))",
           5: "hsl(var(--foreground-5))",
           6: "hsl(var(--foreground-6))",
+          9: "hsl(var(--foreground-9))",
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
