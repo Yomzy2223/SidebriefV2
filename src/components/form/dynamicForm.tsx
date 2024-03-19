@@ -1,7 +1,7 @@
 "use client";
 
 import { Checkbox, FileInput, Label, Radio, Select, TextInput } from "flowbite-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useRef, useCallback, MutableRefObject } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -15,6 +15,7 @@ const DynamicForm = ({
   defaultValues,
   formSchema,
   onFormSubmit,
+  watchValues,
 }: DynamicFormProps) => {
   const dynamic = useDynamic({ subForms: formInfo });
 
@@ -44,10 +45,28 @@ const DynamicForm = ({
   }
 
   useEffect(() => {
-    if (dValues) {
-      formInfo.forEach((el) => setValue(el.name, defaultValues[el.name] || el.value));
+    const subscription = watch((values) => watchValues && watchValues(values));
+    return () => subscription.unsubscribe();
+  }, [watch, watchValues]);
+
+  // useEffect(() => {
+  //   if (defaultValues && dValues) {
+  //     formInfo.forEach((el) => setValue(el.name, defaultValues[el.name] || el.value));
+  //   }
+  // }, [formInfo, setValue, defaultValues, dValues]);
+
+  const prevFormInfoRef = useRef(formInfo);
+
+  useEffect(() => {
+    if (JSON.stringify(prevFormInfoRef.current) !== JSON.stringify(formInfo)) {
+      (formInfo || []).forEach((form) => {
+        if (form.value) {
+          setValue(form.name, form.value);
+        }
+      });
+      prevFormInfoRef.current = formInfo;
     }
-  }, [formInfo, setValue]);
+  }, [setValue, formInfo]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

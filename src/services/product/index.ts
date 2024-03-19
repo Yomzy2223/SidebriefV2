@@ -2,12 +2,18 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   createNewProductRequest,
   saveProductQA,
+  updateProductQA,
   getproductQA,
   addServiceToProduct,
   getProductRequest,
   getProductForm,
 } from "./operations";
-import { saveProductQAPayload, addServiceToProductPayload, createProductPayload } from "./types";
+import {
+  saveProductQAPayload,
+  addServiceToProductPayload,
+  createProductPayload,
+  updateProductQAPayload,
+} from "./types";
 
 export const useCreateNewProductRequest = () =>
   useMutation({
@@ -19,6 +25,12 @@ export const useSaveProductQA = () =>
   useMutation({
     mutationKey: ["save product QA"],
     mutationFn: (payload: saveProductQAPayload) => saveProductQA(payload),
+  });
+
+export const useUpdateProductQA = () =>
+  useMutation({
+    mutationKey: ["update product QA"],
+    mutationFn: (payload: updateProductQAPayload) => updateProductQA(payload),
   });
 
 export const useGetProductQA = (productId: string | undefined) =>

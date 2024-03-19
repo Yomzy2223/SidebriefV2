@@ -1,4 +1,4 @@
-import { axios, rootType, errorType } from "../index";
+import { axios, rootType } from "../index";
 import {
   productType,
   saveProductQAPayload,
@@ -6,6 +6,7 @@ import {
   addServiceToProductPayload,
   createProductPayload,
   productFormType,
+  updateProductQAPayload,
 } from "./types";
 
 export const createNewProductRequest = (payload: createProductPayload) =>
@@ -13,6 +14,9 @@ export const createNewProductRequest = (payload: createProductPayload) =>
 
 export const saveProductQA = ({ productId, form }: saveProductQAPayload) =>
   axios.post<rootType<productQAType[]>>(`/productRequest/form/${productId}`, form);
+
+export const updateProductQA = ({ requestFormId, form }: updateProductQAPayload) =>
+  axios.put<rootType<productQAType[]>>(`/productRequest/form/${requestFormId}`, form);
 
 export const getproductQA = ({ productId }: { productId: string | undefined }) =>
   axios.get<rootType<productQAType[]>>(`/productRequest/form/${productId}`);
