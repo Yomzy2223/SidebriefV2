@@ -1,11 +1,15 @@
-import { InfoGif, PaymentCardGif, ProfileGif, ReviewGif } from "@/assets/gif";
 import { Badge, Button } from "flowbite-react";
 import { ArrowRightCircle, Info, InfoIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import { steps } from "./constants";
 
 const OngoingRegSection = () => {
-  const activeStep = "Payment";
+  const activeStep = "Kyc".toLowerCase();
+
+  const afterProfile = activeStep === "payment" || activeStep === "kyc" || activeStep == "review";
+  const afterPayment = activeStep === "kyc" || activeStep == "review";
+  const afterInfo = activeStep == "review";
 
   return (
     <div className="flex flex-col gap-9 bg-accent rounded-lg">
@@ -37,7 +41,13 @@ const OngoingRegSection = () => {
 
       <div className="flex overflow-auto gap-2.5 mx-8 mb-8">
         {steps.map((el) => {
-          const done = el.state.toLowerCase() === activeStep.toLowerCase();
+          const state = el.state.toLowerCase();
+          const done =
+            state === activeStep ||
+            (state === "request-info" && afterProfile) ||
+            (state === "payment" && afterPayment) ||
+            (state === "kyc" && afterInfo);
+
           return (
             <div
               key={el.step}
@@ -64,34 +74,3 @@ const OngoingRegSection = () => {
 };
 
 export default OngoingRegSection;
-
-const steps = [
-  {
-    step: "Step 1",
-    description:
-      "Now continue the process of registering your business without the need for any physical paperwork.",
-    state: "request-info",
-    icon: ProfileGif,
-  },
-  {
-    step: "Step 2",
-    description:
-      "Now continue the process of registering your business without the need for any physical paperwork.",
-    state: "payment",
-    icon: PaymentCardGif,
-  },
-  {
-    step: "Step 3",
-    description:
-      "Now continue the process of registering your business without the need for any physical paperwork.",
-    state: "kyc",
-    icon: InfoGif,
-  },
-  {
-    step: "Step 4",
-    description:
-      "Now continue the process of registering your business without the need for any physical paperwork.",
-    state: "review",
-    icon: ReviewGif,
-  },
-];

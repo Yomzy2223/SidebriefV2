@@ -8,7 +8,7 @@ export const useTableInfo = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const onClick = () => router.push(pathname + "/reg1");
+  const onClick = () => router.push(pathname + "", { scroll: false });
 
   // Services table header
   const tableHeaders = ["S/N", "SERVICE NAME", "STATUS", "AMOUNT", "DATE"];

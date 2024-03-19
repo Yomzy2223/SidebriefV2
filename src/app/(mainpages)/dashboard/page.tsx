@@ -9,6 +9,8 @@ import { Card } from "flowbite-react";
 import GeneralTable from "@/components/tables/generalTable";
 import { useTableInfo } from "./actions";
 import OngoingRegSection from "@/components/dashboard/ongoingRegSection";
+import useRequestApi from "@/hooks/useRequestApi";
+import { useSession } from "next-auth/react";
 
 // interface BadgeProps {
 //   size?: "sm" | "lg";
@@ -47,6 +49,12 @@ import OngoingRegSection from "@/components/dashboard/ongoingRegSection";
 
 export default function Dashboard() {
   const { tableHeaders, tableBody } = useTableInfo();
+  const session = useSession();
+  const userId = session.data?.user?.id;
+
+  const { useGetUserRequestsQuery } = useRequestApi();
+  const { data } = useGetUserRequestsQuery(userId);
+  console.log(data);
 
   return (
     <div className="p-5 space-y-14 md:p-8">

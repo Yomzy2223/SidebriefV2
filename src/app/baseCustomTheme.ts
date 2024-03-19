@@ -64,5 +64,10 @@ export const customTheme: ThemeProps = {
         },
       },
     },
+    radio: {
+      root: {
+        base: "h-4 w-4 border border-border focus:ring-0 dark:border-gray-600 dark:bg-gray-700 dark:focus:bg-cyan-600 text-cyan-600",
+      },
+    },
   },
 };
