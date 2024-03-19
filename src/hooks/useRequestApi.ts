@@ -1,4 +1,4 @@
-import { useGlobalFucntions } from "./globalFunctions";
+import { useGlobalFunctions } from "./globalFunctions";
 import { useResponse } from "./useResponse";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -11,7 +11,7 @@ import {
 
 const useRequestApi = () => {
   const { handleError, handleSuccess } = useResponse();
-  const { setQuery } = useGlobalFucntions();
+  const { setQuery } = useGlobalFunctions();
   const queryClient = useQueryClient();
 
   const createRequestMutation = useMutation({

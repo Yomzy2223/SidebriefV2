@@ -9,11 +9,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useSession } from "next-auth/react";
 import { IServiceFull } from "@/hooks/api/types";
-import { useGlobalFucntions } from "@/hooks/globalFunctions";
+import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import ServiceCardSK from "@/components/cards/ServiceCard/ServiceCardSK";
 
 const SelectService = () => {
-  const { setQuery } = useGlobalFucntions();
+  const { setQuery } = useGlobalFunctions();
 
   const { getAllServicesQuery } = useServiceApi();
   const { data, isLoading } = getAllServicesQuery;
@@ -37,8 +37,8 @@ const SelectService = () => {
       <h3 className="mb-7 font-normal text-foreground-3 sm:mt-10">WELCOME TO SIDEBRIEF</h3>
       <div className="sb-text-16 font-semibold mb-6">
         Hello <span className="font-normal first-letter:capitalize">{userName} 👋</span>, You&#39;re
-        welcome to Sidebrief, where we handle all your businesses' legal works. Tell us why you are
-        here.
+        welcome to Sidebrief, where we handle all your businesses&#39; legal works. Tell us why you
+        are here.
       </div>
 
       <div className="grid grid-cols-2 gap-2 mb-12 p-2 rounded sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 bg-accent">

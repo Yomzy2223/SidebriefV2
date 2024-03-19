@@ -50,10 +50,10 @@ const DynamicForm = ({
   }, [watch, watchValues]);
 
   // useEffect(() => {
-  //   if (defaultValues && dValues) {
-  //     formInfo.forEach((el) => setValue(el.name, defaultValues[el.name] || el.value));
+  //   if (dValues) {
+  //     formInfo.forEach((el) => dValues[el.name] && setValue(el.name, dValues[el.name] || el.value));
   //   }
-  // }, [formInfo, setValue, defaultValues, dValues]);
+  // }, [formInfo, dValues]);
 
   const prevFormInfoRef = useRef(formInfo);
 

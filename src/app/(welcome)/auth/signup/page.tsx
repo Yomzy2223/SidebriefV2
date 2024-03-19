@@ -3,7 +3,7 @@
 import AuthFormWrapper from "@/components/features/auth/authFormWrapper";
 import DynamicForm from "@/components/form/dynamicForm";
 import { AuthStepper } from "@/components/stepper/auth";
-import { useGlobalFucntions } from "@/hooks/globalFunctions";
+import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { useResponse } from "@/hooks/useResponse";
 import { Button } from "flowbite-react";
 import { ArrowRightCircle } from "lucide-react";
@@ -18,7 +18,7 @@ const SignUp = () => {
   const [isPending, setIsPending] = useState(false);
   const { push } = useRouter();
   const { handleError, handleSuccess } = useResponse();
-  const { isDesktop } = useGlobalFucntions();
+  const { isDesktop } = useGlobalFunctions();
 
   const handleSignUp = async (values: signUpType) => {
     setIsPending(true);
