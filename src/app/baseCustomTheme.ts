@@ -4,9 +4,11 @@ export const customTheme: ThemeProps = {
   theme: {
     badge: {
       root: {
+        base: "flex h-fit items-center gap-1 font-semibold !py-0.5 !px-2.5 !rounded-md",
         color: {
           magenta:
             "bg-magenta/10 text-magenta dark:bg-magenta/20 dark:text-magenta group-hover:bg-magenta/20 dark:group-hover:bg-magenta/30",
+          pink: "bg-[#d400cc14] text-[#D400CC]",
         },
       },
     },

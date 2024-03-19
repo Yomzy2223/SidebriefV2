@@ -1,11 +1,14 @@
 "use client";
 
-import { StaticImageData } from "next/image";
-import { Services } from "./services";
 import WelcomeSection from "@/components/dashboard/welcomeSection";
 import HandpickedSection from "@/components/dashboard/handpickedSection";
 import BusinessMembersSection from "@/components/dashboard/businessMembersSection";
 import BusinessInfoSecion from "@/components/dashboard/businessInfoSection";
+import SuggestionSection from "@/components/dashboard/suggestionsSection";
+import { Card } from "flowbite-react";
+import GeneralTable from "@/components/tables/generalTable";
+import { useTableInfo } from "./actions";
+import OngoingRegSection from "@/components/dashboard/ongoingRegSection";
 
 // interface BadgeProps {
 //   size?: "sm" | "lg";
@@ -43,47 +46,44 @@ import BusinessInfoSecion from "@/components/dashboard/businessInfoSection";
 // };
 
 export default function Dashboard() {
+  const { tableHeaders, tableBody } = useTableInfo();
+
   return (
     <div className="p-5 space-y-14 md:p-8">
       <WelcomeSection />
       <BusinessInfoSecion />
       <HandpickedSection />
-      {/* <div className="flex flex-col sm:flex-row">
-        <div className="px-0 sm:px-0">
-          <div className="flex items-center">
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-              Contifery agricultural limited
-            </h1>
-            <span className="ml-2">
-              <ApplicationBadge size="lg" status="Pending" />
-            </span>
-          </div>
-          <p className="mt-2 text-sm text-gray-500">
-            Now continue the process of registering your business without the need for any physical
-            paperwork.
-          </p>
-        </div>
-
-        <div className="sm:hidden w-full mt-6">
-          <Button color="secondary" size={"lg"} className="self-start">
-            <div className="space-x-2 flex items-center">
-              <p>Resume</p>
-              <ArrowRight />
-            </div>
-          </Button>
-        </div>
-      </div> */}
-
-      {/* <div className="hidden sm:block">
-        <Button color="magenta" size={"lg"} className="mr-7 self-start mt-8 absolute top-0 right-0">
-          <div className="space-x-2 flex items-center">
-            <p>Resume</p>
-            <ArrowRight />
-          </div>
-        </Button>
-      </div> */}
+      <SuggestionSection />
       <BusinessMembersSection />
-      <Services />
+      <OngoingRegSection />
+      <Card>
+        <GeneralTable
+          tableHeaders={tableHeaders}
+          tableBody={tableBody}
+          serviceTableNav={serviceTableNav}
+          title="All Services"
+        />
+      </Card>
     </div>
   );
 }
+
+export const serviceTableNav = [
+  {
+    name: "service",
+    value: "all",
+  },
+  {
+    name: "service",
+    value: "draft",
+  },
+
+  {
+    name: "service",
+    value: "submitted",
+  },
+  {
+    name: "service",
+    value: "completed",
+  },
+];

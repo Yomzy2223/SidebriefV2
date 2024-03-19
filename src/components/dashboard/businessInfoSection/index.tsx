@@ -55,7 +55,7 @@ const BusinessInfoSecion = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 lg:flex-row md:items-center md:gap-7">
+      <div className="flex flex-col gap-4 xl:flex-row md:items-center md:gap-7">
         <Button outline className="border-foreground">
           <span>Manage this business</span>
           <ArrowRightCircle fill="hsl(var(--foreground))" stroke="white" />

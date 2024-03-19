@@ -23,7 +23,7 @@ const renderFile = (files: File[]) => {
       {files.map((file, i) => (
         <div
           key={file.name + i}
-          className="sb-text-16 flex items-center leading-normal border rounded-[50px] py-4 px-6"
+          className="sb-text-16 flex items-center leading-normal rounded-[50px] py-4 px-6 bg-[#FAFAFA]"
         >
           <Image src={getFileImage(file.type)} alt={file.name} className="mr-2 w-6 h-6" />
           <span className="underline text-ellipsis whitespace-nowrap overflow-hidden">
