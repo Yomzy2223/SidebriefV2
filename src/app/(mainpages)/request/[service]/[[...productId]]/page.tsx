@@ -10,6 +10,11 @@ import { redirect } from "next/navigation";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
 import { CountryInput } from "@/components/input";
+<<<<<<< HEAD:src/app/(mainpages)/request/[service]/[[...productId]]/page.tsx
+=======
+import { TCountryCode, countries, getCountryCode } from "countries-list";
+import { sluggify } from "@/lib/utils";
+>>>>>>> origin/staging:src/app/(launch)/dashboard/[service]/[[...productId]]/page.tsx
 
 // const tabs = [
 // 	{ name: "Bank Transfer", href: "#", icon: BankIcon, current: false },
@@ -37,7 +42,7 @@ export default function RegistrationPlan({
       redirect("/dashboard");
     }
 
-    const service = services.find((service) => slugify(service.name) === serviceSlug);
+    const service = services.find((service) => sluggify(service.name) === serviceSlug);
 
     if (!service) {
       redirect("/dashboard");

@@ -2,15 +2,20 @@ import { ProductInfoForm } from "./productinfoform";
 import { MemberForm } from "./proprietorform";
 import { Forms } from "./forms";
 import { getProductRequest, getProductForm } from "@/services/product/operations";
+import { redirect } from "next/navigation";
 
 export default async function KYCpage({
-  params: { productId },
+  params: { productId, service },
 }: {
   params: { service: string; productId: string };
 }) {
   const productRequest = await getProductRequest({ productRequestId: productId });
 
-  const selectedProduct = productRequest.data.data.product.id;
+  const selectedProduct = productRequest.data.data.productId || "";
+
+  if (selectedProduct === "") {
+    redirect("/dashboard/" + service);
+  }
 
   const productForm = await getProductForm({ productId: selectedProduct });
 

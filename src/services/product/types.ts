@@ -53,6 +53,18 @@ export type saveProductQAPayload = {
   };
 };
 
+export type updateProductQAPayload = {
+  requestFormId: string;
+  form: {
+    title: string;
+    description: string;
+    type: string;
+    compulsory: boolean;
+    isGeneral: boolean;
+    subForm: FormItem[];
+  };
+};
+
 export type productQAType = {
   compulsory: boolean;
   createdAt: string;
