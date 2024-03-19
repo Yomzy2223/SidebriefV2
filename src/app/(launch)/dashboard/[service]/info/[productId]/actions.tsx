@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { serviceFormSubFormType, serviceFormType } from "@/services/service/types";
-import { useSaveProductQA } from "@/services/product";
+import { useSaveProductQA, useUpdateProductQA } from "@/services/product";
 import { FormItem } from "@/services/product/types";
 import { useRouter, useParams } from "next/navigation";
 import { sluggify } from "@/lib/utils";
 import { productFormType } from "@/services/product/types";
-import { useEffect } from "react";
+import { MutableRefObject, useEffect, useRef } from "react";
 import { useGetProductQA } from "@/services/product";
 import { useState } from "react";
 
@@ -16,12 +16,19 @@ function isServiceFormType(form: any): form is serviceFormType {
 
 export const useActions = ({ form }: { form: serviceFormType | productFormType }) => {
   const saveProductQA = useSaveProductQA();
+  const updateProductQA = useUpdateProductQA();
 
-  const saveFormProductQA = async (
-    productId: string,
-    values: { [x: string]: string | string[] },
-    isGeneral?: boolean
-  ) => {
+  const saveFormProductQA = async ({
+    productId,
+    values,
+    isGeneral,
+    requestFormId,
+  }: {
+    productId: string;
+    values: { [x: string]: string | string[] };
+    isGeneral?: boolean;
+    requestFormId?: string;
+  }) => {
     const formQA: FormItem[] = Object.keys(values).map((slug) => {
       const subForm = isServiceFormType(form)
         ? form.subForm?.find((el) => sluggify(el.question) === slug)
@@ -36,10 +43,34 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
       } as FormItem;
     });
 
-    // save the questions
-    return await saveProductQA.mutateAsync(
-      {
-        productId,
+    // save the answers
+    if (!requestFormId)
+      return await saveProductQA.mutateAsync(
+        {
+          productId,
+          form: {
+            title: form.title,
+            description: form.description,
+            type: form.type,
+            compulsory: form.compulsory,
+            isGeneral: isGeneral || false,
+            subForm: formQA,
+          },
+        },
+        {
+          // 	onSuccess: (data) => {
+          // 		router.push(
+          // 			`/dashboard/${params.service}/plan/${productId}`
+          // 		);
+          // 	},
+          onError: (err) => {
+            console.log(err);
+          },
+        }
+      );
+    else
+      return updateProductQA.mutateAsync({
+        requestFormId,
         form: {
           title: form.title,
           description: form.description,
@@ -48,23 +79,12 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
           isGeneral: isGeneral || false,
           subForm: formQA,
         },
-      },
-      {
-        // 	onSuccess: (data) => {
-        // 		router.push(
-        // 			`/dashboard/${params.service}/plan/${productId}`
-        // 		);
-        // 	},
-        onError: (err) => {
-          console.log(err);
-        },
-      }
-    );
+      });
   };
 
   return {
     saveFormProductQA,
-    savingForm: saveProductQA.isPending,
+    savingForm: saveProductQA.isPending || updateProductQA.isPending,
   };
 };
 
@@ -81,12 +101,18 @@ export const useRemember = ({
 
   const [values, setValues] = useState<{ [key: string]: string | string[] }>({});
 
+  const formStateId = useRef<string | null>(null);
+
   useEffect(() => {
     if (productId && !productQA.isLoading && prevFormstates) {
       const latestProductState = prevFormstates[prevFormstates?.length - 1];
       if (latestProductState === undefined) {
         return;
       }
+
+      console.log(latestProductState);
+
+      formStateId.current = latestProductState.id;
       const newValues: { [key: string]: string | string[] } = {};
 
       latestProductState.subForm.forEach((qa) => {
@@ -108,6 +134,7 @@ export const useRemember = ({
   }, [productId, productQA.isLoading, values, prevFormstates]);
 
   return {
+    formStateId: formStateId.current,
     values,
     isLoading: productQA.isPending,
   };

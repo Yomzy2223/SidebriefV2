@@ -43,10 +43,17 @@ export const LaunchForm1 = ({
     form,
   });
 
-  const { values, isLoading } = useRemember({ productId: urlProductId, form: form });
+  const { values, isLoading, formStateId } = useRemember({ productId: urlProductId, form: form });
+
+  console.log(values);
 
   const submitFormHandler = async (values: { [x: string]: string | string[] }) => {
-    await saveFormProductQA(urlProductId, values, true);
+    await saveFormProductQA({
+      productId: urlProductId,
+      values,
+      isGeneral: true,
+      requestFormId: formStateId || undefined,
+    });
     if (tabsRef && currentTab !== totalNumOfTabs - 1) {
       tabsRef.current.setActiveTab(currentTab + 1);
     }

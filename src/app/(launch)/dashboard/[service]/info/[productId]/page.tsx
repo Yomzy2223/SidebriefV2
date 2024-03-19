@@ -3,10 +3,11 @@ import { LaunchForm1 } from "./form";
 import { getServices, getServiceForms } from "@/services/service/operations";
 import { redirect } from "next/navigation";
 import { ProductTabs } from "./tabs";
+import { sluggify } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-export default async function LaunchStart({
+export default async function LaunchInfo({
   params,
 }: {
   params: { service: string; productId: string };
@@ -21,7 +22,7 @@ export default async function LaunchStart({
 
   const serviceSlug = params.service;
 
-  const service = services.find((service) => slugify(service.name) === serviceSlug);
+  const service = services.find((service) => sluggify(service.name) === serviceSlug);
   if (!service) {
     redirect("/dashboard");
   }
