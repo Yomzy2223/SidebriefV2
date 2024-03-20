@@ -31,6 +31,7 @@ export type SubFormProfile = {
 };
 
 export type FormItem = {
+  id?: string;
   question: string;
   answer: string[];
   type: string;

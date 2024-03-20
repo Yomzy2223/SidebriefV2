@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { serviceFormSubFormType, serviceFormType } from "@/services/service/types";
 import { useSaveProductQA, useUpdateProductQA } from "@/services/product";
-import { FormItem } from "@/services/product/types";
+import { FormItem, productQAType } from "@/services/product/types";
 import { useRouter, useParams } from "next/navigation";
 import { sluggify } from "@/lib/utils";
 import { productFormType } from "@/services/product/types";
@@ -22,12 +22,10 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
     productId,
     values,
     isGeneral,
-    requestFormId,
   }: {
     productId: string;
     values: { [x: string]: string | string[] };
     isGeneral?: boolean;
-    requestFormId?: string;
   }) => {
     const formQA: FormItem[] = Object.keys(values).map((slug) => {
       const subForm = isServiceFormType(form)
@@ -43,34 +41,12 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
       } as FormItem;
     });
 
+    console.log("saving");
+
     // save the answers
-    if (!requestFormId)
-      return await saveProductQA.mutateAsync(
-        {
-          productId,
-          form: {
-            title: form.title,
-            description: form.description,
-            type: form.type,
-            compulsory: form.compulsory,
-            isGeneral: isGeneral || false,
-            subForm: formQA,
-          },
-        },
-        {
-          // 	onSuccess: (data) => {
-          // 		router.push(
-          // 			`/dashboard/${params.service}/plan/${productId}`
-          // 		);
-          // 	},
-          onError: (err) => {
-            console.log(err);
-          },
-        }
-      );
-    else
-      return updateProductQA.mutateAsync({
-        requestFormId,
+    return saveProductQA.mutateAsync(
+      {
+        productId,
         form: {
           title: form.title,
           description: form.description,
@@ -79,12 +55,61 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
           isGeneral: isGeneral || false,
           subForm: formQA,
         },
-      });
+      },
+      {
+        // 	onSuccess: (data) => {
+        // 		router.push(
+        // 			`/dashboard/${params.service}/plan/${productId}`
+        // 		);
+        // 	},
+        onError: (err) => {
+          console.log(err);
+        },
+      }
+    );
   };
 
+  const updateFormProductQA = async ({
+    values,
+    isGeneral,
+    requestFormState,
+  }: {
+    values: { [x: string]: string | string[] };
+    isGeneral?: boolean;
+    requestFormState: productQAType;
+  }) => {
+    const formQA: FormItem[] = Object.keys(values).map((slug) => {
+      const subForm = requestFormState.subForm?.find((el) => sluggify(el.question) === slug);
+
+      return {
+        id: subForm?.id,
+        question: subForm?.question,
+        answer: Array.isArray(values[slug]) ? values[slug] : [values[slug]],
+        compulsory: subForm?.compulsory,
+        isGeneral: true,
+        type: subForm?.type,
+      } as FormItem;
+    });
+
+    console.log("updating");
+
+    return updateProductQA.mutateAsync({
+      requestFormId: requestFormState.id,
+      form: {
+        title: form.title,
+        description: form.description,
+        type: form.type,
+        compulsory: form.compulsory,
+        isGeneral: isGeneral || false,
+        subForm: formQA,
+      },
+    });
+  };
   return {
     saveFormProductQA,
-    savingForm: saveProductQA.isPending || updateProductQA.isPending,
+    savingForm: saveProductQA.isPending,
+    updateFormProductQA,
+    updatingForm: updateProductQA.isPending,
   };
 };
 
@@ -101,7 +126,7 @@ export const useRemember = ({
 
   const [values, setValues] = useState<{ [key: string]: string | string[] }>({});
 
-  const formStateId = useRef<string | null>(null);
+  const formStateId = useRef<productQAType | null>(null);
 
   useEffect(() => {
     if (productId && !productQA.isLoading && prevFormstates) {
@@ -112,7 +137,7 @@ export const useRemember = ({
 
       console.log(latestProductState);
 
-      formStateId.current = latestProductState.id;
+      formStateId.current = latestProductState;
       const newValues: { [key: string]: string | string[] } = {};
 
       latestProductState.subForm.forEach((qa) => {
@@ -134,7 +159,7 @@ export const useRemember = ({
   }, [productId, productQA.isLoading, values, prevFormstates]);
 
   return {
-    formStateId: formStateId.current,
+    formState: formStateId.current,
     values,
     isLoading: productQA.isPending,
   };

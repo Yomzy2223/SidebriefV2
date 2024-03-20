@@ -39,21 +39,27 @@ export const LaunchForm1 = ({
 
   const subForms = form.subForm;
 
-  const { saveFormProductQA, savingForm } = useActions({
+  const { saveFormProductQA, savingForm, updateFormProductQA, updatingForm } = useActions({
     form,
   });
 
-  const { values, isLoading, formStateId } = useRemember({ productId: urlProductId, form: form });
-
-  console.log(values);
+  const { values, isLoading, formState } = useRemember({ productId: urlProductId, form: form });
 
   const submitFormHandler = async (values: { [x: string]: string | string[] }) => {
-    await saveFormProductQA({
-      productId: urlProductId,
-      values,
-      isGeneral: true,
-      requestFormId: formStateId || undefined,
-    });
+    if (!formState) {
+      await saveFormProductQA({
+        productId: urlProductId,
+        values,
+        isGeneral: true,
+      });
+    } else {
+      await updateFormProductQA({
+        requestFormState: formState,
+        values: values,
+        isGeneral: true,
+      });
+    }
+
     if (tabsRef && currentTab !== totalNumOfTabs - 1) {
       tabsRef.current.setActiveTab(currentTab + 1);
     }
@@ -94,7 +100,7 @@ export const LaunchForm1 = ({
               color="secondary"
               size={"lg"}
               type="submit"
-              isProcessing={savingForm}
+              isProcessing={savingForm || updatingForm}
               // disabled={isLoading}
             >
               <div className="space-x-2 flex items-center">
