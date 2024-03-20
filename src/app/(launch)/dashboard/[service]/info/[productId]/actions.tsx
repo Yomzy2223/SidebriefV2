@@ -57,11 +57,6 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
         },
       },
       {
-        // 	onSuccess: (data) => {
-        // 		router.push(
-        // 			`/dashboard/${params.service}/plan/${productId}`
-        // 		);
-        // 	},
         onError: (err) => {
           console.log(err);
         },
@@ -76,8 +71,10 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
   }: {
     values: { [x: string]: string | string[] };
     isGeneral?: boolean;
-    requestFormState: productQAType;
+    requestFormState: productQAType | undefined;
   }) => {
+    if (!requestFormState) return;
+
     const formQA: FormItem[] = Object.keys(values).map((slug) => {
       const subForm = requestFormState.subForm?.find((el) => sluggify(el.question) === slug);
 
@@ -116,9 +113,11 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
 export const useRemember = ({
   productId,
   form,
+  selectedPerson,
 }: {
   productId: string;
   form: serviceFormType | productFormType;
+  selectedPerson: number | null;
 }) => {
   const productQA = useGetProductQA(productId);
 
@@ -126,41 +125,73 @@ export const useRemember = ({
 
   const [values, setValues] = useState<{ [key: string]: string | string[] }>({});
 
-  const formStateId = useRef<productQAType | null>(null);
+  // const formState = useRef<productQAType | productQAType[] | null>(null);
+  const [formState, setFormState] = useState<productQAType | productQAType[] | null>(null);
 
   useEffect(() => {
     if (productId && !productQA.isLoading && prevFormstates) {
-      const latestProductState = prevFormstates[prevFormstates?.length - 1];
-      if (latestProductState === undefined) {
-        return;
-      }
-
-      console.log(latestProductState);
-
-      formStateId.current = latestProductState;
-      const newValues: { [key: string]: string | string[] } = {};
-
-      latestProductState.subForm.forEach((qa) => {
-        switch (qa.type) {
-          case "country":
-          case "address":
-          case "email address":
-            newValues[sluggify(qa.question || "")] = qa.answer[0];
-            break;
-          default:
-            newValues[sluggify(qa.question || "")] = qa.answer;
+      if (!prevFormstates || prevFormstates.length === 0) {
+        setFormState(null);
+        if (JSON.stringify({}) !== JSON.stringify(values)) {
+          setValues({});
         }
-      });
+      } else {
+        const latestProductState = !selectedPerson
+          ? prevFormstates[prevFormstates?.length - 1]
+          : prevFormstates[selectedPerson - 1];
 
-      if (JSON.stringify(newValues) !== JSON.stringify(values)) {
-        setValues(newValues);
+        if (latestProductState === undefined) {
+          return;
+        }
+
+        let reset = false;
+
+        if (!selectedPerson && form.type === "person") {
+          reset = true;
+          return;
+        }
+
+        // formState.current = form.type === "person" ? prevFormstates : latestProductState;
+        const newFormState = form.type === "person" ? prevFormstates : latestProductState;
+
+        if (JSON.stringify(newFormState) !== JSON.stringify(formState)) {
+          setFormState(newFormState);
+        }
+
+        const newValues: { [key: string]: string | string[] } = {};
+
+        latestProductState.subForm.forEach((qa) => {
+          switch (qa.type) {
+            case "country":
+            case "address":
+            case "email address":
+            case "short answer":
+              newValues[sluggify(qa.question || "")] = reset ? [] : qa.answer[0];
+              break;
+            default:
+              newValues[sluggify(qa.question || "")] = reset ? "" : qa.answer;
+          }
+        });
+
+        if (JSON.stringify(newValues) !== JSON.stringify(values)) {
+          setValues(newValues);
+        }
       }
     }
-  }, [productId, productQA.isLoading, values, prevFormstates]);
+  }, [
+    productId,
+    productQA.isLoading,
+    values,
+    prevFormstates,
+    formState,
+    selectedPerson,
+    form.type,
+  ]);
 
   return {
-    formState: formStateId.current,
+    formState,
     values,
     isLoading: productQA.isPending,
+    refetchState: productQA.refetch,
   };
 };

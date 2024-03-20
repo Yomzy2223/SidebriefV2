@@ -54,7 +54,7 @@ export const LaunchForm1 = ({
       });
     } else {
       await updateFormProductQA({
-        requestFormState: formState,
+        requestFormState: !Array.isArray(formState) ? formState : undefined,
         values: values,
         isGeneral: true,
       });
