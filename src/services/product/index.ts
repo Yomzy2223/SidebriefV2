@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  createNewProductRequest,
   saveProductQA,
   updateProductQA,
   getproductQA,
@@ -8,18 +7,7 @@ import {
   getProductRequest,
   getProductForm,
 } from "./operations";
-import {
-  saveProductQAPayload,
-  addServiceToProductPayload,
-  createProductPayload,
-  updateProductQAPayload,
-} from "./types";
-
-export const useCreateNewProductRequest = () =>
-  useMutation({
-    mutationFn: (payload: createProductPayload) => createNewProductRequest(payload),
-    mutationKey: ["create new product"],
-  });
+import { saveProductQAPayload, addServiceToProductPayload, updateProductQAPayload } from "./types";
 
 export const useSaveProductQA = () =>
   useMutation({

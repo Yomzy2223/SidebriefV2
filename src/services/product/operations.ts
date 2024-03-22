@@ -4,13 +4,9 @@ import {
   saveProductQAPayload,
   productQAType,
   addServiceToProductPayload,
-  createProductPayload,
   productFormType,
   updateProductQAPayload,
 } from "./types";
-
-export const createNewProductRequest = (payload: createProductPayload) =>
-  axios.post<rootType<productType>>("/productRequest", payload);
 
 export const saveProductQA = ({ productId, form }: saveProductQAPayload) =>
   axios.post<rootType<productQAType[]>>(`/productRequest/form/${productId}`, form);

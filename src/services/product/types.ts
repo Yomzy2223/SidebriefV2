@@ -85,11 +85,6 @@ export type addServiceToProductPayload = {
   productId: string;
 };
 
-export type createProductPayload = {
-  userId: string;
-  productId: string;
-};
-
 export type SubformQAType = {
   answer: string[];
   compulsory: boolean;

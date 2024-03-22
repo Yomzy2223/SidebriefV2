@@ -11,7 +11,7 @@ export const axios = defaultAxios.create({
 
 export default axios;
 
-export type rootType<T> = {
+export type rootType<T = any> = {
   message: string;
   data: T;
 };

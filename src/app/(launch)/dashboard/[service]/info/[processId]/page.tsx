@@ -1,20 +1,20 @@
-import slugify from "slugify";
 import { LaunchForm1 } from "./form";
 import { getServices, getServiceForms } from "@/services/service/operations";
 import { redirect } from "next/navigation";
 import { ProductTabs } from "./tabs";
 import { sluggify } from "@/lib/utils";
+import { GetProcessRequest } from "@/services/process/operations";
 
 export const dynamic = "force-dynamic";
 
 export default async function LaunchInfo({
   params,
 }: {
-  params: { service: string; productId: string };
+  params: { service: string; processId: string };
 }) {
   const data = await getServices();
 
-  if (!params.productId) {
+  if (!params.processId) {
     redirect(`/dashboard/${params.service}`);
   }
 
@@ -33,7 +33,13 @@ export default async function LaunchInfo({
 
   const serviceForm1 = allServiceForms[0];
 
-  const productId = params.productId;
+  const processId = params.processId;
+
+  const process = await GetProcessRequest({ id: processId });
+
+  const processData = process.data.data;
+
+  const productId = processData.productRequest[0].id;
 
   return (
     <div className="flex flex-col gap-2 max-w-[500px] w-full">
@@ -47,6 +53,7 @@ export default async function LaunchInfo({
             <p className="font-medium leading-normal text-primary">{serviceForm1.description}</p>
           </div>
           <LaunchForm1 urlProductId={productId} form={serviceForm1} />
+          <>form</>
         </div>
       )}
     </div>

@@ -6,7 +6,7 @@ import { productFormType, productSubFormType } from "@/services/product/types";
 import { cn, sluggify } from "@/lib/utils";
 import { ArrowRight } from "@/assets/icons";
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
-import { useActions, useRemember } from "../../info/[productId]/actions";
+import { useActions, useRemember } from "../../info/[processId]/actions";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/flowbite";
 import { SwatchBook } from "@/assets/icons";

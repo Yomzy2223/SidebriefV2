@@ -117,7 +117,7 @@ export const useRemember = ({
 }: {
   productId: string;
   form: serviceFormType | productFormType;
-  selectedPerson: number | null;
+  selectedPerson?: number | null;
 }) => {
   const productQA = useGetProductQA(productId);
 
