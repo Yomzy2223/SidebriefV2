@@ -35,7 +35,7 @@ export const LaunchForm1 = ({
 
   const router = useRouter();
 
-  const params: { service: string } = useParams();
+  const params: { service: string; processId: string } = useParams();
 
   const subForms = form.subForm;
 
@@ -64,7 +64,7 @@ export const LaunchForm1 = ({
       tabsRef.current.setActiveTab(currentTab + 1);
     }
     if (currentTab === totalNumOfTabs - 1) {
-      router.push(`/dashboard/${params.service}/kyc/${urlProductId}`);
+      router.push(`/dashboard/${params.service}/kyc/${params.processId}`);
     }
   };
 
