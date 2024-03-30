@@ -14,9 +14,9 @@ export default async function KYCpage({
 
   const processData = process.data.data;
 
-  const productId = processData.productRequest[0].id;
+  const productRequestId = processData.productRequest[0].id;
 
-  const productRequest = await getProductRequest({ productRequestId: productId });
+  const productRequest = await getProductRequest({ productRequestId: productRequestId });
 
   const selectedProduct = productRequest.data.data.productId || "";
 
@@ -26,11 +26,15 @@ export default async function KYCpage({
 
   const productForm = await getProductForm({ productId: selectedProduct });
 
+  if (productForm.data.data.length === 0) {
+    // TODO: redirect to next pag, since there is no form
+  }
+
   return (
     <div className="flex flex-col max-w-[500px] w-full">
       <h4 className="text-sm leading-normal text-foreground-3 mb-1">STEP 4</h4>
       <div className="space-y-20">
-        <Forms forms={productForm.data.data} productId={productId} />
+        <Forms forms={productForm.data.data} productId={productRequestId} />
         {/* <div>
           <h6 className="text-2xl leading-normal font-semibold">
             Product Info

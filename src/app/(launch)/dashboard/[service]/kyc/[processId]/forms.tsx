@@ -74,7 +74,9 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
   };
 
   const noDocuments: (form: productFormType) => productSubFormType[] = (form: productFormType) => {
-    return form.productSubForm.filter((subform) => subform.type !== "document upload");
+    return form.productSubForm.filter(
+      (subform) => subform.type !== "document upload" && subform.type !== "document template"
+    );
   };
 
   return (

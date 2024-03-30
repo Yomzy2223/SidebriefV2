@@ -1,4 +1,4 @@
-import { axios, rootType } from "../index";
+import { Client, rootType } from "../index";
 import {
   productType,
   saveProductQAPayload,
@@ -8,23 +8,35 @@ import {
   updateProductQAPayload,
 } from "./types";
 
-export const saveProductQA = ({ productId, form }: saveProductQAPayload) =>
-  axios.post<rootType<productQAType[]>>(`/productRequest/form/${productId}`, form);
+export const saveProductQA = async ({ productId, form }: saveProductQAPayload) => {
+  const client = await Client();
+  return client.post<rootType<productQAType[]>>(`/productRequest/form/${productId}`, form);
+};
 
-export const updateProductQA = ({ requestFormId, form }: updateProductQAPayload) =>
-  axios.put<rootType<productQAType[]>>(`/productRequest/form/${requestFormId}`, form);
+export const updateProductQA = async ({ requestFormId, form }: updateProductQAPayload) => {
+  const client = await Client();
+  return client.put<rootType<productQAType[]>>(`/productRequest/form/${requestFormId}`, form);
+};
 
-export const getproductQA = ({ productId }: { productId: string | undefined }) =>
-  axios.get<rootType<productQAType[]>>(`/productRequest/form/${productId}`);
+export const getproductQA = async ({ productId }: { productId: string | undefined }) => {
+  const client = await Client();
+  return client.get<rootType<productQAType[]>>(`/productRequest/form/${productId}`);
+};
 
-export const addServiceToProduct = ({ productId, serviceId }: addServiceToProductPayload) =>
-  axios.post<rootType<productType>>("/product/serviceId", {
+export const addServiceToProduct = async ({ productId, serviceId }: addServiceToProductPayload) => {
+  const client = await Client();
+  return client.post<rootType<productType>>("/product/serviceId", {
     serviceId,
     productId,
   });
+};
 
-export const getProductRequest = ({ productRequestId }: { productRequestId: string }) =>
-  axios.get<rootType<productType>>(`/productRequest/${productRequestId}`);
+export const getProductRequest = async ({ productRequestId }: { productRequestId: string }) => {
+  const client = await Client();
+  return client.get<rootType<productType>>(`/productRequest/${productRequestId}`);
+};
 
-export const getProductForm = ({ productId }: { productId: string }) =>
-  axios.get<rootType<productFormType[]>>(`/products/formByProduct/${productId}`);
+export const getProductForm = async ({ productId }: { productId: string }) => {
+  const client = await Client();
+  return client.get<rootType<productFormType[]>>(`/products/formByProduct/${productId}`);
+};

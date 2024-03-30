@@ -8,12 +8,26 @@ import {
   getProductForm,
 } from "./operations";
 import { saveProductQAPayload, addServiceToProductPayload, updateProductQAPayload } from "./types";
+import { useToast } from "@/components/ui/use-toast";
 
-export const useSaveProductQA = () =>
-  useMutation({
+export const useSaveProductQA = () => {
+  const { toast } = useToast();
+
+  return useMutation({
     mutationKey: ["save product QA"],
     mutationFn: (payload: saveProductQAPayload) => saveProductQA(payload),
+    onError(error: any) {
+      const errorMessage = error.response.data.error;
+      toast({
+        className: "bg-red-200 border border-destructive-foreground",
+        title: "Failed",
+        description: errorMessage,
+        // success: hideIcon ? null : false,
+        // action,
+      });
+    },
   });
+};
 
 export const useUpdateProductQA = () =>
   useMutation({

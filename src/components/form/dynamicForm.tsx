@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DynamicFormProps } from "./constants";
-import { BusinessNameInput, BusinessObjectiveInput, CountryInput } from "../input";
+import { BusinessNameInput, BusinessObjectiveInput, CountryInput, AllCOuntries } from "../input";
 import { useDynamic } from "@/hooks/useDynamic";
 
 const DynamicForm = ({
@@ -108,6 +108,13 @@ const DynamicForm = ({
               />
             )}
 
+            {el.type === "countries-all" && (
+              <AllCOuntries
+                value={watch(el.name) || ""}
+                setValue={(value: string) => setValue(el.name, value)}
+              />
+            )}
+
             {el.type === "checkbox" && (
               <Checkbox id={el.name} defaultChecked {...register(el.name)} />
             )}
@@ -161,7 +168,7 @@ const DynamicForm = ({
             {el.type === "countries" && (
               <CountryInput
                 id={el.id}
-                value={watch(el.name) || []}
+                value={watch(el.name) || ""}
                 setValue={(value: string) => setValue(el.name, value)}
               />
             )}

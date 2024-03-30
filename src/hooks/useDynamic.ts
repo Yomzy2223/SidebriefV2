@@ -42,6 +42,8 @@ export const useDynamic = ({
                   return [field.name, z.string().email().min(1, "Cannot be empty")];
                 case "short answer":
                   return [field.name, z.string().min(1, "cannot be empty")];
+                case "countries-all":
+                  return [field.name, z.string().min(1, "select a country")];
                 // Add more cases as needed
                 default:
                   return [field.type, z.any()]; // Default validation if no specific type matches
