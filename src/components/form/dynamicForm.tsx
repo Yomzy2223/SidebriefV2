@@ -16,7 +16,8 @@ const DynamicForm = ({
   formSchema,
   onFormSubmit,
   watchValues,
-}: DynamicFormProps) => {
+}: // selectedPerson,
+DynamicFormProps) => {
   const dynamic = useDynamic({ subForms: formInfo });
 
   const schema = formSchema || dynamic.schema;
@@ -33,6 +34,7 @@ const DynamicForm = ({
     getValues,
     setValue,
     control,
+    reset,
   } = useForm<formType>({
     resolver: zodResolver(schema),
     defaultValues: dValues,
@@ -48,6 +50,14 @@ const DynamicForm = ({
     const subscription = watch((values) => watchValues && watchValues(values));
     return () => subscription.unsubscribe();
   }, [watch, watchValues]);
+
+  // useEffect(() => {
+  //   console.log(selectedPerson);
+  //   if (!selectedPerson) {
+  //     console.log("hi");
+  //     reset(); // Reset the form fields
+  //   }
+  // }, [selectedPerson, reset]);
 
   // useEffect(() => {
   //   if (defaultValues && dValues) {

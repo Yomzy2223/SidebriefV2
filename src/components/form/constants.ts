@@ -20,4 +20,5 @@ export interface DynamicFormProps {
   defaultValues?: Record<string, any>;
   formSchema?: ZodType<any, any, any>;
   watchValues?: (values: { [key: string]: string | string[] }) => void;
+  // selectedPerson?: number | null;
 }

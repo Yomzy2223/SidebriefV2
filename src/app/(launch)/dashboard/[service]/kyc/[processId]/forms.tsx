@@ -25,7 +25,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
     form: forms[activeTab],
   });
 
-  const { values, isLoading, formState, refetchState } = useRemember({
+  const { values, isLoading, formState, refetchState, resetForm } = useRemember({
     productId: productId,
     form: forms[activeTab],
     selectedPerson,
@@ -69,6 +69,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
     if (addPerson) {
       await saveOrUpdate();
       setSelectedPerson(null);
+      resetForm();
     }
     setSaving(false);
   };
@@ -117,6 +118,16 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
                           </div>
                         </Badge>
                       ))}
+                    {/* <Badge
+                      color={selectedPerson === null ? "yellow" : "green"}
+                      icon={SwatchBook}
+                      onClick={() => setSelectedPerson(null)}
+                      className={cn("cursor-pointer", {
+                        "opacity-50": null !== selectedPerson,
+                      })}
+                    >
+                      <div className="flex gap-0.5 items-center">null</div>
+                    </Badge> */}
                   </div>
                 )}
                 {noDocuments(form).length <= 0 ? (
@@ -160,6 +171,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
                           value: values[sluggify(subform.question)],
                         }))}
                         onFormSubmit={submitform}
+                        // selectedPerson={selectedPerson}
                       >
                         <div className="flex justify-between">
                           <div className="flex space-x-[18px]">

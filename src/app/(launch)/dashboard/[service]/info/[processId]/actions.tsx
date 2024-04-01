@@ -5,7 +5,7 @@ import { FormItem, productQAType } from "@/services/product/types";
 import { useRouter, useParams } from "next/navigation";
 import { sluggify } from "@/lib/utils";
 import { productFormType } from "@/services/product/types";
-import { MutableRefObject, useEffect, useRef } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { useGetProductQA } from "@/services/product";
 import { useState } from "react";
 
@@ -125,13 +125,33 @@ export const useRemember = ({
 
   const [values, setValues] = useState<{ [key: string]: string | string[] }>({});
 
-  // const formState = useRef<productQAType | productQAType[] | null>(null);
-  const [formState, setFormState] = useState<productQAType | productQAType[] | null>(null);
+  const valueSetter = useCallback(
+    ({ latestProductState, reset }: { latestProductState?: productQAType; reset: boolean }) => {
+      const newValues: { [key: string]: string | string[] } = {};
+
+      latestProductState?.subForm.forEach((qa) => {
+        switch (qa.type) {
+          case "country":
+          case "address":
+          case "email address":
+          case "short answer":
+            newValues[sluggify(qa.question || "")] = reset ? [] : qa.answer[0];
+            break;
+          default:
+            newValues[sluggify(qa.question || "")] = reset ? "" : qa.answer;
+        }
+      });
+
+      if (JSON.stringify(newValues) !== JSON.stringify(values)) {
+        setValues(newValues);
+      }
+    },
+    [values]
+  );
 
   useEffect(() => {
     if (productId && !productQA.isLoading && prevFormstates) {
       if (!prevFormstates || prevFormstates.length === 0) {
-        setFormState(null);
         if (JSON.stringify({}) !== JSON.stringify(values)) {
           setValues({});
         }
@@ -148,34 +168,9 @@ export const useRemember = ({
 
         if (!selectedPerson && form.type === "person") {
           reset = true;
-          return;
         }
 
-        // formState.current = form.type === "person" ? prevFormstates : latestProductState;
-        const newFormState = form.type === "person" ? prevFormstates : latestProductState;
-
-        if (JSON.stringify(newFormState) !== JSON.stringify(formState)) {
-          setFormState(newFormState);
-        }
-
-        const newValues: { [key: string]: string | string[] } = {};
-
-        latestProductState.subForm.forEach((qa) => {
-          switch (qa.type) {
-            case "country":
-            case "address":
-            case "email address":
-            case "short answer":
-              newValues[sluggify(qa.question || "")] = reset ? [] : qa.answer[0];
-              break;
-            default:
-              newValues[sluggify(qa.question || "")] = reset ? "" : qa.answer;
-          }
-        });
-
-        if (JSON.stringify(newValues) !== JSON.stringify(values)) {
-          setValues(newValues);
-        }
+        valueSetter({ latestProductState, reset });
       }
     }
   }, [
@@ -183,15 +178,38 @@ export const useRemember = ({
     productQA.isLoading,
     values,
     prevFormstates,
-    formState,
     selectedPerson,
     form.type,
+    valueSetter,
   ]);
+
+  let formState: productQAType | productQAType[] | null;
+
+  if (!prevFormstates || prevFormstates.length === 0) {
+    formState = null;
+  } else if (form.type === "person") {
+    formState = prevFormstates;
+  } else if (selectedPerson) {
+    formState = prevFormstates[selectedPerson - 1];
+  } else {
+    formState = prevFormstates[prevFormstates?.length - 1];
+  }
 
   return {
     formState,
     values,
     isLoading: productQA.isPending,
     refetchState: productQA.refetch,
+    resetForm: () => {
+      valueSetter({
+        latestProductState:
+          formState && selectedPerson
+            ? !Array.isArray(formState)
+              ? formState
+              : formState[selectedPerson - 1]
+            : undefined,
+        reset: true,
+      });
+    },
   };
 };
