@@ -6,6 +6,7 @@ import {
   addServiceToProductPayload,
   productFormType,
   updateProductQAPayload,
+  deleteProductQAPayload,
 } from "./types";
 
 export const saveProductQA = async ({ productId, form }: saveProductQAPayload) => {
@@ -16,6 +17,11 @@ export const saveProductQA = async ({ productId, form }: saveProductQAPayload) =
 export const updateProductQA = async ({ requestFormId, form }: updateProductQAPayload) => {
   const client = await Client();
   return client.put<rootType<productQAType[]>>(`/productRequest/form/${requestFormId}`, form);
+};
+
+export const deleteProductQA = async ({ requestFormId }: deleteProductQAPayload) => {
+  const client = await Client();
+  return client.delete<rootType<productQAType[]>>(`/productRequest/form/${requestFormId}`);
 };
 
 export const getproductQA = async ({ productId }: { productId: string | undefined }) => {

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { serviceFormSubFormType, serviceFormType } from "@/services/service/types";
-import { useSaveProductQA, useUpdateProductQA } from "@/services/product";
+import { useDeleteProductQA, useSaveProductQA, useUpdateProductQA } from "@/services/product";
 import { FormItem, productQAType } from "@/services/product/types";
 import { useRouter, useParams } from "next/navigation";
 import { sluggify } from "@/lib/utils";
@@ -17,6 +17,7 @@ function isServiceFormType(form: any): form is serviceFormType {
 export const useActions = ({ form }: { form: serviceFormType | productFormType }) => {
   const saveProductQA = useSaveProductQA();
   const updateProductQA = useUpdateProductQA();
+  const deleteProductQA = useDeleteProductQA();
 
   const saveFormProductQA = async ({
     productId,
@@ -40,8 +41,6 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
         type: subForm?.type,
       } as FormItem;
     });
-
-    console.log("saving");
 
     // save the answers
     return saveProductQA.mutateAsync(
@@ -88,8 +87,6 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
       } as FormItem;
     });
 
-    console.log("updating");
-
     return updateProductQA.mutateAsync({
       requestFormId: requestFormState.id,
       form: {
@@ -102,11 +99,24 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
       },
     });
   };
+
+  const deleteFormProductQA = async ({
+    requestFormState,
+  }: {
+    requestFormState: productQAType | undefined;
+  }) => {
+    if (!requestFormState) return;
+
+    return deleteProductQA.mutateAsync({ requestFormId: requestFormState?.id });
+  };
+
   return {
     saveFormProductQA,
     savingForm: saveProductQA.isPending,
     updateFormProductQA,
     updatingForm: updateProductQA.isPending,
+    deleteFormProductQA,
+    deletingForm: deleteProductQA.isPending,
   };
 };
 

@@ -66,6 +66,10 @@ export type updateProductQAPayload = {
   };
 };
 
+export type deleteProductQAPayload = {
+  requestFormId: string;
+};
+
 export type productQAType = {
   compulsory: boolean;
   createdAt: string;

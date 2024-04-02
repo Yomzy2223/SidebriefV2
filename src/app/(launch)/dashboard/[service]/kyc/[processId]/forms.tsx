@@ -5,11 +5,11 @@ import DynamicForm from "@/components/form/dynamicForm";
 import { productFormType, productSubFormType } from "@/services/product/types";
 import { cn, sluggify } from "@/lib/utils";
 import { ArrowRight } from "@/assets/icons";
-import { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { useRef, useState } from "react";
 import { useActions, useRemember } from "../../info/[processId]/actions";
 import { Badge } from "@/components/flowbite";
 import { SwatchBook } from "@/assets/icons";
-import { X } from "lucide-react";
+import { X, Loader } from "lucide-react";
 import { LoadingSkeleton } from "@/components/input";
 import { KycUploadModal } from "./kycUploadModal";
 
@@ -18,10 +18,18 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
   const [activeTab, setActiveTab] = useState(0);
   const [addPerson, setAddPerson] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState<number | null>(1);
+  const [deletedPerson, setDeletedPerson] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
-  const { saveFormProductQA, savingForm, updateFormProductQA, updatingForm } = useActions({
+  const {
+    saveFormProductQA,
+    savingForm,
+    updateFormProductQA,
+    updatingForm,
+    deleteFormProductQA,
+    deletingForm,
+  } = useActions({
     form: forms[activeTab],
   });
 
@@ -74,6 +82,24 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
     setSaving(false);
   };
 
+  const deleteQA = async (personNumber: number) => {
+    if (!formState) return;
+
+    setDeletedPerson(personNumber);
+
+    console.log("deleting...", personNumber + 1);
+
+    console.log(!Array.isArray(formState) ? formState : formState[personNumber]);
+
+    await deleteFormProductQA({
+      requestFormState: !Array.isArray(formState) ? formState : formState[personNumber],
+    });
+
+    console.log("refetching...");
+
+    await refetchState();
+  };
+
   const noDocuments: (form: productFormType) => productSubFormType[] = (form: productFormType) => {
     return form.productSubForm.filter(
       (subform) => subform.type !== "document upload" && subform.type !== "document template"
@@ -114,7 +140,17 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
                         >
                           <div className="flex gap-0.5 items-center">
                             {form.subForm[0].answer[0]}
-                            <X className="h-3 cursor-pointer" />
+                            {deletingForm && deletedPerson === index ? (
+                              <Loader className="h-3 animate-spin" />
+                            ) : (
+                              <X
+                                className="h-3 cursor-pointer"
+                                onClick={(e: React.MouseEvent<SVGSVGElement>) => {
+                                  e.stopPropagation();
+                                  deleteQA(index);
+                                }}
+                              />
+                            )}
                           </div>
                         </Badge>
                       ))}
