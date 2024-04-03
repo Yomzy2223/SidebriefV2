@@ -145,10 +145,10 @@ export const useRemember = ({
           case "address":
           case "email address":
           case "short answer":
-            newValues[sluggify(qa.question || "")] = reset ? [] : qa.answer[0];
+            newValues[sluggify(qa.question || "")] = reset ? "" : qa.answer[0];
             break;
           default:
-            newValues[sluggify(qa.question || "")] = reset ? "" : qa.answer;
+            newValues[sluggify(qa.question || "")] = reset ? [] : qa.answer;
         }
       });
 

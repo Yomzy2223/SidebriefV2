@@ -5,8 +5,8 @@ import { SwatchBook } from "@/assets/icons";
 import { ExternalLink, Filter, X } from "lucide-react";
 import { FileInput } from "@/components/form/fileInput";
 import { useGetProductQA } from "@/services/product";
-import { productFormType } from "@/services/product/types";
-import { useState } from "react";
+import { productFormType, productSubFormType } from "@/services/product/types";
+import { useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 
@@ -44,18 +44,69 @@ export const KycUploadModal = ({
     closer();
   };
 
+  const withDocument = useCallback(
+    (forms: productFormType[]) => {
+      const uploads: { title: string; isPerson: boolean; docs: productSubFormType[] }[] = [];
+
+      const isContainDocument = (form: productFormType) =>
+        form.productSubForm.some(
+          (subForm) => subForm.type === "document upload" || subForm.type === "document template"
+        );
+
+      const allDocuments = (subForms: productSubFormType[]) => {
+        return subForms
+          .map((subForm) => {
+            if (subForm.type === "document upload" || subForm.type === "document template") {
+              return subForm;
+            } else return;
+          })
+          .filter((subForm): subForm is productSubFormType => subForm !== undefined);
+      };
+
+      forms
+        .filter((form) => form.type !== "person" && isContainDocument)
+        .forEach((form) => {
+          uploads.push({
+            title: form.title,
+            isPerson: false,
+            docs: allDocuments(form.productSubForm),
+          });
+        });
+
+      if (persons) {
+        for (let i = 0; i < persons.length; i++) {
+          const person = persons[i];
+          const form = forms.find((form) => form.title === person.title);
+          if (!form) {
+            continue;
+          }
+          if (isContainDocument(form)) {
+            uploads.push({
+              title: person.subForm[0].answer[0],
+              isPerson: true,
+              docs: allDocuments(form.productSubForm),
+            });
+          }
+        }
+      }
+
+      return uploads;
+    },
+    [persons]
+  );
+
   return (
     <Modal show={open} onClose={closer} size={"4xl"} className="">
       <Modal.Header>Required documents</Modal.Header>
       <form className="overflow-y-auto">
         <Modal.Body className="py-11 px-5 space-y-8">
-          {persons && (
+          {withDocument(forms) && (
             <div className="flex gap-2.5 flex-wrap">
-              {Array.isArray(persons) &&
-                persons.map((form, index) => (
+              {Array.isArray(withDocument(forms)) &&
+                withDocument(forms).map((form, index) => (
                   // the persons
                   <Badge
-                    key={form.id}
+                    key={index}
                     color={index + 1 === selected ? "yellow" : "green"}
                     icon={SwatchBook}
                     onClick={() => setSelected(index + 1)}
@@ -64,7 +115,7 @@ export const KycUploadModal = ({
                     })}
                   >
                     <div className="flex gap-0.5 items-center">
-                      {form.subForm[0].answer[0]}
+                      {form.title}
                       {/* <X className="h-3 cursor-pointer" /> */}
                     </div>
                   </Badge>
@@ -74,7 +125,8 @@ export const KycUploadModal = ({
           <div className="space-y-6">
             <div className="flex justify-between">
               <h4 className="text-2xl font-semibold text-gray-900 leading-normal">
-                Upload {persons?.at(selected - 1)?.subForm[0].answer[0]}’s Document
+                Upload {withDocument(forms)?.at(selected - 1)?.title}
+                {withDocument(forms)?.at(selected - 1)?.isPerson && "'s"} Document
               </h4>
               <Button color="link" size={"fit"}>
                 <div className="flex gap-2 items-center">
@@ -85,10 +137,11 @@ export const KycUploadModal = ({
             {productQA.isLoading ? (
               <>Loading...</>
             ) : (
+              // TODO: figure out how to do document template
               <div className="grid grid-cols-2 gap-5">
-                {forms
-                  .filter((form) => form.title === persons?.at(selected - 1)?.title)[0]
-                  ?.productSubForm.filter((sub) => sub.type === "document upload")
+                {withDocument(forms)
+                  ?.at(selected - 1)
+                  ?.docs?.filter((sub) => sub.type === "document upload")
                   .map((sub) => {
                     return <FileInput key={sub.id} name={sub.question} />;
                   }) || <p>No matching form found.</p>}
