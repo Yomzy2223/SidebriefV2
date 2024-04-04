@@ -1,10 +1,5 @@
-import DashboardFirst from "./(mainpages)/dashboard/FirstTimer";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div>
-      {/* <Navbar /> */}
-      <DashboardFirst />
-    </div>
-  );
+  redirect("/dashboard");
 }

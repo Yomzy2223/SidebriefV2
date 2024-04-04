@@ -6,6 +6,7 @@ const SuggestionSection = () => {
     <div className="flex gap-4 max-w-full overflow-auto">
       {suggestions.map((el) => (
         <SuggestionCard
+          key={el.title}
           title={el.title}
           description={el.description}
           guideLink={el?.guideLink || ""}
