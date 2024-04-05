@@ -11,7 +11,7 @@ import { Badge } from "@/components/flowbite";
 import { SwatchBook } from "@/assets/icons";
 import { X, Loader } from "lucide-react";
 import { LoadingSkeleton } from "@/components/input";
-import { KycUploadModal } from "./kycUploadModal";
+import { KycUploadModal } from "./upload/kycUploadModal";
 
 export const Forms = ({ forms, productId }: { forms: productFormType[]; productId: string }) => {
   const tabsRef = useRef<TabsRef>(null);
@@ -48,16 +48,12 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
           values,
           isGeneral: true,
         });
-
-        console.log("saving");
       } else {
         await updateFormProductQA({
           requestFormState: !Array.isArray(formState) ? formState : formState[selectedPerson - 1],
           values: values,
           isGeneral: true,
         });
-
-        console.log("updating");
       }
 
       await refetchState();
