@@ -52,7 +52,7 @@ export const uploadFileToCloudinary = async ({
   file,
 }: {
   file: File;
-  getProgress: (e: number) => void;
+  getProgress?: (e: number) => void;
 }) => {
   const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/raw/upload`;
   const formData = new FormData();
@@ -64,7 +64,7 @@ export const uploadFileToCloudinary = async ({
     onUploadProgress: (progressEvent) => {
       if (progressEvent.total) {
         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        getProgress(percentCompleted);
+        getProgress && getProgress(percentCompleted);
       }
     },
   });

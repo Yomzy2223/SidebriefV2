@@ -16,9 +16,9 @@ export type productType = {
   product: serviceProductType;
 };
 
-export type File = {
+export type FileType = {
   name: string;
-  description?: string;
+  size?: string;
   link: string;
   type: string;
 };
@@ -39,7 +39,7 @@ export type FormItem = {
   isGeneral: boolean;
   // subForm: boolean;
   // profile: SubFormProfile[];
-  file?: File;
+  file?: FileType;
 };
 
 export type saveProductQAPayload = {

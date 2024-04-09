@@ -4,7 +4,12 @@ import { useCallback } from "react";
 export const useUploadActions = ({ persons }: { persons: productQAType[] }) => {
   const withDocument = useCallback(
     (forms: productFormType[]) => {
-      const uploads: { title: string; isPerson: boolean; docs: productSubFormType[] }[] = [];
+      const uploads: {
+        title: string;
+        isPerson: boolean;
+        personType?: string;
+        docs: productSubFormType[];
+      }[] = [];
 
       const isContainDocument = (form: productFormType) =>
         form.productSubForm.some(
@@ -38,10 +43,12 @@ export const useUploadActions = ({ persons }: { persons: productQAType[] }) => {
           if (!form) {
             continue;
           }
+
           if (isContainDocument(form)) {
             uploads.push({
-              title: person.subForm[0].answer[0],
+              title: person.subForm[0]?.answer[0],
               isPerson: true,
+              personType: person.title,
               docs: allDocuments(form.productSubForm),
             });
           }
@@ -53,5 +60,19 @@ export const useUploadActions = ({ persons }: { persons: productQAType[] }) => {
     [persons]
   );
 
-  return { withDocument };
+  function getForm(forms: productFormType[], selected: number): productFormType {
+    const selectedForm = withDocument(forms)[selected - 1];
+
+    if (!selectedForm.isPerson) {
+      // find by title
+      const index = forms.findIndex((form) => form.title === selectedForm.title);
+      return forms[index];
+    } else {
+      // find by personType
+      const index = forms.findIndex((form) => form.title === selectedForm.personType);
+      return forms[index];
+    }
+  }
+
+  return { withDocument, getForm };
 };

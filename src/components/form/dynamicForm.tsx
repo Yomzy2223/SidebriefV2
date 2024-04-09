@@ -16,6 +16,7 @@ const DynamicForm = ({
   formSchema,
   onFormSubmit,
   watchValues,
+  resetForm,
 }: // selectedPerson,
 DynamicFormProps) => {
   const dynamic = useDynamic({ subForms: formInfo });
@@ -45,6 +46,12 @@ DynamicFormProps) => {
     // console.log(values);
     onFormSubmit && onFormSubmit(values);
   }
+
+  const setResetter = useCallback(() => {
+    resetForm && resetForm(reset);
+  }, [reset, resetForm]);
+
+  setResetter();
 
   useEffect(() => {
     const subscription = watch((values) => watchValues && watchValues(values));

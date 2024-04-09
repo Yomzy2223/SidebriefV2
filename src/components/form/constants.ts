@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { UseFormReset } from "react-hook-form";
 import { ZodType } from "zod";
 
 export interface FormInput {
@@ -21,4 +22,5 @@ export interface DynamicFormProps {
   formSchema?: ZodType<any, any, any>;
   watchValues?: (values: { [key: string]: string | string[] }) => void;
   // selectedPerson?: number | null;
+  resetForm?: (reset: UseFormReset<any>) => void;
 }

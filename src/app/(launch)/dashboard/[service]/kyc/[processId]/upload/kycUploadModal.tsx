@@ -6,6 +6,7 @@ import { productFormType } from "@/services/product/types";
 import { useState } from "react";
 import { useUploadActions } from "./uploadActions";
 import { UploadForm } from "./uploadform";
+import { useRemember } from "../../../info/[processId]/actions";
 
 export const KycUploadModal = ({
   open,
@@ -33,6 +34,29 @@ export const KycUploadModal = ({
     closer();
   }
 
+  const { getForm } = useUploadActions({ persons: persons || [] });
+
+  const getSelectedPerson: () => number | null | undefined = () => {
+    const formWithDocuments = withDocument(forms);
+    const form = getForm(forms, selected);
+
+    if (form.type !== "person") {
+      return 1;
+    } else {
+      const selectedNumber = formWithDocuments
+        .filter((el) => el.personType === form.title)
+        .findIndex((el) => el.title === formWithDocuments[selected - 1].title);
+
+      return selectedNumber + 1;
+    }
+  };
+
+  const { values, isLoading, formState, refetchState } = useRemember({
+    productId: productId,
+    form: getForm(forms, selected),
+    selectedPerson: getSelectedPerson(),
+  });
+
   return (
     <Modal show={open} onClose={closer} size={"4xl"} className="">
       <Modal.Header>Required documents</Modal.Header>
@@ -41,12 +65,13 @@ export const KycUploadModal = ({
           (_, index) =>
             index + 1 === selected && (
               <UploadForm
+                key={index}
                 productId={productId}
                 forms={forms}
                 closer={closer}
                 selected={selected}
                 setSelected={(num) => setSelected(num)}
-                key={index}
+                formState={formState}
               />
             )
         )}

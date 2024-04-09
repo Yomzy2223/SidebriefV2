@@ -6,21 +6,24 @@ import { productFormType, productSubFormType } from "@/services/product/types";
 import { cn, sluggify } from "@/lib/utils";
 import { ArrowRight } from "@/assets/icons";
 import { useRef, useState } from "react";
-import { useActions, useRemember } from "../../info/[processId]/actions";
+import { useActions, useRemember, isFileType } from "../../info/[processId]/actions";
 import { Badge } from "@/components/flowbite";
 import { SwatchBook } from "@/assets/icons";
 import { X, Loader } from "lucide-react";
 import { LoadingSkeleton } from "@/components/input";
 import { KycUploadModal } from "./upload/kycUploadModal";
+import { UseFormReset } from "react-hook-form";
 
 export const Forms = ({ forms, productId }: { forms: productFormType[]; productId: string }) => {
   const tabsRef = useRef<TabsRef>(null);
   const [activeTab, setActiveTab] = useState(0);
   const [addPerson, setAddPerson] = useState(false);
+  // selected person default value has to be one
   const [selectedPerson, setSelectedPerson] = useState<number | null>(1);
   const [deletedPerson, setDeletedPerson] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [reset, setReset] = useState<UseFormReset<any>>();
 
   const {
     saveFormProductQA,
@@ -33,11 +36,17 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
     form: forms[activeTab],
   });
 
-  const { values, isLoading, formState, refetchState, resetForm } = useRemember({
+  const { values, isLoading, formState, refetchState } = useRemember({
     productId: productId,
     form: forms[activeTab],
     selectedPerson,
   });
+
+  const resetForm = (reset: UseFormReset<any>) => {
+    if (reset) {
+      setReset(() => reset);
+    }
+  };
 
   const submitform = async (values: { [key: string]: string | string[] }) => {
     setSaving(true);
@@ -73,7 +82,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
     if (addPerson) {
       await saveOrUpdate();
       setSelectedPerson(null);
-      resetForm();
+      reset && reset();
     }
     setSaving(false);
   };
@@ -85,7 +94,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
 
     console.log("deleting...", personNumber + 1);
 
-    console.log(!Array.isArray(formState) ? formState : formState[personNumber]);
+    // console.log(!Array.isArray(formState) ? formState : formState[personNumber]);
 
     await deleteFormProductQA({
       requestFormState: !Array.isArray(formState) ? formState : formState[personNumber],
@@ -135,7 +144,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
                           })}
                         >
                           <div className="flex gap-0.5 items-center">
-                            {form.subForm[0].answer[0]}
+                            {form.subForm[0]?.answer[0]}
                             {deletingForm && deletedPerson === index ? (
                               <Loader className="h-3 animate-spin" />
                             ) : (
@@ -194,15 +203,20 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
                       </div>
                     ) : (
                       <DynamicForm
-                        formInfo={noDocuments(form).map((subform) => ({
-                          name: sluggify(subform.question),
-                          type: subform.type,
-                          id: subform.id,
-                          label: subform.question,
-                          selectOptions: subform.options,
-                          value: values[sluggify(subform.question)],
-                        }))}
+                        formInfo={noDocuments(form).map((subform) => {
+                          const value = values[sluggify(subform.question)];
+                          const rValue = !isFileType(value) ? value : "";
+                          return {
+                            name: sluggify(subform.question),
+                            type: subform.type,
+                            id: subform.id,
+                            label: subform.question,
+                            selectOptions: subform.options,
+                            value: rValue,
+                          };
+                        })}
                         onFormSubmit={submitform}
+                        resetForm={resetForm}
                         // selectedPerson={selectedPerson}
                       >
                         <div className="flex justify-between">

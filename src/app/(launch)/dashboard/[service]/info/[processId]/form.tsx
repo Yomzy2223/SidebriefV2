@@ -9,7 +9,7 @@ import { LoadingSkeleton } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGetProductQA } from "@/services/product";
 import { useGetCountries } from "@/services/service";
-import { useActions, useRemember } from "./actions";
+import { isFileType, useActions, useRemember } from "./actions";
 import { MutableRefObject, useEffect, useState } from "react";
 import DynamicForm from "@/components/form/dynamicForm";
 import { sluggify } from "@/lib/utils";
@@ -84,13 +84,15 @@ export const LaunchForm1 = ({
           <DynamicForm
             formInfo={
               subForms?.map((input) => {
+                const value = values[sluggify(input.question)];
+                const rValue = !isFileType(value) ? value : "";
                 return {
                   name: sluggify(input.question),
                   type: input.type,
                   id: input.id,
                   label: input.question,
                   selectOptions: input.options,
-                  value: values[sluggify(input.question)],
+                  value: rValue,
                 };
               })!
             }
