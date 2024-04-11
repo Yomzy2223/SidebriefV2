@@ -34,16 +34,16 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
   const updateProductQA = useUpdateProductQA();
   const deleteProductQA = useDeleteProductQA();
 
-  console.log(form);
-
   const saveFormProductQA = async ({
     productId,
     values,
     isGeneral,
+    fileDescription,
   }: {
     productId: string;
     values: { [x: string]: string | string[] | FileType };
     isGeneral?: boolean;
+    fileDescription?: string;
   }) => {
     const formQA: FormItem[] = Object.keys(values).map((slug) => {
       const subForm = isServiceFormType(form)
@@ -69,8 +69,8 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
       {
         productId,
         form: {
-          title: form.title,
-          description: form.description,
+          title: fileDescription ? "document upload" : form.title,
+          description: fileDescription ? fileDescription : form.description,
           type: form.type,
           compulsory: form.compulsory,
           isGeneral: isGeneral || false,
@@ -89,63 +89,26 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
     values,
     isGeneral,
     requestFormState,
+    fileDescription,
   }: {
     values: { [x: string]: string | string[] | FileType };
     isGeneral?: boolean;
     requestFormState: productQAType | undefined;
+    fileDescription?: string;
   }) => {
     if (!requestFormState) return;
 
-    console.log(values);
-
-    console.log(form);
-
     const formQA: FormItem[] = Object.keys(values).map((slug) => {
-      const subForm = requestFormState.subForm?.find((el) => sluggify(el.question) === slug);
+      let subForm = requestFormState.subForm?.find((el) => sluggify(el.question) === slug);
 
-      // const formItem = {
-      //   id: subForm?.id,
-      //   question: subForm?.question,
-      //   answer: Array.isArray(values[slug]) ? values[slug] : [values[slug]],
-      //   compulsory: subForm?.compulsory,
-      //   isGeneral: true,
-      //   type: subForm?.type,
-      //   // file: isFileType(values[slug]) && values[slug],
-      // } as FormItem;
+      console.log("subform", subForm);
 
-      // if (!subForm) {
-      //   const pureSubForm = isServiceFormType(form)
-      //     ? form.subForm?.find((el) => sluggify(el.question) === slug)
-      //     : form.productSubForm?.find((el) => sluggify(el.question) === slug);
+      // if (form.title === "document upload") {
+      //   subForm = productQA.data?.data.data.filter(
+      //     (el) => el.description === form.description && form.title === "document upload"
+      //   );
+      // }
 
-      //   console.log("got here", pureSubForm);
-      //   console.log({
-      //     id: pureSubForm?.id,
-      //     question: pureSubForm?.question,
-      //     answer: isFileType(values[slug])
-      //       ? [""]
-      //       : Array.isArray(values[slug])
-      //       ? values[slug]
-      //       : [values[slug]],
-      //     compulsory: pureSubForm?.compulsory,
-      //     isGeneral: true,
-      //     type: pureSubForm?.type,
-      //     file: isFileType(values[slug]) && values[slug],
-      //   });
-      //   return {
-      //     id: pureSubForm?.id,
-      //     question: pureSubForm?.question,
-      //     answer: isFileType(values[slug])
-      //       ? [""]
-      //       : Array.isArray(values[slug])
-      //       ? values[slug]
-      //       : [values[slug]],
-      //     compulsory: pureSubForm?.compulsory,
-      //     isGeneral: true,
-      //     type: pureSubForm?.type,
-      //     file: isFileType(values[slug]) && values[slug],
-      //   } as FormItem;
-      // } else {
       const formItem = {
         id: subForm?.id,
         question: subForm?.question,
@@ -167,8 +130,8 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
     return updateProductQA.mutateAsync({
       requestFormId: requestFormState.id,
       form: {
-        title: form.title,
-        description: form.description,
+        title: fileDescription ? "document upload" : form.title,
+        description: fileDescription ? fileDescription : form.description,
         type: form.type,
         compulsory: form.compulsory,
         isGeneral: isGeneral || false,
@@ -197,6 +160,9 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
   };
 };
 
+const stringValues = ["country", "address", "email address", "short answer", "countries-all"];
+const documentValues = ["document upload"];
+
 export const useRemember = ({
   productId,
   form,
@@ -208,7 +174,13 @@ export const useRemember = ({
 }) => {
   const productQA = useGetProductQA(productId);
 
-  const prevFormstates = productQA.data?.data.data.filter((el) => el.title === form.title);
+  let prevFormstates = productQA.data?.data.data.filter((el) => el.title === form.title);
+
+  if (form.title === "document upload") {
+    prevFormstates = productQA.data?.data.data.filter(
+      (el) => el.description === form.description && form.title === "document upload"
+    );
+  }
 
   const [values, setValues] = useState<{ [key: string]: string | string[] | FileType }>({});
 
@@ -217,24 +189,26 @@ export const useRemember = ({
       const newValues: { [key: string]: string | string[] | FileType } = {};
 
       latestProductState?.subForm.forEach((qa) => {
-        switch (qa.type) {
-          case "country":
-          case "address":
-          case "email address":
-          case "short answer":
-            newValues[sluggify(qa.question || "")] = reset ? "" : qa.answer[0];
-            break;
-          // the document cases
-          case "document upload":
-            newValues[sluggify(qa.question || "")] = reset
-              ? ""
-              : ({ link: qa.fileLink, name: qa.fileName, type: qa.fileType } as FileType);
-            break;
-          default:
-            newValues[sluggify(qa.question || "")] = reset ? [] : qa.answer;
+        if (stringValues.includes(qa.type)) {
+          // set fields with string values
+          newValues[sluggify(qa.question || "")] = reset ? "" : qa.answer[0];
+        } else if (documentValues.includes(qa.type)) {
+          // set fields with document values
+          newValues[sluggify(qa.question || "")] = reset
+            ? ""
+            : ({
+                link: qa.fileLink,
+                name: qa.fileName,
+                type: qa.fileType,
+                size: "size",
+              } as FileType);
+        } else {
+          // set fields with array values
+          newValues[sluggify(qa.question || "")] = reset ? [] : qa.answer;
         }
       });
 
+      // prevent unnecesssary rerenders
       if (JSON.stringify(newValues) !== JSON.stringify(values)) {
         setValues(newValues);
       }
@@ -253,9 +227,9 @@ export const useRemember = ({
           ? prevFormstates[prevFormstates?.length - 1]
           : prevFormstates[selectedPerson - 1];
 
-        if (latestProductState === undefined) {
-          return;
-        }
+        // if (latestProductState === undefined) {
+        //   return;
+        // }
 
         let reset = false;
 
@@ -276,20 +250,20 @@ export const useRemember = ({
     valueSetter,
   ]);
 
-  let formState: productQAType | productQAType[] | null;
-
-  if (!prevFormstates || prevFormstates.length === 0) {
-    formState = null;
-  } else if (form.type === "person") {
-    formState = prevFormstates;
-  } else if (selectedPerson) {
-    formState = prevFormstates[selectedPerson - 1];
-  } else {
-    formState = prevFormstates[prevFormstates?.length - 1];
-  }
+  const getFormState = () => {
+    if (!prevFormstates || prevFormstates.length === 0) {
+      return null;
+    } else if (form.type === "person") {
+      return prevFormstates;
+    } else if (selectedPerson) {
+      return prevFormstates[selectedPerson - 1];
+    } else {
+      return prevFormstates[prevFormstates?.length - 1];
+    }
+  };
 
   return {
-    formState,
+    formState: getFormState(),
     values,
     isLoading: productQA.isPending,
     refetchState: productQA.refetch,

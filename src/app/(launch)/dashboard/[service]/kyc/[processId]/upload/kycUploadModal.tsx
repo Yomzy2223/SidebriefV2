@@ -6,7 +6,7 @@ import { productFormType } from "@/services/product/types";
 import { useState } from "react";
 import { useUploadActions } from "./uploadActions";
 import { UploadForm } from "./uploadform";
-import { useRemember } from "../../../info/[processId]/actions";
+import { isFileType, useRemember } from "../../../info/[processId]/actions";
 
 export const KycUploadModal = ({
   open,
@@ -36,25 +36,14 @@ export const KycUploadModal = ({
 
   const { getForm } = useUploadActions({ persons: persons || [] });
 
-  const getSelectedPerson: () => number | null | undefined = () => {
-    const formWithDocuments = withDocument(forms);
-    const form = getForm(forms, selected);
-
-    if (form.type !== "person") {
-      return 1;
-    } else {
-      const selectedNumber = formWithDocuments
-        .filter((el) => el.personType === form.title)
-        .findIndex((el) => el.title === formWithDocuments[selected - 1].title);
-
-      return selectedNumber + 1;
-    }
-  };
-
   const { values, isLoading, formState, refetchState } = useRemember({
     productId: productId,
-    form: getForm(forms, selected),
-    selectedPerson: getSelectedPerson(),
+    form: {
+      ...getForm(forms, selected),
+      title: "document upload",
+      description: withDocument(forms)[selected - 1].title,
+    },
+    selectedPerson: 1,
   });
 
   return (
@@ -71,7 +60,11 @@ export const KycUploadModal = ({
                 closer={closer}
                 selected={selected}
                 setSelected={(num) => setSelected(num)}
+                values={values}
                 formState={formState}
+                refetch={async () => {
+                  await refetchState();
+                }}
               />
             )
         )}

@@ -63,15 +63,22 @@ export const useUploadActions = ({ persons }: { persons: productQAType[] }) => {
   function getForm(forms: productFormType[], selected: number): productFormType {
     const selectedForm = withDocument(forms)[selected - 1];
 
+    let form: productFormType;
+
     if (!selectedForm.isPerson) {
       // find by title
       const index = forms.findIndex((form) => form.title === selectedForm.title);
-      return forms[index];
+      form = forms[index];
     } else {
       // find by personType
       const index = forms.findIndex((form) => form.title === selectedForm.personType);
-      return forms[index];
+      form = forms[index];
     }
+
+    // form.title = "document upload";
+    // form.description = selectedForm.title;
+
+    return form;
   }
 
   return { withDocument, getForm };

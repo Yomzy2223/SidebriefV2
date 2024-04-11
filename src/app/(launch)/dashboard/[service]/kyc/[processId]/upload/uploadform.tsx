@@ -11,8 +11,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useDynamic } from "@/hooks/useDynamic";
-import { useMemo, useState } from "react";
-import { useActions } from "../../../info/[processId]/actions";
+import { useEffect, useMemo, useState } from "react";
+import { isFileType, useActions } from "../../../info/[processId]/actions";
 import { uploadFileToCloudinary } from "@/hooks/globalFunctions";
 
 export const UploadForm = ({
@@ -21,14 +21,18 @@ export const UploadForm = ({
   closer,
   selected,
   setSelected,
+  values,
   formState,
+  refetch,
 }: {
   productId: string;
   forms: productFormType[];
   closer: () => void;
   selected: number;
   setSelected: (num: number) => void;
+  values: { [key: string]: string | FileType | string[] };
   formState: productQAType | productQAType[] | null;
+  refetch: () => Promise<any>;
 }) => {
   const params: { service: string; processId: string } = useParams();
   const router = useRouter();
@@ -70,6 +74,24 @@ export const UploadForm = ({
     defaultValues: dValues,
   });
 
+  useEffect(() => {
+    // if (JSON.stringify(prevFormInfoRef.current) !== JSON.stringify(formInfo)) {
+    Object.keys(values).forEach((key) => {
+      if (isFileType(values[key])) {
+        setValue(key, values[key]);
+      }
+    });
+    // prevFormInfoRef.current = formInfo;
+    // }
+    return () => {
+      Object.keys(values).forEach((key) => {
+        if (isFileType(values[key])) {
+          setValue(key, null);
+        }
+      });
+    };
+  }, [setValue, values]);
+
   const handleFileUpload: (file: File, question: string) => Promise<any> = async (
     file: File,
     question
@@ -84,8 +106,10 @@ export const UploadForm = ({
   const submitUploadForm = async (values: { [key: string]: any }) => {
     setUploading(true);
     const promises = Object.keys(values).map(async (key) => {
-      const result = await uploadFileToCloudinary({ file: values[key] });
-      return result.data;
+      if (values[key] instanceof File) {
+        const result = await uploadFileToCloudinary({ file: values[key] });
+        return result.data;
+      } else return values[key];
     });
 
     const uploaded = await Promise.all(promises);
@@ -93,7 +117,7 @@ export const UploadForm = ({
     Object.keys(values).forEach((key, index) => {
       const oldValue = values[key];
       values[key] = {
-        link: uploaded[index].secure_url,
+        link: uploaded[index].secure_url || oldValue.link,
         name: oldValue.name,
         size: `${oldValue.size}`,
         type: oldValue.type,
@@ -101,16 +125,24 @@ export const UploadForm = ({
     });
 
     try {
-      const response = await updateFormProductQA({
-        values,
-        requestFormState: !formState
-          ? undefined
-          : !Array.isArray(formState)
-          ? formState
-          : undefined,
-        isGeneral: false,
-      });
-      console.log(response);
+      if (!formState) {
+        console.log("saving");
+        await saveFormProductQA({
+          values,
+          productId,
+          isGeneral: false,
+          fileDescription: withDocument(forms)[selected - 1].title,
+        });
+      } else {
+        console.log("updating");
+        await updateFormProductQA({
+          requestFormState: !Array.isArray(formState) ? formState : formState[0],
+          values: values,
+          isGeneral: false,
+          fileDescription: withDocument(forms)[selected - 1].title,
+        });
+        await refetch();
+      }
       setUploading(false);
       // go to next person
       setSelected(selected + 1);
@@ -123,8 +155,6 @@ export const UploadForm = ({
     router.push(`/dashboard/${params.service}/review`);
     closer();
   };
-
-  // console.log(watch());
 
   return (
     <>

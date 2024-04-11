@@ -42,7 +42,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
     selectedPerson,
   });
 
-  const resetForm = (reset: UseFormReset<any>) => {
+  const getResetForm = (reset: UseFormReset<any>) => {
     if (reset) {
       setReset(() => reset);
     }
@@ -216,7 +216,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
                           };
                         })}
                         onFormSubmit={submitform}
-                        resetForm={resetForm}
+                        resetForm={getResetForm}
                         // selectedPerson={selectedPerson}
                       >
                         <div className="flex justify-between">
