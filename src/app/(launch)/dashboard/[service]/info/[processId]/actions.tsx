@@ -101,8 +101,6 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
     const formQA: FormItem[] = Object.keys(values).map((slug) => {
       let subForm = requestFormState.subForm?.find((el) => sluggify(el.question) === slug);
 
-      console.log("subform", subForm);
-
       // if (form.title === "document upload") {
       //   subForm = productQA.data?.data.data.filter(
       //     (el) => el.description === form.description && form.title === "document upload"

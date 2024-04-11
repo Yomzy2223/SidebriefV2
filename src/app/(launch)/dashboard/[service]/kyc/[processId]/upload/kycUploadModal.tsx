@@ -27,21 +27,19 @@ export const KycUploadModal = ({
 
   const persons = allQA?.filter((qa) => qa.type === "person");
 
-  const { withDocument } = useUploadActions({ persons: persons || [] });
+  const { withDocument, getForm } = useUploadActions({ persons: persons || [], forms });
 
   if (persons === undefined || persons.length <= 0) {
     // go to the next page
     closer();
   }
 
-  const { getForm } = useUploadActions({ persons: persons || [] });
-
   const { values, isLoading, formState, refetchState } = useRemember({
     productId: productId,
     form: {
-      ...getForm(forms, selected),
+      ...getForm(selected),
       title: "document upload",
-      description: withDocument(forms)[selected - 1].title,
+      description: withDocument()[selected - 1].title,
     },
     selectedPerson: 1,
   });
@@ -49,8 +47,8 @@ export const KycUploadModal = ({
   return (
     <Modal show={open} onClose={closer} size={"4xl"} className="">
       <Modal.Header>Required documents</Modal.Header>
-      {Array.isArray(withDocument(forms)) &&
-        withDocument(forms).map(
+      {Array.isArray(withDocument()) &&
+        withDocument().map(
           (_, index) =>
             index + 1 === selected && (
               <UploadForm

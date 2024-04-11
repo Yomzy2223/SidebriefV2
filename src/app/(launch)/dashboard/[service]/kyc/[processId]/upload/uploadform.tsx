@@ -14,6 +14,7 @@ import { useDynamic } from "@/hooks/useDynamic";
 import { useEffect, useMemo, useState } from "react";
 import { isFileType, useActions } from "../../../info/[processId]/actions";
 import { uploadFileToCloudinary } from "@/hooks/globalFunctions";
+import { useToast } from "@/components/ui/use-toast";
 
 export const UploadForm = ({
   productId,
@@ -36,6 +37,7 @@ export const UploadForm = ({
 }) => {
   const params: { service: string; processId: string } = useParams();
   const router = useRouter();
+  const { toast } = useToast();
 
   const [uploading, setUploading] = useState(false);
 
@@ -45,10 +47,13 @@ export const UploadForm = ({
 
   const persons = allQA?.filter((qa) => qa.type === "person");
 
-  const { withDocument, getForm } = useUploadActions({ persons: persons || [] });
+  const { withDocument, getForm, checkAllUploaded } = useUploadActions({
+    persons: persons || [],
+    forms,
+  });
 
   const dynamic = useDynamic({
-    subForms: withDocument(forms)[selected - 1].docs.map((doc) => ({
+    subForms: withDocument()[selected - 1].docs.map((doc) => ({
       name: sluggify(doc.question),
       type: doc.type,
     })),
@@ -100,7 +105,7 @@ export const UploadForm = ({
   };
 
   const { saveFormProductQA, savingForm, updateFormProductQA, updatingForm } = useActions({
-    form: getForm(forms, selected),
+    form: getForm(selected),
   });
 
   const submitUploadForm = async (values: { [key: string]: any }) => {
@@ -131,7 +136,7 @@ export const UploadForm = ({
           values,
           productId,
           isGeneral: false,
-          fileDescription: withDocument(forms)[selected - 1].title,
+          fileDescription: withDocument()[selected - 1].title,
         });
       } else {
         console.log("updating");
@@ -139,30 +144,44 @@ export const UploadForm = ({
           requestFormState: !Array.isArray(formState) ? formState : formState[0],
           values: values,
           isGeneral: false,
-          fileDescription: withDocument(forms)[selected - 1].title,
+          fileDescription: withDocument()[selected - 1].title,
         });
         await refetch();
       }
       setUploading(false);
-      // go to next person
-      setSelected(selected + 1);
+
+      if (!!withDocument()[selected + 1]) {
+        // go to next person
+        setSelected(selected + 1);
+      }
     } catch (err) {
       setUploading(false);
     }
   };
 
   const completeDone = () => {
-    router.push(`/dashboard/${params.service}/review`);
-    closer();
+    // check if all files have been uploaded
+    if (checkAllUploaded(allQA || [])) {
+      // proceed to the next page
+      router.push(`/dashboard/${params.service}/review`);
+      // closer();
+    } else {
+      toast({
+        className: "bg-red-200 border border-destructive-foreground",
+        title: "Missing files",
+        description: "some required files are missing",
+        success: false,
+      });
+    }
   };
 
   return (
     <>
       <form onSubmit={handleSubmit(submitUploadForm)} className="overflow-y-auto">
         <Modal.Body className="py-11 px-5 space-y-8">
-          {withDocument(forms) && (
+          {withDocument() && (
             <div className="flex gap-2.5 flex-wrap">
-              {withDocument(forms).map((form, index) => (
+              {withDocument().map((form, index) => (
                 <Badge
                   key={index}
                   color={index + 1 === selected ? "yellow" : "green"}
@@ -183,8 +202,8 @@ export const UploadForm = ({
           <div className="space-y-6">
             <div className="flex justify-between">
               <h4 className="text-2xl font-semibold text-gray-900 leading-normal">
-                Upload {withDocument(forms)[selected - 1].title}
-                {withDocument(forms)[selected - 1].isPerson && "'s"} Document
+                Upload {withDocument()[selected - 1].title}
+                {withDocument()[selected - 1].isPerson && "'s"} Document
               </h4>
               <Button color="link" size={"fit"}>
                 <div className="flex gap-2 items-center">
@@ -197,7 +216,7 @@ export const UploadForm = ({
             ) : (
               // TODO: figure out how to do document template
               <div className="grid grid-cols-2 gap-5">
-                {withDocument(forms)
+                {withDocument()
                   [selected - 1]?.docs?.filter((sub) => sub.type === "document upload")
                   .map((sub) => {
                     return (
@@ -214,12 +233,14 @@ export const UploadForm = ({
           </div>
         </Modal.Body>
         <Modal.Footer className="flex justify-between">
-          <Button onClick={completeDone} color="secondary">
+          <Button onClick={completeDone} color="secondary" type="button">
             Done
           </Button>
-          <Button color="gray" type="submit" isProcessing={uploading}>
-            Go to next proprietor
-          </Button>
+          {!!withDocument()[selected + 1] && (
+            <Button color="gray" type="submit" isProcessing={uploading}>
+              Go to next proprietor
+            </Button>
+          )}
         </Modal.Footer>
       </form>
     </>
