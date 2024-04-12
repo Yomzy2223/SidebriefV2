@@ -87,6 +87,12 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
     setSaving(false);
   };
 
+  const justOpenModal = () => {
+    if (selectedPerson === null) {
+      setOpenModal(true);
+    }
+  };
+
   const deleteQA = async (personNumber: number) => {
     if (!formState) return;
 
@@ -224,10 +230,15 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
                             <Button
                               color="secondary"
                               size={"lg"}
-                              type="submit"
+                              type={selectedPerson === null ? "button" : "submit"}
                               isProcessing={saving}
                               disabled={isLoading}
-                              onClick={() => setAddPerson(false)}
+                              onClick={() => {
+                                setAddPerson(false);
+                                if (selectedPerson === null) {
+                                  justOpenModal();
+                                }
+                              }}
                             >
                               <div className="space-x-2 flex items-center">
                                 <p>Continue</p>
