@@ -153,6 +153,8 @@ export const UploadForm = ({
       if (!!withDocument()[selected + 1]) {
         // go to next person
         setSelected(selected + 1);
+      } else {
+        completeDone();
       }
     } catch (err) {
       setUploading(false);
@@ -233,10 +235,17 @@ export const UploadForm = ({
           </div>
         </Modal.Body>
         <Modal.Footer className="flex justify-between">
-          <Button onClick={completeDone} color="secondary" type="button">
+          <Button
+            // onClick={() => {
+            //   console.log(!withDocument()[selected]);
+            // }}
+            isProcessing={!withDocument()[selected] && uploading}
+            color="secondary"
+            type="submit"
+          >
             Done
           </Button>
-          {!!withDocument()[selected + 1] && (
+          {!!withDocument()[selected] && (
             <Button color="gray" type="submit" isProcessing={uploading}>
               Go to next proprietor
             </Button>
