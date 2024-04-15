@@ -14,6 +14,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ChevronDown } from "lucide-react";
 import { ThreeDots } from "react-loading-icons";
+import { ScrollArea } from "../ui/scroll-area";
 
 export function Combobox({
   placeholder,
@@ -61,19 +62,21 @@ export function Combobox({
             <>
               <CommandInput placeholder="Search options..." />
               <CommandEmpty>No Option found.</CommandEmpty>
-              <CommandGroup className="max-h-[500px] overflow-y-auto">
-                {options.map((option, i) => (
-                  <CommandItem
-                    key={i}
-                    value={option}
-                    onSelect={(currentValue) => {
-                      selectValue(currentValue);
-                      setOpen(false);
-                    }}
-                  >
-                    {option}
-                  </CommandItem>
-                ))}
+              <CommandGroup>
+                <ScrollArea className="h-full max-h-[500px]">
+                  {options.map((option, i) => (
+                    <CommandItem
+                      key={i}
+                      value={option}
+                      onSelect={(currentValue) => {
+                        selectValue(currentValue);
+                        setOpen(false);
+                      }}
+                    >
+                      {option}
+                    </CommandItem>
+                  ))}
+                </ScrollArea>
               </CommandGroup>
             </>
           )}

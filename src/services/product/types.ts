@@ -16,9 +16,9 @@ export type productType = {
   product: serviceProductType;
 };
 
-export type File = {
+export type FileType = {
   name: string;
-  description?: string;
+  size?: string;
   link: string;
   type: string;
 };
@@ -31,6 +31,7 @@ export type SubFormProfile = {
 };
 
 export type FormItem = {
+  id?: string;
   question: string;
   answer: string[];
   type: string;
@@ -38,7 +39,7 @@ export type FormItem = {
   isGeneral: boolean;
   // subForm: boolean;
   // profile: SubFormProfile[];
-  file?: File;
+  file?: FileType;
 };
 
 export type saveProductQAPayload = {
@@ -65,6 +66,10 @@ export type updateProductQAPayload = {
   };
 };
 
+export type deleteProductQAPayload = {
+  requestFormId: string;
+};
+
 export type productQAType = {
   compulsory: boolean;
   createdAt: string;
@@ -81,11 +86,6 @@ export type productQAType = {
 
 export type addServiceToProductPayload = {
   serviceId: string;
-  productId: string;
-};
-
-export type createProductPayload = {
-  userId: string;
   productId: string;
 };
 

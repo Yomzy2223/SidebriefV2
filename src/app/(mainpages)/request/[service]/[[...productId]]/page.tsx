@@ -5,7 +5,12 @@ import { Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { ServicesModal } from "@/components/services/ServicesModal";
 import { useGetServiceproduct, useGetServices } from "@/services/service";
+<<<<<<< HEAD:src/app/(mainpages)/request/[service]/[[...productId]]/page.tsx
 import { useGetProductRequest, useCreateNewProductRequest } from "@/services/product";
+=======
+import { useAddServiceToProduct, useGetProductRequest } from "@/services/product";
+import { useCreateNewProcessRequest } from "@/services/process";
+>>>>>>> origin/launchContinued:src/app/(launch)/dashboard/[service]/[[...productId]]/page.tsx
 import { redirect } from "next/navigation";
 import slugify from "slugify";
 import { useRouter } from "next/navigation";
@@ -28,7 +33,7 @@ export default function RegistrationPlan({
   params: { productId: string[]; service: string };
 }) {
   const getServices = useGetServices();
-  const createNewProduct = useCreateNewProductRequest();
+  const createNewProcess = useCreateNewProcessRequest();
   const services = getServices.data?.data.data;
   const serviceSlug = params.service;
   const router = useRouter();
@@ -83,7 +88,7 @@ export default function RegistrationPlan({
     let productId = params.productId?.[0];
 
     if (!productId) {
-      const res = await createNewProduct.mutateAsync({
+      const res = await createNewProcess.mutateAsync({
         productId: selectedPlan?.id,
         userId: "5c99014f-4d5f-4771-9c6e-8e56d3afd819",
       });
@@ -149,7 +154,7 @@ export default function RegistrationPlan({
         className="self-start"
         onClick={handleSubmit}
         disabled={loading || !selectedService}
-        isProcessing={createNewProduct.isPending}
+        isProcessing={createNewProcess.isPending}
       >
         <div className="space-x-2 flex items-center">
           <p>Continue</p>
