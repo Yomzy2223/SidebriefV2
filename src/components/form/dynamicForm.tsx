@@ -6,7 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DynamicFormProps } from "./constants";
-import { BusinessNameInput, BusinessObjectiveInput, CountryInput } from "../input";
+import { BusinessNameInput, BusinessObjectiveInput, CountryInput, AllCOuntries } from "../input";
 import { useDynamic } from "@/hooks/useDynamic";
 
 const DynamicForm = ({
@@ -16,7 +16,9 @@ const DynamicForm = ({
   formSchema,
   onFormSubmit,
   watchValues,
-}: DynamicFormProps) => {
+  resetForm,
+}: // selectedPerson,
+DynamicFormProps) => {
   const dynamic = useDynamic({ subForms: formInfo });
 
   const schema = formSchema || dynamic.schema;
@@ -33,6 +35,7 @@ const DynamicForm = ({
     getValues,
     setValue,
     control,
+    reset,
   } = useForm<formType>({
     resolver: zodResolver(schema),
     defaultValues: dValues,
@@ -44,14 +47,33 @@ const DynamicForm = ({
     onFormSubmit && onFormSubmit(values);
   }
 
+  const setResetter = useCallback(() => {
+    resetForm && resetForm(reset);
+  }, [reset, resetForm]);
+
+  setResetter();
+
   useEffect(() => {
     const subscription = watch((values) => watchValues && watchValues(values));
     return () => subscription.unsubscribe();
   }, [watch, watchValues]);
 
   // useEffect(() => {
+<<<<<<< HEAD
   //   if (dValues) {
   //     formInfo.forEach((el) => dValues[el.name] && setValue(el.name, dValues[el.name] || el.value));
+=======
+  //   console.log(selectedPerson);
+  //   if (!selectedPerson) {
+  //     console.log("hi");
+  //     reset(); // Reset the form fields
+  //   }
+  // }, [selectedPerson, reset]);
+
+  // useEffect(() => {
+  //   if (defaultValues && dValues) {
+  //     formInfo.forEach((el) => setValue(el.name, defaultValues[el.name] || el.value));
+>>>>>>> origin/launchContinued
   //   }
   // }, [formInfo, dValues]);
 
@@ -108,6 +130,13 @@ const DynamicForm = ({
               />
             )}
 
+            {el.type === "countries-all" && (
+              <AllCOuntries
+                value={watch(el.name) || ""}
+                setValue={(value: string) => setValue(el.name, value)}
+              />
+            )}
+
             {el.type === "checkbox" && (
               <Checkbox id={el.name} defaultChecked {...register(el.name)} />
             )}
@@ -161,7 +190,7 @@ const DynamicForm = ({
             {el.type === "countries" && (
               <CountryInput
                 id={el.id}
-                value={watch(el.name) || []}
+                value={watch(el.name) || ""}
                 setValue={(value: string) => setValue(el.name, value)}
               />
             )}

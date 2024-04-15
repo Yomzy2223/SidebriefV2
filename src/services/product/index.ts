@@ -1,36 +1,51 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  createNewProductRequest,
   saveProductQA,
   updateProductQA,
   getproductQA,
   addServiceToProduct,
   getProductRequest,
   getProductForm,
+  deleteProductQA,
+  submitProductRequest,
 } from "./operations";
 import {
   saveProductQAPayload,
   addServiceToProductPayload,
-  createProductPayload,
   updateProductQAPayload,
+  deleteProductQAPayload,
 } from "./types";
+import { useToast } from "@/components/ui/use-toast";
 
-export const useCreateNewProductRequest = () =>
-  useMutation({
-    mutationFn: (payload: createProductPayload) => createNewProductRequest(payload),
-    mutationKey: ["create new product"],
-  });
+export const useSaveProductQA = () => {
+  const { toast } = useToast();
 
-export const useSaveProductQA = () =>
-  useMutation({
+  return useMutation({
     mutationKey: ["save product QA"],
     mutationFn: (payload: saveProductQAPayload) => saveProductQA(payload),
+    onError(error: any) {
+      const errorMessage = error.response.data.error;
+      toast({
+        className: "bg-red-200 border border-destructive-foreground",
+        title: "Failed",
+        description: errorMessage,
+        // success: hideIcon ? null : false,
+        // action,
+      });
+    },
   });
+};
 
 export const useUpdateProductQA = () =>
   useMutation({
     mutationKey: ["update product QA"],
     mutationFn: (payload: updateProductQAPayload) => updateProductQA(payload),
+  });
+
+export const useDeleteProductQA = () =>
+  useMutation({
+    mutationKey: ["delete product QA"],
+    mutationFn: (payload: deleteProductQAPayload) => deleteProductQA(payload),
   });
 
 export const useGetProductQA = (productId: string | undefined) =>
@@ -58,3 +73,23 @@ export const useGetProductForm = (productId: string) =>
     queryKey: ["get product form", productId],
     queryFn: () => getProductForm({ productId: productId }),
   });
+
+export const useSubmitProductRequest = () => {
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationKey: ["submit product request"],
+    mutationFn: ({ productRequestIds }: { productRequestIds: string[] }) =>
+      submitProductRequest({ productRequestIds }),
+    onError: (error: any) => {
+      const errorMessage = error.response.data.error;
+      toast({
+        className: "bg-red-200 border border-destructive-foreground",
+        title: "Failed",
+        description: errorMessage,
+        success: false,
+        // action,
+      });
+    },
+  });
+};
