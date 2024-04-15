@@ -7,6 +7,7 @@ import {
   getProductRequest,
   getProductForm,
   deleteProductQA,
+  submitProductRequest,
 } from "./operations";
 import {
   saveProductQAPayload,
@@ -72,3 +73,23 @@ export const useGetProductForm = (productId: string) =>
     queryKey: ["get product form", productId],
     queryFn: () => getProductForm({ productId: productId }),
   });
+
+export const useSubmitProductRequest = () => {
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationKey: ["submit product request"],
+    mutationFn: ({ productRequestIds }: { productRequestIds: string[] }) =>
+      submitProductRequest({ productRequestIds }),
+    onError: (error: any) => {
+      const errorMessage = error.response.data.error;
+      toast({
+        className: "bg-red-200 border border-destructive-foreground",
+        title: "Failed",
+        description: errorMessage,
+        success: false,
+        // action,
+      });
+    },
+  });
+};

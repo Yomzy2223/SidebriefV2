@@ -46,3 +46,14 @@ export const getProductForm = async ({ productId }: { productId: string }) => {
   const client = await Client();
   return client.get<rootType<productFormType[]>>(`/products/formByProduct/${productId}`);
 };
+
+export const submitProductRequest = async ({
+  productRequestIds,
+}: {
+  productRequestIds: string[];
+}) => {
+  const client = await Client();
+  return client.post<rootType<any>>(`/productRequest/submission`, {
+    requestIds: productRequestIds,
+  });
+};

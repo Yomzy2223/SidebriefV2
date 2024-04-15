@@ -35,6 +35,7 @@ export const UploadForm = ({
   formState: productQAType | productQAType[] | null;
   refetch: () => Promise<any>;
 }) => {
+  const [isDone, setIsDone] = useState(false);
   const params: { service: string; processId: string } = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -150,22 +151,27 @@ export const UploadForm = ({
       }
       setUploading(false);
 
-      if (!!withDocument()[selected + 1]) {
+      if (!isDone) {
         // go to next person
         setSelected(selected + 1);
-      } else {
+      }
+
+      if (isDone) {
         completeDone();
+        setIsDone(false);
       }
     } catch (err) {
       setUploading(false);
     }
   };
 
-  const completeDone = () => {
+  const completeDone = async () => {
+    await productQA.refetch();
+
     // check if all files have been uploaded
     if (checkAllUploaded(allQA || [])) {
       // proceed to the next page
-      router.push(`/dashboard/${params.service}/review`);
+      router.push(`/dashboard/${params.service}/review/${params.processId}`);
       // closer();
     } else {
       toast({
@@ -236,17 +242,17 @@ export const UploadForm = ({
         </Modal.Body>
         <Modal.Footer className="flex justify-between">
           <Button
-            // onClick={() => {
-            //   console.log(!withDocument()[selected]);
-            // }}
-            isProcessing={!withDocument()[selected] && uploading}
+            onClick={() => {
+              setIsDone(true);
+            }}
+            isProcessing={uploading && isDone}
             color="secondary"
             type="submit"
           >
             Done
           </Button>
           {!!withDocument()[selected] && (
-            <Button color="gray" type="submit" isProcessing={uploading}>
+            <Button color="gray" type="submit" isProcessing={uploading && !isDone}>
               Go to next proprietor
             </Button>
           )}
