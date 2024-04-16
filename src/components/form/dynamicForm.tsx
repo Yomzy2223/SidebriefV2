@@ -59,10 +59,6 @@ DynamicFormProps) => {
   }, [watch, watchValues]);
 
   // useEffect(() => {
-<<<<<<< HEAD
-  //   if (dValues) {
-  //     formInfo.forEach((el) => dValues[el.name] && setValue(el.name, dValues[el.name] || el.value));
-=======
   //   console.log(selectedPerson);
   //   if (!selectedPerson) {
   //     console.log("hi");
@@ -73,7 +69,6 @@ DynamicFormProps) => {
   // useEffect(() => {
   //   if (defaultValues && dValues) {
   //     formInfo.forEach((el) => setValue(el.name, defaultValues[el.name] || el.value));
->>>>>>> origin/launchContinued
   //   }
   // }, [formInfo, dValues]);
 
@@ -154,7 +149,7 @@ DynamicFormProps) => {
             {el.type === "select" && el.selectOptions && (
               <Select
                 id={el.name}
-                placeholder="dkcdslcj"
+                // placeholder="dkcdslcj"
                 color={errorMsg && "failure"}
                 helperText={<>{errorMsg}</>}
                 {...el.selectProp}

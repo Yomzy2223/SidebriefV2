@@ -11,6 +11,7 @@ import { useTableInfo } from "./actions";
 import OngoingRegSection from "@/components/dashboard/ongoingRegSection";
 import useRequestApi from "@/hooks/useRequestApi";
 import { useSession } from "next-auth/react";
+import { serviceTableNav } from "./constants";
 
 // interface BadgeProps {
 //   size?: "sm" | "lg";
@@ -76,23 +77,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-export const serviceTableNav = [
-  {
-    name: "service",
-    value: "all",
-  },
-  {
-    name: "service",
-    value: "draft",
-  },
-
-  {
-    name: "service",
-    value: "submitted",
-  },
-  {
-    name: "service",
-    value: "completed",
-  },
-];

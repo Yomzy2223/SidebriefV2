@@ -1,5 +1,4 @@
 import { ProductInfoForm } from "./productinfoform";
-import { MemberForm } from "./proprietorform";
 import { Forms } from "./forms";
 import { getProductRequest, getProductForm } from "@/services/product/operations";
 import { redirect } from "next/navigation";

@@ -171,7 +171,7 @@ export const UploadForm = ({
     // check if all files have been uploaded
     if (checkAllUploaded(allQA || [])) {
       // proceed to the next page
-      router.push(`/dashboard/${params.service}/review/${params.processId}`);
+      router.push(`/request/${params.service}/review/${params.processId}`);
       // closer();
     } else {
       toast({
