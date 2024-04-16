@@ -5,21 +5,13 @@ import { Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { ServicesModal } from "@/components/services/ServicesModal";
 import { useGetServiceproduct, useGetServices } from "@/services/service";
-<<<<<<< HEAD:src/app/(mainpages)/request/[service]/[[...productId]]/page.tsx
-import { useGetProductRequest, useCreateNewProductRequest } from "@/services/product";
-=======
 import { useAddServiceToProduct, useGetProductRequest } from "@/services/product";
 import { useCreateNewProcessRequest } from "@/services/process";
->>>>>>> origin/launchContinued:src/app/(launch)/dashboard/[service]/[[...productId]]/page.tsx
 import { redirect } from "next/navigation";
-import slugify from "slugify";
 import { useRouter } from "next/navigation";
 import { CountryInput } from "@/components/input";
-<<<<<<< HEAD:src/app/(mainpages)/request/[service]/[[...productId]]/page.tsx
-=======
 import { TCountryCode, countries, getCountryCode } from "countries-list";
 import { sluggify } from "@/lib/utils";
->>>>>>> origin/staging:src/app/(launch)/dashboard/[service]/[[...productId]]/page.tsx
 
 // const tabs = [
 // 	{ name: "Bank Transfer", href: "#", icon: BankIcon, current: false },
@@ -98,7 +90,7 @@ export default function RegistrationPlan({
 
     // add country to QA
 
-    router.push(`/dashboard/${params.service}/info/${productId}`);
+    router.push(`/request/${params.service}/info/${productId}`);
 
     // const planId = selectedPlan.id;
     // const productId = params.productId;

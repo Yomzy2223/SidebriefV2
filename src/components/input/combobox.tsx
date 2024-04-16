@@ -38,13 +38,13 @@ export function Combobox({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <div className="space-y-1.5">
+        <div className="space-y-2 flex flex-col w-full">
           {label ? <Label value={label} /> : null}
           <Button
             color={"input"}
             role="combobox"
             aria-expanded={open}
-            className=""
+            className="w-full"
             // outline={!!error}
           >
             <div className="flex w-full justify-between capitalize">

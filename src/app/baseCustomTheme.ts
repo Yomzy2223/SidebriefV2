@@ -18,8 +18,12 @@ export const customTheme: ThemeProps = {
         primary:
           "bg-primary text-primary-foreground border border-transparent enabled:hover:bg-primary-dark",
         secondary:
-          "bg-secondary text-secondary-foreground border border-transparent enabled:hover:bg-magenta-dark",
-        ghost: "bg-transparent text-foreground",
+          "bg-magenta text-magenta-foreground border border-transparent enabled:hover:bg-magenta-dark",
+        ghost: "bg-transparent text-foreground enabled:hover:bg-foreground/10",
+        ghost2: "bg-transparent text-foreground",
+        link: "bg-transparent text-primary enabled:hover:underline",
+        input:
+          "block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 h-10 p-1 text-sm rounded-lg",
       },
       outline: {
         color: {

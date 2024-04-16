@@ -1,19 +1,20 @@
 import { useToast } from "@/components/ui/use-toast";
 
+interface responseType {
+  title?: string;
+  action?: any;
+  hideIcon?: boolean;
+}
+
+interface successType extends responseType {
+  data: any;
+}
+interface errorType extends responseType {
+  error: any;
+}
+
 export const useResponse = () => {
   const { toast } = useToast();
-
-  interface responseType {
-    title?: string;
-    action?: any;
-    hideIcon?: boolean;
-  }
-  interface successType extends responseType {
-    data: any;
-  }
-  interface errorType extends responseType {
-    error: any;
-  }
 
   const handleError = ({ error, title, action, hideIcon }: errorType) => {
     let errorMessage;
