@@ -6,7 +6,7 @@ import { IProductFull } from "@/hooks/api/types";
 import useProductApi from "@/hooks/useProductApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PlanCard } from "@/components/cards/planCard";
-import { AuthStepper } from "@/components/stepper/auth";
+import { AuthStepper } from "@/app/(welcome)/auth/authStepper";
 import { Button } from "flowbite-react";
 import { ArrowRightCircle } from "lucide-react";
 import { useSession } from "next-auth/react";

@@ -1,8 +1,8 @@
 "use client";
 
-import AuthFormWrapper from "@/components/features/auth/authFormWrapper";
+import AuthFormWrapper from "@/components/wrappers/authFormWrapper";
 import DynamicForm from "@/components/form/dynamicForm";
-import { AuthStepper } from "@/components/stepper/auth";
+import { AuthStepper } from "@/app/(welcome)/auth/authStepper";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { useResponse } from "@/hooks/useResponse";
 import { Button } from "flowbite-react";

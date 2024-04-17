@@ -8,6 +8,7 @@ import * as z from "zod";
 import { DynamicFormProps } from "./constants";
 import { BusinessNameInput, BusinessObjectiveInput, CountryInput, AllCOuntries } from "../input";
 import { useDynamic } from "@/hooks/useDynamic";
+import ComboBox from "./comboBox";
 
 const DynamicForm = ({
   children,
@@ -17,8 +18,8 @@ const DynamicForm = ({
   onFormSubmit,
   watchValues,
   resetForm,
-}: // selectedPerson,
-DynamicFormProps) => {
+  disableAll,
+}: DynamicFormProps) => {
   const dynamic = useDynamic({ subForms: formInfo });
 
   const schema = formSchema || dynamic.schema;
@@ -147,18 +148,18 @@ DynamicFormProps) => {
             )}
 
             {el.type === "select" && el.selectOptions && (
-              <Select
-                id={el.name}
-                // placeholder="dkcdslcj"
-                color={errorMsg && "failure"}
-                helperText={<>{errorMsg}</>}
-                {...el.selectProp}
-                {...register(el.name)}
-              >
-                {el.selectOptions.map((option) => (
-                  <option key={option}>{option}</option>
-                ))}
-              </Select>
+              <ComboBox
+                name={el.name}
+                options={el.selectOptions}
+                setValue={setValue}
+                selectProp={el.selectProp}
+                handleSelect={el.handleSelect}
+                fieldName={el.fieldName}
+                leftContent={el.leftContent}
+                defaultValue={dValues[el.name]}
+                disabled={disableAll}
+                optionsLoading={el.optionsLoading}
+              />
             )}
 
             {el.type === "business name" && (

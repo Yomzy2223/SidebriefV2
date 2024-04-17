@@ -12,6 +12,10 @@ export interface FormInput {
   fileProp?: Record<string, any>;
   selectOptions?: string[];
   value?: string | string[];
+  leftContent?: string | ReactNode;
+  handleSelect?: (selected?: string) => void;
+  fieldName?: string;
+  optionsLoading?: boolean;
 }
 
 export interface DynamicFormProps {
@@ -23,4 +27,5 @@ export interface DynamicFormProps {
   watchValues?: (values: { [key: string]: string | string[] }) => void;
   // selectedPerson?: number | null;
   resetForm?: (reset: UseFormReset<any>) => void;
+  disableAll?: boolean;
 }
