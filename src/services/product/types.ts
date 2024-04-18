@@ -1,4 +1,4 @@
-import type { serviceProductType } from "../service/types";
+import type { IProduct } from "../service/types";
 
 export type productType = {
   id: string;
@@ -13,7 +13,7 @@ export type productType = {
   productId: string | null;
   userId: string;
   productQA: productQAType[];
-  product: serviceProductType;
+  product: IProduct;
 };
 
 export type FileType = {

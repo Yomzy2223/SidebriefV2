@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 
 export const RequestInfoPanel = () => {
   return (
-    <div className="max-w-[470px] bg-primary text-white relative overflow-auto">
+    <div className="max-w-[470px] min-w-[250px] bg-primary text-white relative overflow-auto">
       <Image src={Ellipse1} alt="" className="absolute z-0 right-0 bottom-0" />
       <Image src={Ellipse2} alt="" className="absolute top-0 z-0 h-full" />
       <div className="py-[70px] px-[49px] relative">

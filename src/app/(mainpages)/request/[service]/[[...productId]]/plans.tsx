@@ -2,7 +2,7 @@
 
 import { PlanCard } from "@/components/cards/planCard";
 import { Combobox } from "@/components/input/combobox";
-import { serviceProductType } from "@/services/service/types";
+import { IProduct } from "@/services/service/types";
 import { Puff } from "react-loading-icons";
 
 export const Plans = ({
@@ -12,9 +12,9 @@ export const Plans = ({
   selectedPlan,
 }: {
   loading: boolean;
-  serviceProducts: serviceProductType[];
+  serviceProducts: IProduct[];
   selectPlan: (a: string) => void;
-  selectedPlan?: serviceProductType;
+  selectedPlan?: IProduct;
 }) => {
   return (
     <div className="flex flex-col space-y-7 md:max-w-[500px]">

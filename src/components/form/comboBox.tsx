@@ -1,15 +1,6 @@
 import React, { HTMLAttributes, ReactNode, useEffect, useState } from "react";
-import {
-  Command,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Command, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Check, ChevronDown } from "lucide-react";
 import { Button } from "flowbite-react";
 import { cn } from "@/lib/utils";
@@ -52,10 +43,8 @@ const ComboBox = ({
             className={cn(
               "w-full [&_span]:justify-between [&>span]:!p-2.5",
               {
-                "border-primary ring-primary ring-1":
-                  openSelect && !isMultiCombo,
-                "[&_span]:rounded-none rounded-none border-none bg-transparent":
-                  isMultiCombo,
+                "border-primary ring-primary ring-1": openSelect && !isMultiCombo,
+                "[&_span]:rounded-none rounded-none border-none bg-transparent": isMultiCombo,
               },
               className
             )}
@@ -77,9 +66,7 @@ const ComboBox = ({
         </PopoverTrigger>
         <PopoverContent className="w-full p-0 max-h-96 overflow-y-auto">
           <Command className="min-w-40">
-            {options.length > 10 && (
-              <CommandInput placeholder={`Search ${fieldName}...`} />
-            )}
+            {options.length > 10 && <CommandInput placeholder={`Search ${fieldName}...`} />}
             {!optionsLoading && options.length === 0 && (
               <p className="text-sm text-foreground-5 p-2 pb-0">{`No ${
                 fieldName || name
@@ -98,12 +85,9 @@ const ComboBox = ({
                   key={option}
                   value={option}
                   onSelect={(currentValue) => {
-                    const selected =
-                      currentValue === selectValue ? "" : currentValue;
+                    const selected = currentValue === selectValue ? "" : currentValue;
                     setSelectValue(selected);
-                    setValue &&
-                      name &&
-                      setValue(name, selected, { shouldValidate: true });
+                    setValue && name && setValue(name, selected, { shouldValidate: true });
                     setOpenSelect(false);
                     handleSelect && handleSelect(findOriginalValue(selected));
                   }}
@@ -111,9 +95,7 @@ const ComboBox = ({
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      selectValue === option.toLowerCase()
-                        ? "opacity-100"
-                        : "opacity-0"
+                      selectValue === option.toLowerCase() ? "opacity-100" : "opacity-0"
                     )}
                   />
                   {option}
@@ -123,9 +105,7 @@ const ComboBox = ({
           </Command>
         </PopoverContent>
       </Popover>
-      {errorMsg && (
-        <p className="text-sm text-destructive-foreground">{errorMsg}</p>
-      )}
+      {errorMsg && <p className="text-sm text-destructive-foreground mt-1">{errorMsg}</p>}
     </>
   );
 };

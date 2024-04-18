@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { UseFormReset } from "react-hook-form";
 import { ZodType } from "zod";
 
-export interface FormInput {
+export interface IFormInput {
   id?: string;
   name: string;
   label?: string;
@@ -20,7 +20,7 @@ export interface FormInput {
 
 export interface DynamicFormProps {
   children: ReactNode;
-  formInfo: FormInput[];
+  formInfo: IFormInput[];
   onFormSubmit: (values: any) => void;
   defaultValues?: Record<string, any>;
   formSchema?: ZodType<any, any, any>;
@@ -28,4 +28,6 @@ export interface DynamicFormProps {
   // selectedPerson?: number | null;
   resetForm?: (reset: UseFormReset<any>) => void;
   disableAll?: boolean;
+  formClassName?: string;
+  className?: string;
 }

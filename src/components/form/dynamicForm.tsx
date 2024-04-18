@@ -9,6 +9,7 @@ import { DynamicFormProps } from "./constants";
 import { BusinessNameInput, BusinessObjectiveInput, CountryInput, AllCOuntries } from "../input";
 import { useDynamic } from "@/hooks/useDynamic";
 import ComboBox from "./comboBox";
+import { cn } from "@/lib/utils";
 
 const DynamicForm = ({
   children,
@@ -19,6 +20,8 @@ const DynamicForm = ({
   watchValues,
   resetForm,
   disableAll,
+  formClassName,
+  className,
 }: DynamicFormProps) => {
   const dynamic = useDynamic({ subForms: formInfo });
 
@@ -59,20 +62,6 @@ const DynamicForm = ({
     return () => subscription.unsubscribe();
   }, [watch, watchValues]);
 
-  // useEffect(() => {
-  //   console.log(selectedPerson);
-  //   if (!selectedPerson) {
-  //     console.log("hi");
-  //     reset(); // Reset the form fields
-  //   }
-  // }, [selectedPerson, reset]);
-
-  // useEffect(() => {
-  //   if (defaultValues && dValues) {
-  //     formInfo.forEach((el) => setValue(el.name, defaultValues[el.name] || el.value));
-  //   }
-  // }, [formInfo, dValues]);
-
   const prevFormInfoRef = useRef(formInfo);
 
   useEffect(() => {
@@ -87,112 +76,118 @@ const DynamicForm = ({
   }, [setValue, formInfo]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      {(formInfo || []).map((el, i: number) => {
-        const isTextInput = el.type === "text" || el.type === "password" || el.type === "email";
-        const errorMsg = errors[el.name]?.message;
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className={cn("flex flex-col gap-8 justify-between flex-1 max-w-[500px]", formClassName)}
+    >
+      <div className={cn("flex flex-col justify-start gap-8", className)}>
+        {(formInfo || []).map((el, i: number) => {
+          const isTextInput = el.type === "text" || el.type === "password" || el.type === "email";
+          const errorMsg = errors[el.name]?.message;
 
-        return (
-          <div key={i}>
-            {el.label && (
-              <div className="mb-2 block">
-                <Label htmlFor={el.name} value={el.label} />
-              </div>
-            )}
+          return (
+            <div key={i}>
+              {el.label && (
+                <div className="mb-2 block">
+                  <Label htmlFor={el.name} value={el.label} />
+                </div>
+              )}
 
-            {isTextInput && (
-              <TextInput
-                id={el.name}
-                type={el.type}
-                sizing="md"
-                helperText={<>{errorMsg}</>}
-                color={errorMsg && "failure"}
-                {...el.textInputProp}
-                {...register(el.name)}
-              />
-            )}
+              {isTextInput && (
+                <TextInput
+                  id={el.name}
+                  type={el.type}
+                  sizing="md"
+                  helperText={<>{errorMsg}</>}
+                  color={errorMsg && "failure"}
+                  {...el.textInputProp}
+                  {...register(el.name)}
+                />
+              )}
 
-            {(el.type === "address" ||
-              el.type === "email address" ||
-              el.type === "short answer") && (
-              <TextInput
-                id={el.name}
-                type={el.type}
-                sizing="md"
-                helperText={<>{errorMsg}</>}
-                color={errorMsg && "failure"}
-                // {...el.textInputProp}
-                {...register(el.name)}
-              />
-            )}
+              {(el.type === "address" ||
+                el.type === "email address" ||
+                el.type === "short answer") && (
+                <TextInput
+                  id={el.name}
+                  type={el.type}
+                  sizing="md"
+                  helperText={<>{errorMsg}</>}
+                  color={errorMsg && "failure"}
+                  // {...el.textInputProp}
+                  {...register(el.name)}
+                />
+              )}
 
-            {el.type === "countries-all" && (
-              <AllCOuntries
-                value={watch(el.name) || ""}
-                setValue={(value: string) => setValue(el.name, value)}
-              />
-            )}
+              {el.type === "countries-all" && (
+                <AllCOuntries
+                  value={watch(el.name) || ""}
+                  setValue={(value: string) => setValue(el.name, value)}
+                />
+              )}
 
-            {el.type === "checkbox" && (
-              <Checkbox id={el.name} defaultChecked {...register(el.name)} />
-            )}
+              {el.type === "checkbox" && (
+                <Checkbox id={el.name} defaultChecked {...register(el.name)} />
+              )}
 
-            {el.type === "radio" && <Radio id={el.name} {...register(el.name)} />}
+              {el.type === "radio" && <Radio id={el.name} {...register(el.name)} />}
 
-            {el.type === "file" && (
-              <FileInput
-                id={el.name}
-                helperText="A profile picture is useful to confirm your are logged into your account"
-                {...register(el.name)}
-              />
-            )}
+              {el.type === "file" && (
+                <FileInput
+                  id={el.name}
+                  helperText="A profile picture is useful to confirm your are logged into your account"
+                  {...register(el.name)}
+                />
+              )}
 
-            {el.type === "select" && el.selectOptions && (
-              <ComboBox
-                name={el.name}
-                options={el.selectOptions}
-                setValue={setValue}
-                selectProp={el.selectProp}
-                handleSelect={el.handleSelect}
-                fieldName={el.fieldName}
-                leftContent={el.leftContent}
-                defaultValue={dValues[el.name]}
-                disabled={disableAll}
-                optionsLoading={el.optionsLoading}
-              />
-            )}
+              {el.type === "select" && el.selectOptions && (
+                <ComboBox
+                  name={el.name}
+                  options={el.selectOptions}
+                  setValue={setValue}
+                  errorMsg={errorMsg?.toString()}
+                  selectProp={el.selectProp}
+                  handleSelect={el.handleSelect}
+                  fieldName={el.fieldName}
+                  leftContent={el.leftContent}
+                  defaultValue={dValues?.[el.name]}
+                  disabled={disableAll}
+                  optionsLoading={el.optionsLoading}
+                />
+              )}
 
-            {el.type === "business name" && (
-              <BusinessNameInput
-                id={el.id!}
-                // question={el.}
-                value={watch(el.name) || []}
-                setValue={(value: string[]) => setValue(el.name, value)}
-                error={errorMsg as string | undefined}
-              />
-            )}
+              {el.type === "business name" && (
+                <BusinessNameInput
+                  id={el.id!}
+                  // question={el.}
+                  value={watch(el.name) || []}
+                  setValue={(value: string[]) => setValue(el.name, value)}
+                  error={errorMsg as string | undefined}
+                />
+              )}
 
-            {el.type === "objectives" && (
-              <BusinessObjectiveInput
-                id={el.id!}
-                // question={el.question}
-                options={el.selectOptions || []}
-                value={watch(el.name) || []}
-                setValue={(value: string[]) => setValue(el.name, value)}
-                error={errorMsg as string | undefined}
-              />
-            )}
+              {el.type === "objectives" && (
+                <BusinessObjectiveInput
+                  id={el.id!}
+                  // question={el.question}
+                  options={el.selectOptions || []}
+                  value={watch(el.name) || []}
+                  setValue={(value: string[]) => setValue(el.name, value)}
+                  error={errorMsg as string | undefined}
+                />
+              )}
 
-            {el.type === "countries" && (
-              <CountryInput
-                id={el.id}
-                value={watch(el.name) || ""}
-                setValue={(value: string) => setValue(el.name, value)}
-              />
-            )}
-          </div>
-        );
-      })}
+              {el.type === "countries" && (
+                <CountryInput
+                  id={el.id}
+                  value={watch(el.name) || ""}
+                  setValue={(value: string) => setValue(el.name, value)}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
 
       {children}
     </form>

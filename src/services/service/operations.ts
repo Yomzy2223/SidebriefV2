@@ -4,7 +4,7 @@ import {
   serviceFormType,
   serviceFormSubFormType,
   countryType,
-  serviceProductType,
+  IProduct,
 } from "./types";
 
 export const getServices = () => axios.get<rootType<serviceType[]>>("/services");
@@ -21,4 +21,15 @@ export const getServiceFormSubForms = ({ serviceFormId }: { serviceFormId: strin
 export const getCountries = () => axios.get<rootType<countryType[]>>("/countries");
 
 export const getServiceProductsById = ({ serviceId }: { serviceId?: string }) =>
-  axios.get<rootType<serviceProductType[]>>(`/products/service/${serviceId}`);
+  axios.get<rootType<IProduct[]>>(`/products/service/${serviceId}`);
+
+export const getCountryServiceProducts = ({
+  serviceId,
+  country,
+}: {
+  serviceId: string;
+  country: string;
+}) =>
+  axios.get<rootType<IProduct[]>>(
+    `/products/service/country/${serviceId}/${country.toLowerCase()}`
+  );

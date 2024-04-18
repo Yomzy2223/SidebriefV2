@@ -38,7 +38,7 @@ export type countryType = {
   flagUrl: string;
 };
 
-export type serviceProductType = {
+export type IProduct = {
   id: string;
   name: string;
   description: string;

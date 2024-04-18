@@ -1,8 +1,14 @@
 import { axios, rootType } from "../index";
-import { ProcessData, createProcessPayload } from "./types";
+import { IBusinessData, ICreateBusinessPayload, ICreateRequestPayload } from "./types";
 
-export const createNewProcessRequest = (payload: createProcessPayload) =>
-  axios.post<rootType<ProcessData>>("/processRequest", payload);
+export const createBusinessRequest = (payload: ICreateBusinessPayload) =>
+  axios.post<rootType<IBusinessData>>("/businessRequest", payload);
 
-export const GetProcessRequest = ({ id }: { id: string }) =>
-  axios.get<rootType<ProcessData>>(`/processRequest/${id}`);
+export const createProductRequest = (payload: ICreateRequestPayload) =>
+  axios.post<rootType<IBusinessData>>("/businessRequest/requests", payload);
+
+export const getBusinessRequest = ({ id }: { id: string }) =>
+  axios.get<rootType<IBusinessData>>(`/businessRequest/${id}`);
+
+export const getUserBusinessRequests = ({ userId }: { userId: string }) =>
+  axios.get<rootType<IBusinessData[]>>(`/businessRequest/user/${userId}`);

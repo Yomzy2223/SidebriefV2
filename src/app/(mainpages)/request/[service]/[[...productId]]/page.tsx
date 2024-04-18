@@ -6,7 +6,7 @@ import { ArrowRight } from "@/assets/icons";
 import { ServicesModal } from "@/components/services/ServicesModal";
 import { useGetServiceproduct, useGetServices } from "@/services/service";
 import { useAddServiceToProduct, useGetProductRequest } from "@/services/product";
-import { useCreateNewProcessRequest } from "@/services/process";
+import { useCreateBusinessRequest } from "@/services/process";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { CountryInput } from "@/components/input";
@@ -25,7 +25,7 @@ export default function RegistrationPlan({
   params: { productId: string[]; service: string };
 }) {
   const getServices = useGetServices();
-  const createNewProcess = useCreateNewProcessRequest();
+  const createNewProcess = useCreateBusinessRequest();
   const services = getServices.data?.data.data;
   const serviceSlug = params.service;
   const router = useRouter();

@@ -1,16 +1,42 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { createProcessPayload } from "./types";
-import { GetProcessRequest, createNewProcessRequest } from "./operations";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ICreateBusinessPayload, ICreateRequestPayload } from "./types";
+import {
+  getBusinessRequest,
+  createBusinessRequest,
+  createProductRequest,
+  getUserBusinessRequests,
+} from "./operations";
 
-export const useCreateNewProcessRequest = () =>
+const queryClient = useQueryClient();
+
+export const useCreateBusinessRequest = () =>
   useMutation({
-    mutationFn: (payload: createProcessPayload) => createNewProcessRequest(payload),
+    mutationFn: (payload: ICreateBusinessPayload) => createBusinessRequest(payload),
     mutationKey: ["create new product"],
+    onSuccess(data, variables, context) {
+      queryClient.invalidateQueries({ queryKey: ["business requests"] });
+    },
   });
 
-export const useGetProcessRequest = ({ id }: { id: string }) =>
+export const useCreateProductRequest = () =>
+  useMutation({
+    mutationFn: (payload: ICreateRequestPayload) => createProductRequest(payload),
+    mutationKey: ["create new product"],
+    onSuccess(data, variables, context) {
+      queryClient.invalidateQueries({ queryKey: ["business requests"] });
+    },
+  });
+
+export const useGetBusinessRequest = ({ id }: { id: string }) =>
   useQuery({
-    queryFn: () => GetProcessRequest({ id }),
-    queryKey: ["get process request", id],
+    queryFn: () => getBusinessRequest({ id }),
+    queryKey: ["business requests", id],
     enabled: !!id,
+  });
+
+export const useGetUserBusinessRequests = ({ userId }: { userId: string }) =>
+  useQuery({
+    queryFn: () => getUserBusinessRequests({ userId }),
+    queryKey: ["business requests", userId],
+    enabled: !!userId,
   });

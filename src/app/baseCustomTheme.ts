@@ -37,6 +37,7 @@ export const customTheme: ThemeProps = {
       },
       size: {
         fit: "p-0 h-max w-max !p-0",
+        xl: "text-sm !min-w-[150px] !px-4 !py-3 lg:text-base lg:!min-w-[200px] lg:!px-6 lg:!py-3 ",
       },
       inner: {
         base: "flex justify-center items-center gap-2 !px-4 !py-2",
