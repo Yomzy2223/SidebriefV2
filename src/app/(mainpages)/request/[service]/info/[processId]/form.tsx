@@ -13,7 +13,7 @@ import { isFileType, useActions, useRemember } from "./actions";
 import { MutableRefObject, useEffect, useState } from "react";
 import DynamicForm from "@/components/form/dynamicForm";
 import { sluggify } from "@/lib/utils";
-import { serviceFormType } from "@/services/service/types";
+import { IForm } from "@/services/service/types";
 import { useRouter, useParams } from "next/navigation";
 
 export const LaunchForm1 = ({
@@ -23,10 +23,10 @@ export const LaunchForm1 = ({
   currentTab = 0,
   totalNumOfTabs = 1,
 }: {
-  // subForms: serviceFormSubFormType[];
+  // subForms: ISubForm[];
   // serviceFormId: string;
   urlProductId: string;
-  form: serviceFormType;
+  form: IForm;
   tabsRef?: MutableRefObject<any>;
   currentTab?: number;
   totalNumOfTabs?: number;

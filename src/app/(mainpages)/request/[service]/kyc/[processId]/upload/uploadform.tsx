@@ -3,7 +3,7 @@ import { SwatchBook } from "@/assets/icons";
 import { ExternalLink } from "lucide-react";
 import { FileInput } from "@/components/form/fileInput";
 import { useGetProductQA } from "@/services/product";
-import { FileType, productFormType, productQAType } from "@/services/product/types";
+import { FileType, IForm, IFormQA } from "@/services/product/types";
 import { cn, sluggify } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import { useUploadActions } from "./uploadActions";
@@ -27,12 +27,12 @@ export const UploadForm = ({
   refetch,
 }: {
   productId: string;
-  forms: productFormType[];
+  forms: IForm[];
   closer: () => void;
   selected: number;
   setSelected: (num: number) => void;
   values: { [key: string]: string | FileType | string[] };
-  formState: productQAType | productQAType[] | null;
+  formState: IFormQA | IFormQA[] | null;
   refetch: () => Promise<any>;
 }) => {
   const [isDone, setIsDone] = useState(false);

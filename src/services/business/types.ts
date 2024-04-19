@@ -1,14 +1,14 @@
-export type ICreateBusinessPayload = {
+export type TCreateBusinessPayload = {
   userId: string;
   productId: string;
 };
 
-export type ICreateRequestPayload = {
+export type TCreateRequestPayload = {
   businessId: string;
   productIds: string[];
 };
 
-export type IProductRequest = {
+export type TProductRequest = {
   id: string;
   paid: boolean;
   completed: boolean;
@@ -23,7 +23,7 @@ export type IProductRequest = {
   productId: string;
 };
 
-export type IBusinessData = {
+export type TBusinessData = {
   id: string;
   rcNumber: string;
   companyName: string;
@@ -44,5 +44,8 @@ export type IBusinessData = {
   createdAt: string;
   updatedAt: string;
   userId: string;
-  productRequest: IProductRequest[];
+};
+
+export type TBusinessDataFull = TBusinessData & {
+  productRequest: TProductRequest[];
 };

@@ -24,7 +24,7 @@ export const useGetService = (id: string) => {
   });
 };
 
-export const useGetServiceForm = (serviceId: string) =>
+export const useGetServiceForms = (serviceId: string) =>
   useQuery({
     queryKey: ["serviceForm", serviceId],
     queryFn: () => getServiceForms({ serviceId }),

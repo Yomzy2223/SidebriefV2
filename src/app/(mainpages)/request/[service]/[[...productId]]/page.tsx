@@ -15,7 +15,7 @@ import { sluggify } from "@/lib/utils";
 
 // const tabs = [
 // 	{ name: "Bank Transfer", href: "#", icon: BankIcon, current: false },
-// 	{ name: "Card Payment", href: "#", icon: CardIcon, current: false },
+// 	{ name: "Card xPayment", href: "#", icon: CardIcon, current: false },
 // 	{ name: "Bank USSD", href: "#", icon: CreditCardIcon, current: false },
 // ];
 

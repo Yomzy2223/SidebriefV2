@@ -2,7 +2,7 @@
 
 import { Button, Tabs, TabsRef } from "@/components/flowbite";
 import DynamicForm from "@/components/form/dynamicForm";
-import { productFormType, productSubFormType } from "@/services/product/types";
+import { IForm, ISubForm } from "@/services/product/types";
 import { cn, sluggify } from "@/lib/utils";
 import { ArrowRight } from "@/assets/icons";
 import { useRef, useState } from "react";
@@ -14,7 +14,7 @@ import { LoadingSkeleton } from "@/components/input";
 import { KycUploadModal } from "./upload/kycUploadModal";
 import { UseFormReset } from "react-hook-form";
 
-export const Forms = ({ forms, productId }: { forms: productFormType[]; productId: string }) => {
+export const Forms = ({ forms, productId }: { forms: IForm[]; productId: string }) => {
   const tabsRef = useRef<TabsRef>(null);
   const [activeTab, setActiveTab] = useState(0);
   const [addPerson, setAddPerson] = useState(false);
@@ -111,7 +111,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
     await refetchState();
   };
 
-  const noDocuments: (form: productFormType) => productSubFormType[] = (form: productFormType) => {
+  const noDocuments: (form: IForm) => ISubForm[] = (form: IForm) => {
     return form.productSubForm.filter(
       (subform) => subform.type !== "document upload" && subform.type !== "document template"
     );

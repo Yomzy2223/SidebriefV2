@@ -1,17 +1,11 @@
 "use client";
 
+import { RequestForm } from "@/components/form/requestForm.tsx";
+import { TProductForm, TServiceForm } from "@/services/service/types";
 import { Tabs, TabsRef } from "flowbite-react";
-import { LaunchForm1 } from "./form";
-import { IForm } from "@/services/service/types";
 import { useRef, useState } from "react";
 
-export const ProductTabs = ({
-  allServiceForms,
-  productId,
-}: {
-  allServiceForms: IForm[];
-  productId: string;
-}) => {
+export const ProductTabs = ({ formInfo }: { formInfo: TServiceForm[] }) => {
   const tabsRef = useRef<TabsRef>(null);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -22,7 +16,7 @@ export const ProductTabs = ({
       ref={tabsRef}
       onActiveTabChange={(tab) => setActiveTab(tab)}
     >
-      {allServiceForms.map((el, i, arr) => {
+      {formInfo.map((el, i, arr) => {
         return (
           <Tabs.Item active title={el.title} key={el.id}>
             <div className="space-y-5 w-full">
@@ -30,13 +24,7 @@ export const ProductTabs = ({
                 <h6 className="text-2xl leading-normal font-semibold">{el.title}</h6>
                 <p className="font-medium leading-normal text-primary">{el.description}</p>
               </div>
-              <LaunchForm1
-                urlProductId={productId}
-                form={el}
-                tabsRef={tabsRef}
-                currentTab={i}
-                totalNumOfTabs={arr.length}
-              />
+              <RequestForm info={el.subForm} isLoading={false} isSubmitting={false} />
             </div>
           </Tabs.Item>
         );

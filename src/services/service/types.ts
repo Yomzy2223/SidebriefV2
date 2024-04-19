@@ -6,29 +6,6 @@ export type serviceType = {
   updatedAt: string;
 };
 
-export type serviceFormType = {
-  id: string;
-  title: string;
-  description: string;
-  type: string;
-  compulsory: boolean;
-  createdAt: string;
-  updatedAt: string;
-  serviceId: string;
-  subForm: serviceFormSubFormType[];
-};
-
-export type serviceFormSubFormType = {
-  id: string;
-  question: string;
-  type: string;
-  options: string[];
-  compulsory: boolean;
-  createdAt: string;
-  updatedAt: string;
-  formId: string;
-};
-
 export type countryType = {
   id: string;
   name: string;
@@ -38,7 +15,7 @@ export type countryType = {
   flagUrl: string;
 };
 
-export type IProduct = {
+export type TProduct = {
   id: string;
   name: string;
   description: string;
@@ -57,4 +34,47 @@ export type IProduct = {
   // createdAt: string;
   // updatedAt: string;
   // serviceCategoryId: string;
+};
+
+type TFormCFields = {
+  id: string;
+  title: string;
+  type: string;
+  description: string;
+  compulsory: boolean;
+  createdAt: string;
+  isDeprecated: boolean;
+  updatedAt: string;
+};
+
+export type TProductForm = TFormCFields & {
+  productId: string;
+  productSubForm: TSubForm[];
+};
+
+export type TServiceForm = TFormCFields & {
+  serviceId: string;
+  subForm: TSubForm[];
+};
+
+export type TSubForm = {
+  id: string;
+  question: string;
+  type: string;
+  options: string[];
+  formId: string;
+  compulsory: boolean;
+  fileName: string;
+  fileLink: string;
+  fileType: string;
+  fileSize: string;
+  allowOther: boolean;
+  documentType: string;
+  dependsOn: {
+    field: string;
+    options: string[];
+  };
+  createdAt: string;
+  updatedAt: string;
+  isDeprecated: boolean;
 };

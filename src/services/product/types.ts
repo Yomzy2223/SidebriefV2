@@ -1,19 +1,56 @@
-import type { IProduct } from "../service/types";
+import { TBusinessData } from "../business/types";
+import type { TProduct } from "../service/types";
 
-export type productType = {
+export type TProductRequest = {
   id: string;
-  email: string | null;
-  address: string | null;
   paid: boolean;
-  completed: boolean;
-  currentState: "START";
-  status: "pending";
+  status: "PENDING" | "SUBMITTED" | "ASSIGNED" | "REJECTED" | "COMPLETED";
+  currentState: "SERVICEFORM" | "PAYMENT";
+  partnerInCharge: string;
+  isDeprecated: boolean;
   createdAt: string;
   updatedAt: string;
-  productId: string | null;
-  userId: string;
-  productQA: productQAType[];
-  product: IProduct;
+  completedAt: string;
+  submittedAt: string;
+  assignedAt: string;
+  businessId: string;
+  productId: string;
+  requestQA: TFormQAGet[];
+  product: TProduct;
+  business: TBusinessData;
+};
+
+export type TFormQACreate = {
+  title: string;
+  description: string;
+  type: string;
+  compulsory: boolean;
+  isGeneral: boolean;
+  subForm: TSubformQACreate[];
+};
+
+export type TFormQAGet = TFormQACreate & {
+  id: string;
+  requestId: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TSubformQACreate = {
+  question: string;
+  answer: string[];
+  type: string;
+  compulsory: true;
+  file: {
+    name: string;
+    link: string;
+    size: string;
+    type: string;
+  };
+};
+
+export type TSubformQAGet = TSubformQACreate & {
+  id: string;
 };
 
 export type FileType = {
@@ -23,116 +60,16 @@ export type FileType = {
   type: string;
 };
 
-export type SubFormProfile = {
-  question: string;
-  answer: string[];
-  type: string;
-  compulsory: boolean;
-};
-
-export type FormItem = {
-  id?: string;
-  question: string;
-  answer: string[];
-  type: string;
-  compulsory: boolean;
-  isGeneral: boolean;
-  // subForm: boolean;
-  // profile: SubFormProfile[];
-  file?: FileType;
-};
-
 export type saveProductQAPayload = {
   productId: string;
-  form: {
-    title: string;
-    description: string;
-    type: string;
-    compulsory: boolean;
-    isGeneral: boolean;
-    subForm: FormItem[];
-  };
-};
-
-export type updateProductQAPayload = {
-  requestFormId: string;
-  form: {
-    title: string;
-    description: string;
-    type: string;
-    compulsory: boolean;
-    isGeneral: boolean;
-    subForm: FormItem[];
-  };
+  form: TFormQACreate;
 };
 
 export type deleteProductQAPayload = {
   requestFormId: string;
 };
 
-export type productQAType = {
-  compulsory: boolean;
-  createdAt: string;
-  description: string;
-  id: string;
-  isDeprecated: boolean;
-  isGeneral: boolean;
-  requestId: string;
-  subForm: SubformQAType[];
-  title: string;
-  type: string;
-  updatedAt: string;
-};
-
-export type addServiceToProductPayload = {
-  serviceId: string;
-  productId: string;
-};
-
-export type SubformQAType = {
-  answer: string[];
-  compulsory: boolean;
-  fileLink: string | null;
-  fileName: string | null;
-  fileType: string | null;
-  id: string;
-  //   isDeprecated: boolean;
-  question: string;
-  requestQAId: string;
-  type: string;
-};
-
-export type productSubFormType = {
-  id: string;
-  question: string;
-  type: string;
-  options: string[];
-  formId: string;
-  compulsory: true;
-  fileName: string | null;
-  fileLink: string | null;
-  fileType: string | null;
-  fileSize: string | null;
-  allowOther: boolean;
-  documentType: string;
-  dependsOn: {
-    field: string;
-    options: string[];
-  };
-  createdAt: string;
-  updatedAt: string;
-  isDeprecated: boolean;
-};
-
-export type productFormType = {
-  id: string;
-  title: string;
-  type: string;
-  description: string;
-  compulsory: boolean;
-  createdAt: string;
-  isDeprecated: boolean;
-  updatedAt: string;
-  productId: string;
-  productSubForm: productSubFormType[];
+export type updateProductQAPayload = {
+  requestFormId: string;
+  form: TFormQACreate;
 };

@@ -1,16 +1,16 @@
 import { z } from "zod";
-import { serviceFormSubFormType, serviceFormType } from "@/services/service/types";
+import { ISubForm, IForm } from "@/services/service/types";
 import { useDeleteProductQA, useSaveProductQA, useUpdateProductQA } from "@/services/product";
-import { FileType, FormItem, productQAType } from "@/services/product/types";
+import { FileType, FormItem, IFormQA } from "@/services/product/types";
 import { useRouter, useParams } from "next/navigation";
 import { sluggify } from "@/lib/utils";
-import { productFormType } from "@/services/product/types";
+import { IForm } from "@/services/product/types";
 import { MutableRefObject, useCallback, useEffect, useRef } from "react";
 import { useGetProductQA } from "@/services/product";
 import { useState } from "react";
 
 // typescript type guard
-function isServiceFormType(form: any): form is serviceFormType {
+function isServiceFormType(form: any): form is IForm {
   return "serviceId" in form;
 }
 
@@ -29,7 +29,7 @@ export function isFileType(obj: any): obj is FileType {
   );
 }
 
-export const useActions = ({ form }: { form: serviceFormType | productFormType }) => {
+export const useActions = ({ form }: { form: IForm | IForm }) => {
   const saveProductQA = useSaveProductQA();
   const updateProductQA = useUpdateProductQA();
   const deleteProductQA = useDeleteProductQA();
@@ -93,7 +93,7 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
   }: {
     values: { [x: string]: string | string[] | FileType };
     isGeneral?: boolean;
-    requestFormState: productQAType | undefined;
+    requestFormState: IFormQA | undefined;
     fileDescription?: string;
   }) => {
     if (!requestFormState) return;
@@ -141,7 +141,7 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
   const deleteFormProductQA = async ({
     requestFormState,
   }: {
-    requestFormState: productQAType | undefined;
+    requestFormState: IFormQA | undefined;
   }) => {
     if (!requestFormState) return;
 
@@ -167,7 +167,7 @@ export const useRemember = ({
   selectedPerson,
 }: {
   productId: string;
-  form: serviceFormType | productFormType;
+  form: IForm | IForm;
   selectedPerson?: number | null;
 }) => {
   const productQA = useGetProductQA(productId);
@@ -183,7 +183,7 @@ export const useRemember = ({
   const [values, setValues] = useState<{ [key: string]: string | string[] | FileType }>({});
 
   const valueSetter = useCallback(
-    ({ latestProductState, reset }: { latestProductState?: productQAType; reset: boolean }) => {
+    ({ latestProductState, reset }: { latestProductState?: IFormQA; reset: boolean }) => {
       const newValues: { [key: string]: string | string[] | FileType } = {};
 
       latestProductState?.subForm.forEach((qa) => {

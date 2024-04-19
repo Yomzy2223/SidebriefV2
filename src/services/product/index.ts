@@ -3,18 +3,12 @@ import {
   saveProductQA,
   updateProductQA,
   getproductQA,
-  addServiceToProduct,
   getProductRequest,
   getProductForm,
   deleteProductQA,
   submitProductRequest,
 } from "./operations";
-import {
-  saveProductQAPayload,
-  addServiceToProductPayload,
-  updateProductQAPayload,
-  deleteProductQAPayload,
-} from "./types";
+import { saveProductQAPayload, updateProductQAPayload, deleteProductQAPayload } from "./types";
 import { useToast } from "@/components/ui/use-toast";
 
 export const useSaveProductQA = () => {
@@ -53,12 +47,6 @@ export const useGetProductQA = (productId: string | undefined) =>
     queryKey: ["get product QA", productId],
     queryFn: () => getproductQA({ productId }),
     enabled: !!productId,
-  });
-
-export const useAddServiceToProduct = () =>
-  useMutation({
-    mutationKey: ["add service too product"],
-    mutationFn: (payload: addServiceToProductPayload) => addServiceToProduct(payload),
   });
 
 export const useGetProductRequest = (productRequestId: string) =>

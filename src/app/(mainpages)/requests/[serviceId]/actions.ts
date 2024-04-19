@@ -1,7 +1,7 @@
 import { IFormInput } from "@/components/form/constants";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { useCreateBusinessRequest, useUpdateBusinessRequest } from "@/services/business";
-import { ICreateBusinessPayload } from "@/services/business/types";
+import { TCreateBusinessPayload } from "@/services/business/types";
 import {
   useGetCountries,
   useGetCountryServiceProduct,
@@ -60,7 +60,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
     {
       name: "country",
       type: "select",
-      label: "Select operational country",
+      label: "Select an operational country",
       selectOptions: originalCountries,
       optionsLoading: countriesRes.isLoading,
       optionsErrorMsg: countriesRes.error?.message,
@@ -70,7 +70,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
     {
       name: "product",
       type: "select",
-      label: "Select product of your choice",
+      label: "Select a product of your choice",
       selectOptions: productsNames,
       optionsLoading: productsRes.isLoading,
       optionsErrorMsg: productsRes.error?.message,

@@ -2,7 +2,7 @@
 
 import { Modal } from "@/components/flowbite";
 import { useGetProductQA } from "@/services/product";
-import { productFormType } from "@/services/product/types";
+import { IForm } from "@/services/product/types";
 import { useState } from "react";
 import { useUploadActions } from "./uploadActions";
 import { UploadForm } from "./uploadform";
@@ -17,7 +17,7 @@ export const KycUploadModal = ({
   open: boolean;
   closer: () => void;
   productId: string;
-  forms: productFormType[];
+  forms: IForm[];
 }) => {
   const [selected, setSelected] = useState(1);
 

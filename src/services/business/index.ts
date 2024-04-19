@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ICreateBusinessPayload, ICreateRequestPayload } from "./types";
+import { TCreateBusinessPayload, TCreateRequestPayload } from "./types";
 import {
   getBusinessRequest,
   createBusinessRequest,
@@ -12,7 +12,7 @@ export const useCreateBusinessRequest = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: ICreateBusinessPayload) => createBusinessRequest(payload),
+    mutationFn: (payload: TCreateBusinessPayload) => createBusinessRequest(payload),
     mutationKey: ["create new product"],
     onSuccess(data, variables, context) {
       queryClient.invalidateQueries({ queryKey: ["business requests"] });
@@ -24,7 +24,7 @@ export const useUpdateBusinessRequest = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: ICreateBusinessPayload }) =>
+    mutationFn: ({ id, payload }: { id: string; payload: TCreateBusinessPayload }) =>
       updateBusinessRequest({ id, payload }),
     mutationKey: ["update new product"],
     onSuccess(data, variables, context) {
@@ -37,7 +37,7 @@ export const useCreateProductRequest = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: ICreateRequestPayload) => createProductRequest(payload),
+    mutationFn: (payload: TCreateRequestPayload) => createProductRequest(payload),
     mutationKey: ["create new product"],
     onSuccess(data, variables, context) {
       queryClient.invalidateQueries({ queryKey: ["business requests"] });
