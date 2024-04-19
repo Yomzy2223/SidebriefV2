@@ -4,8 +4,8 @@ import { Button, TextInput, Label, Badge } from "@/components/flowbite";
 import { PencilLine } from "lucide-react";
 import { SwatchBook } from "@/assets/icons";
 import { useGetProductQA } from "@/services/product";
-import DynamicForm from "@/components/form/dynamicForm";
 import { sluggify } from "@/lib/utils";
+import { productQAType } from "@/services/product/types";
 
 export const BusinessInfoReview = ({ productId }: { productId: string }) => {
   const productQA = useGetProductQA(productId);
@@ -16,17 +16,20 @@ export const BusinessInfoReview = ({ productId }: { productId: string }) => {
 
   const onlyFormsDocuments = onlyForms?.filter((el) => el.title.includes("document"));
 
-  const consolidated = onlyForms
-    ?.filter((el) => !el.title.includes("document"))
-    .map((el) => {
-      const withDoc = onlyFormsDocuments?.find((doc) => doc.description === el.title);
-      if (withDoc) {
-        return { ...el, subForm: [...el.subForm, ...withDoc.subForm] };
-      }
-      return el;
-    });
+  const consolidated: productQAType[] | undefined = [];
+  const uniqueObjects = new Set();
 
-  console.log(consolidated);
+  onlyForms
+    ?.filter((el) => !el.title.includes("document"))
+    .forEach((el) => {
+      const withDoc = onlyFormsDocuments?.find((doc) => doc.description === el.title);
+      const updatedObject = withDoc ? { ...el, subForm: [...el.subForm, ...withDoc.subForm] } : el;
+
+      if (!uniqueObjects.has(updatedObject.title)) {
+        uniqueObjects.add(updatedObject.title);
+        consolidated.push(updatedObject);
+      }
+    });
 
   return (
     <div className="space-y-8">

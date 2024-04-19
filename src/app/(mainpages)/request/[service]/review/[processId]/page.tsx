@@ -23,7 +23,7 @@ export default function Review() {
     <div className="pr-0 md:pr-20 w-full">
       <div className="space-y-14">
         <BusinessInfoReview productId={productRequestId || ""} />
-        <ProprietorInfoReview />
+        <ProprietorInfoReview productId={productRequestId || ""} />
       </div>
       <Button
         disabled={process.isLoading}
