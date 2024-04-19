@@ -1,10 +1,11 @@
 import { Card } from "@/components/flowbite";
-import { PlanCardEllipse, PlanCardIllustration } from "@/assets/svg";
 import Image from "next/image";
 import getCurrencySymbol from "currency-symbol-map";
 import numeral from "numeral";
 import { CheckCheck } from "lucide-react";
 import { ClockIcon, CoinIcon } from "@/assets/images";
+import Ellipse from "./ellipse.svg";
+import Illustration from "./illustration.svg";
 
 export const PlanCard = ({
   features,
@@ -17,8 +18,8 @@ export const PlanCard = ({
 }) => {
   return (
     <Card className="w-full bg-primary relative overflow-hidden">
-      <Image src={PlanCardEllipse} alt="" className="absolute top-0 left-0 z-0" />
-      <Image src={PlanCardIllustration} alt="" className="absolute bottom-0 right-0 z-0" />
+      <Image src={Ellipse} alt="" className="absolute top-0 left-0 z-0" />
+      <Image src={Illustration} alt="" className="absolute bottom-0 right-0 z-0" />
       <div className="flex gap-12 relative z-10">
         {features ? (
           <div>

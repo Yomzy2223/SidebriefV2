@@ -2,7 +2,7 @@ import { ProductInfoForm } from "./productinfoform";
 import { Forms } from "./forms";
 import { getProductRequest, getProductForm } from "@/services/product/operations";
 import { redirect } from "next/navigation";
-import { GetProcessRequest } from "@/services/process/operations";
+import { GetProcessRequest } from "@/services/business/operations";
 
 export default async function KYCpage({
   params: { processId, service },

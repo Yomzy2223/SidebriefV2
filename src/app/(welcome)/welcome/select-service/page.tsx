@@ -1,7 +1,7 @@
 "use client";
 
 import ServiceCard from "@/components/cards/ServiceCard";
-import { AuthStepper } from "@/app/(welcome)/auth/authStepper";
+import { AuthStepper } from "@/components/stepper/auth";
 import useServiceApi from "@/hooks/useServiceApi";
 import { Button } from "flowbite-react";
 import { ArrowRightCircle, ChevronRight } from "lucide-react";

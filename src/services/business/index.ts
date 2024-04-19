@@ -5,27 +5,45 @@ import {
   createBusinessRequest,
   createProductRequest,
   getUserBusinessRequests,
+  updateBusinessRequest,
 } from "./operations";
 
-const queryClient = useQueryClient();
+export const useCreateBusinessRequest = () => {
+  const queryClient = useQueryClient();
 
-export const useCreateBusinessRequest = () =>
-  useMutation({
+  return useMutation({
     mutationFn: (payload: ICreateBusinessPayload) => createBusinessRequest(payload),
     mutationKey: ["create new product"],
     onSuccess(data, variables, context) {
       queryClient.invalidateQueries({ queryKey: ["business requests"] });
     },
   });
+};
 
-export const useCreateProductRequest = () =>
-  useMutation({
+export const useUpdateBusinessRequest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: ICreateBusinessPayload }) =>
+      updateBusinessRequest({ id, payload }),
+    mutationKey: ["update new product"],
+    onSuccess(data, variables, context) {
+      queryClient.invalidateQueries({ queryKey: ["business requests"] });
+    },
+  });
+};
+
+export const useCreateProductRequest = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationFn: (payload: ICreateRequestPayload) => createProductRequest(payload),
     mutationKey: ["create new product"],
     onSuccess(data, variables, context) {
       queryClient.invalidateQueries({ queryKey: ["business requests"] });
     },
   });
+};
 
 export const useGetBusinessRequest = ({ id }: { id: string }) =>
   useQuery({

@@ -20,6 +20,7 @@ const ComboBox = ({
   defaultValue,
   disabled,
   optionsLoading,
+  optionsErrorMsg,
   isMultiCombo,
   className,
 }: IProps) => {
@@ -68,9 +69,9 @@ const ComboBox = ({
           <Command className="min-w-40">
             {options.length > 10 && <CommandInput placeholder={`Search ${fieldName}...`} />}
             {!optionsLoading && options.length === 0 && (
-              <p className="text-sm text-foreground-5 p-2 pb-0">{`No ${
-                fieldName || name
-              } found`}</p>
+              <p className="text-sm text-foreground-5 p-2 pb-0">
+                {optionsErrorMsg || `No ${fieldName || name} found`}
+              </p>
             )}
             <CommandGroup>
               {optionsLoading && (
@@ -124,6 +125,7 @@ interface IProps {
   defaultValue?: string;
   disabled?: boolean;
   optionsLoading?: boolean;
+  optionsErrorMsg?: string;
   isMultiCombo?: boolean;
   className?: string;
 }

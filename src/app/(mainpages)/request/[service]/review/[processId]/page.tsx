@@ -6,7 +6,7 @@ import { ArrowRight } from "@/assets/icons";
 import { ProprietorInfoReview } from "./proprietorInfoReview";
 import { useSubmitProductRequest } from "@/services/product";
 import { useParams } from "next/navigation";
-import { useGetBusinessRequest } from "@/services/process";
+import { useGetBusinessRequest } from "@/services/business";
 import { useRouter } from "next/navigation";
 
 export default function Review() {

@@ -16,6 +16,7 @@ export interface IFormInput {
   handleSelect?: (selected?: string) => void;
   fieldName?: string;
   optionsLoading?: boolean;
+  optionsErrorMsg?: string;
 }
 
 export interface DynamicFormProps {

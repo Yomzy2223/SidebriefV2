@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { IProductFull } from "@/hooks/api/types";
 import useProductApi from "@/hooks/useProductApi";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PlanCard } from "@/components/cards/planCard";
+import { PlanCard } from "@/components/cards/PlanCard";
 import { AuthStepper } from "@/app/(welcome)/auth/authStepper";
 import { Button } from "flowbite-react";
 import { ArrowRightCircle } from "lucide-react";

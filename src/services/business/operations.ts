@@ -4,6 +4,14 @@ import { IBusinessData, ICreateBusinessPayload, ICreateRequestPayload } from "./
 export const createBusinessRequest = (payload: ICreateBusinessPayload) =>
   axios.post<rootType<IBusinessData>>("/businessRequest", payload);
 
+export const updateBusinessRequest = ({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: ICreateBusinessPayload;
+}) => axios.post<rootType<IBusinessData>>(`/businessRequest/${id}`, payload);
+
 export const createProductRequest = (payload: ICreateRequestPayload) =>
   axios.post<rootType<IBusinessData>>("/businessRequest/requests", payload);
 

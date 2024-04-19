@@ -3,7 +3,7 @@ import { getServices, getServiceForms } from "@/services/service/operations";
 import { redirect } from "next/navigation";
 import { ProductTabs } from "./tabs";
 import { sluggify } from "@/lib/utils";
-import { GetProcessRequest } from "@/services/process/operations";
+import { GetProcessRequest } from "@/services/business/operations";
 
 export const dynamic = "force-dynamic";
 

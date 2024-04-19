@@ -1,6 +1,5 @@
 "use client";
 
-import { IFormInput } from "@/components/form/constants";
 import DynamicForm from "@/components/form/dynamicForm";
 import { Button } from "flowbite-react";
 import React from "react";
@@ -8,16 +7,17 @@ import { useActions } from "./actions";
 import * as z from "zod";
 import { ArrowRightCircle } from "lucide-react";
 import { Oval } from "react-loading-icons";
-import { useSession } from "next-auth/react";
+import { PlanCard } from "@/components/cards/PlanCard";
 
 const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
-  const { formInfo, handleFormSubmit, isPending } = useActions({ serviceId: params.serviceId });
+  const { formInfo, handleFormSubmit, createBusinessRequest, productInfo } = useActions({
+    serviceId: params.serviceId,
+  });
 
-  const session = useSession();
-  console.log(session);
+  const isPending = createBusinessRequest.isPending;
 
   return (
-    <div>
+    <div className="mb-6">
       <div className="flex flex-col mb-6">
         <h4 className="text-sm leading-normal text-foreground-3 mb-1">STEP 1</h4>
         <h6 className="text-2xl leading-normal font-semibold">Select Product</h6>
@@ -27,9 +27,16 @@ const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
         formInfo={formInfo}
         onFormSubmit={handleFormSubmit}
         formSchema={formSchema}
-        formClassName="gap-12"
+        formClassName="gap-7"
         className="gap-6"
       >
+        {productInfo && (
+          <PlanCard
+            price={{ amount: productInfo?.amount, currency: productInfo?.currency }}
+            timeline={productInfo?.timeline}
+            features={productInfo?.feature}
+          />
+        )}
         <Button
           type="submit"
           color="secondary"
@@ -47,7 +54,7 @@ const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
 
 export default ProductSelect;
 
-const formSchema = z.object({
+export const formSchema = z.object({
   country: z
     .string({ required_error: "You need to select a country" })
     .min(1, { message: "You need to select a country" }),

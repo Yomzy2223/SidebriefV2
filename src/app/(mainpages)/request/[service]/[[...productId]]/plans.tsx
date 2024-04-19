@@ -1,6 +1,6 @@
 "use client";
 
-import { PlanCard } from "@/components/cards/planCard";
+import { PlanCard } from "@/components/cards/PlanCard";
 import { Combobox } from "@/components/input/combobox";
 import { IProduct } from "@/services/service/types";
 import { Puff } from "react-loading-icons";

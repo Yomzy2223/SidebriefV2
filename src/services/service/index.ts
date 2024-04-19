@@ -7,6 +7,7 @@ import {
   getCountries,
   getServiceProductsById,
   getCountryServiceProducts,
+  getProductById,
 } from "./operations";
 
 export const useGetServices = () => {
@@ -41,11 +42,18 @@ export const useGetCountries = () =>
     queryFn: getCountries,
   });
 
-export const useGetServiceproduct = (serviceId?: string) =>
+export const useGetServiceproduct = (serviceId: string) =>
   useQuery({
     queryKey: ["product", serviceId],
     queryFn: () => getServiceProductsById({ serviceId }),
     enabled: !!serviceId,
+  });
+
+export const useGetProductById = (id: string) =>
+  useQuery({
+    queryKey: ["product", id],
+    queryFn: () => getProductById({ id }),
+    enabled: !!id,
   });
 
 export const useGetCountryServiceProduct = ({

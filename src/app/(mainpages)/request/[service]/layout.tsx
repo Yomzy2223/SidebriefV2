@@ -39,9 +39,5 @@ export default function LaunchLayout({ children }: { children: ReactNode }) {
       break;
   }
 
-  return (
-    <RequestLayout path={path} progress={progress}>
-      {children}
-    </RequestLayout>
-  );
+  return <RequestLayout path={path}>{children}</RequestLayout>;
 }

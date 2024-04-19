@@ -150,9 +150,10 @@ const DynamicForm = ({
                   handleSelect={el.handleSelect}
                   fieldName={el.fieldName}
                   leftContent={el.leftContent}
-                  defaultValue={dValues?.[el.name]}
+                  defaultValue={el.value as string}
                   disabled={disableAll}
                   optionsLoading={el.optionsLoading}
+                  optionsErrorMsg={el.optionsErrorMsg}
                 />
               )}
 
@@ -195,14 +196,3 @@ const DynamicForm = ({
 };
 
 export default DynamicForm;
-
-//  {
-//    el.type === "toggle" && (
-//      <ToggleSwitch
-//        checked={getValues()[el.name]}
-//        label="Toggle me (checked)"
-//        // {...register(el.name)}
-//        onChange={() => setValue(el.name, !getValues()[el.name])}
-//      />
-//    );
-//  }

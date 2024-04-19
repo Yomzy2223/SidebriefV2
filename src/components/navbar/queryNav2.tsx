@@ -19,8 +19,7 @@ const QueryNav2 = ({ queryNav, defaultActive = 0, variant }: IProps) => {
       {queryNav.map((el, i) => {
         let isActive =
           i === defaultActive
-            ? !searchParams.get(el.name) ||
-              el.value === searchParams.get(el.name)
+            ? !searchParams.get(el.name) || el.value === searchParams.get(el.name)
             : el.value === searchParams.get(el.name);
 
         return (
