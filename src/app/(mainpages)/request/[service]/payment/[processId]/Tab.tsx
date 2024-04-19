@@ -43,21 +43,17 @@ function classNames(...classes: (string | any)[]) {
 }
 
 const Tab = () => {
-  const [currentTab, setCurrentTab] = useState<Tab | any>(
-    tabs.find((tab) => tab.current)
-  );
+  const [currentTab, setCurrentTab] = useState<Tab | any>(tabs.find((tab) => tab.current));
 
   const handleTabChange = (selectedTab: Tab) => {
-    setCurrentTab(selectedTab);
+    setCurrentTab({ ...selectedTab, current: true });
   };
 
   return (
     <div className="space-y-8">
       <div className="flex justify-between w-full">
         <div className="flex flex-col">
-          <h6 className="text-2xl leading-normal font-semibold">
-            Choose Payment Choice
-          </h6>
+          <h6 className="text-2xl leading-normal font-semibold">Choose Payment Choice</h6>
 
           {/* Tabs selection  */}
           <div>
@@ -69,8 +65,8 @@ const Tab = () => {
                     href={tab.href}
                     onClick={() => handleTabChange(tab)}
                     className={classNames(
-                      tab.current
-                        ? "bg-gray-100 text-gray-700"
+                      currentTab.name === tab.name
+                        ? "bg-[hsla(194,100%,42%,0.16)] text-gray-700"
                         : "text-gray-500 hover:text-gray-700",
                       "rounded-md px-3 py-2 text-sm font-medium"
                     )}
@@ -91,12 +87,12 @@ const Tab = () => {
         </div>
       </div>
 
-      <Button color="secondary" size={"lg"} className="self-start mt-8">
+      {/* <Button color="secondary" size={"lg"} className="self-start mt-8">
         <div className="space-x-2 flex items-center">
           <p>Continue</p>
           <ArrowRight />
         </div>
-      </Button>
+      </Button> */}
     </div>
   );
 };

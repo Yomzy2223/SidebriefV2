@@ -24,6 +24,7 @@ export function Combobox({
   isLoading = false,
   value,
   error,
+  disabled,
 }: {
   placeholder?: string;
   options: string[];
@@ -32,6 +33,7 @@ export function Combobox({
   isLoading?: boolean;
   value?: string | number;
   error?: string;
+  disabled?: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -46,6 +48,7 @@ export function Combobox({
             aria-expanded={open}
             className="w-full"
             // outline={!!error}
+            disabled={disabled}
           >
             <div className="flex w-full justify-between capitalize">
               {value || placeholder || "Select an option..."}

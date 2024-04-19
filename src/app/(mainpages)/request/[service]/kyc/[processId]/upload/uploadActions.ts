@@ -102,8 +102,6 @@ export const useUploadActions = ({
       }
       const formState = prevFormstates[0];
 
-      console.log(formState);
-
       if (formState === undefined) return false;
 
       for (let i = 0; i < doc.docs.length; i++) {
@@ -124,8 +122,6 @@ export const useUploadActions = ({
 
       return true;
     });
-
-    console.log(allUploaded);
 
     return !allUploaded.includes(false);
   }

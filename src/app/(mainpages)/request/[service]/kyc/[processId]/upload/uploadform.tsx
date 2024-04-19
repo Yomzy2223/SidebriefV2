@@ -166,7 +166,9 @@ export const UploadForm = ({
   };
 
   const completeDone = async () => {
-    await productQA.refetch();
+    const response = await productQA.refetch();
+
+    const allQA = response.data?.data.data;
 
     // check if all files have been uploaded
     if (checkAllUploaded(allQA || [])) {

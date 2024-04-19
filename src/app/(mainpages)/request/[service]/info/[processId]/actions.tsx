@@ -222,8 +222,10 @@ export const useRemember = ({
         }
       } else {
         const latestProductState = !selectedPerson
-          ? prevFormstates[prevFormstates?.length - 1]
+          ? prevFormstates[0]
           : prevFormstates[selectedPerson - 1];
+
+        // const latestProductState = prevFormstates[0];
 
         // if (latestProductState === undefined) {
         //   return;
@@ -256,7 +258,7 @@ export const useRemember = ({
     } else if (selectedPerson) {
       return prevFormstates[selectedPerson - 1];
     } else {
-      return prevFormstates[prevFormstates?.length - 1];
+      return prevFormstates[0];
     }
   };
 
