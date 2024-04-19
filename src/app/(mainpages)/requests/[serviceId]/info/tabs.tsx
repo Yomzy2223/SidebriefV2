@@ -5,7 +5,7 @@ import { TProductForm, TServiceForm } from "@/services/service/types";
 import { Tabs, TabsRef } from "flowbite-react";
 import { useRef, useState } from "react";
 
-export const ProductTabs = ({ formInfo }: { formInfo: TServiceForm[] }) => {
+export const ProductTabsWithForm = ({ formInfo }: { formInfo: TServiceForm[] }) => {
   const tabsRef = useRef<TabsRef>(null);
   const [activeTab, setActiveTab] = useState(0);
 

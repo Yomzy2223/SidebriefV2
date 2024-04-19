@@ -3,16 +3,17 @@
 import { RequestForm } from "@/components/form/requestForm.tsx";
 import React from "react";
 import { useActions } from "./actions";
-import { ProductTabs } from "./tabs";
+import { ProductTabsWithForm } from "./tabs";
 
 const Info = () => {
   const { serviceForms, formInfo } = useActions({});
 
+  console.log(serviceForms);
   return (
     <div className="flex flex-col gap-2 max-w-[500px] w-full">
       <h4 className="text-sm leading-normal text-foreground-3 mb-1">STEP 2</h4>
       {serviceForms.length > 1 ? (
-        <ProductTabs formInfo={serviceForms} />
+        <ProductTabsWithForm formInfo={serviceForms} />
       ) : (
         <div className="space-y-5 w-full">
           <div className="flex flex-col">

@@ -4,13 +4,6 @@ import { TSubForm } from "@/services/service/types";
 import { useParams, useSearchParams } from "next/navigation";
 
 export const useActions = ({ info }: { info?: TSubForm[] }) => {
-  const { serviceId } = useParams();
-  const searchParams = useSearchParams();
-  const productId = searchParams.get("productId") || "";
-
-  const serviceFormsRes = useGetServiceForms(serviceId.toString());
-  const serviceForms = serviceFormsRes.data?.data?.data || [];
-
   const formInfo = info?.map((field) => {
     const value = "values[sluggify(field.question)]";
     const rValue = `!isFileType(value) ? value : ""`;
@@ -19,12 +12,12 @@ export const useActions = ({ info }: { info?: TSubForm[] }) => {
       type: field.type,
       id: field.id,
       label: field.question,
-      selectOptions: [],
-      value: rValue,
+      selectOptions: field.options,
+      // value: rValue,
     };
   })!;
 
   const submitFormHandler = () => {};
 
-  return { serviceForms, productId, formInfo, submitFormHandler };
+  return { formInfo, submitFormHandler };
 };
