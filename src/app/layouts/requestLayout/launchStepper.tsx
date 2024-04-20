@@ -1,13 +1,13 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useLaunchSteps } from "./constant";
+import { useLaunchSteps } from "./actions";
 import { BadgeCheck } from "@/assets/svg";
 import Image from "next/image";
 import { Button } from "flowbite-react";
 
 export const LaunchStepper = () => {
-  const { launchSteps, productId, progress, handleClick } = useLaunchSteps();
+  const { launchSteps, progress, handleClick } = useLaunchSteps();
 
   return (
     <>

@@ -19,8 +19,6 @@ export const useActions = ({
   const saveProductQA = useSaveProductQA();
 
   const formInfo = info?.subForm?.map((field) => {
-    const value = "values[sluggify(field.question)]";
-    const rValue = `!isFileType(value) ? value : ""`;
     return {
       id: field.id,
       name: sluggify(field.question),

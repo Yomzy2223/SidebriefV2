@@ -70,7 +70,7 @@ export const useGetCountryServiceProduct = ({
     enabled: !!serviceId && !!country,
   });
 
-export const useGetProductForm = (productId: string) =>
+export const useGetProductForms = (productId: string) =>
   useQuery({
     queryKey: ["get product form", productId],
     queryFn: () => getProductForm({ productId: productId }),
