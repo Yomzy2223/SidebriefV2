@@ -5,36 +5,40 @@ import DynamicForm from "@/components/form/dynamicForm";
 import { Oval } from "react-loading-icons";
 import { ArrowRightCircle } from "lucide-react";
 import { useActions } from "./actions";
-import { TSubForm } from "@/services/service/types";
+import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
 
 export const RequestForm = ({
   info,
   isLoading,
-  isSubmitting,
+  isServiceForm = false,
 }: {
-  info: TSubForm[];
+  info: TServiceForm | TProductForm;
   isLoading: boolean;
-  isSubmitting: boolean;
+  isServiceForm?: boolean;
 }) => {
-  const { formInfo, submitFormHandler } = useActions({ info });
+  const { formInfo, submitFormHandler, saveProductQA } = useActions({ info, isServiceForm });
 
+  const isSubmitting = saveProductQA.isPending;
   return (
-    <div className="flex flex-col gap-20 items-stretch">
-      <DynamicForm formInfo={formInfo} onFormSubmit={submitFormHandler}>
-        <Button
-          color="secondary"
-          size={"lg"}
-          type="submit"
-          isProcessing={isSubmitting}
-          disabled={isSubmitting}
-          processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
-        >
-          <div className="space-x-2 flex items-center">
-            <p>Continue</p>
-            {!isSubmitting && <ArrowRightCircle className="ml-1" />}
-          </div>
-        </Button>
-      </DynamicForm>
-    </div>
+    <DynamicForm
+      formInfo={formInfo}
+      onFormSubmit={submitFormHandler}
+      className="gap-6"
+      formClassName="gap-12 justify-between"
+    >
+      <Button
+        color="secondary"
+        size={"lg"}
+        type="submit"
+        isProcessing={isSubmitting}
+        disabled={isSubmitting}
+        processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
+      >
+        <div className="space-x-2 flex items-center">
+          <p>Continue</p>
+          {!isSubmitting && <ArrowRightCircle className="ml-1" />}
+        </div>
+      </Button>
+    </DynamicForm>
   );
 };

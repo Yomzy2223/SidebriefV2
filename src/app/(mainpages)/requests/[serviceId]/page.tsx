@@ -8,11 +8,14 @@ import * as z from "zod";
 import { ArrowRightCircle } from "lucide-react";
 import { Oval } from "react-loading-icons";
 import { PlanCard } from "@/components/cards/PlanCard";
+import { useSession } from "next-auth/react";
 
 const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
   const { formInfo, handleFormSubmit, createBusinessRequest, productInfo } = useActions({
     serviceId: params.serviceId,
   });
+  const session = useSession();
+  console.log(session);
 
   const isPending = createBusinessRequest.isPending;
 
@@ -44,6 +47,7 @@ const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
           isProcessing={isPending}
           disabled={isPending}
           processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
+          className="mt-5"
         >
           <span>Continue</span> {!isPending && <ArrowRightCircle className="ml-1" />}
         </Button>

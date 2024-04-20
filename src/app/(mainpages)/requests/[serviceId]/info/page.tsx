@@ -22,8 +22,7 @@ const Info = () => {
               {serviceForms[0]?.description}
             </p>
           </div>
-          <RequestForm info={serviceForms[0]?.subForm} isLoading={false} isSubmitting={false} />
-          <>form</>
+          <RequestForm info={serviceForms[0]} isLoading={false} />
         </div>
       )}
     </div>

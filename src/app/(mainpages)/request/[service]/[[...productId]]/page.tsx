@@ -5,7 +5,7 @@ import { Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { ServicesModal } from "@/components/services/ServicesModal";
 import { useGetServiceproduct, useGetServices } from "@/services/service";
-import { useAddServiceToProduct, useGetProductRequest } from "@/services/product";
+import { useAddServiceToProduct, useGetProductRequest } from "@/services/productQA";
 import { useCreateBusinessRequest } from "@/services/business";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";

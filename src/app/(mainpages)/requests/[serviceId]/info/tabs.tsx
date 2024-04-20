@@ -24,7 +24,7 @@ export const ProductTabsWithForm = ({ formInfo }: { formInfo: TServiceForm[] }) 
                 <h6 className="text-2xl leading-normal font-semibold">{el.title}</h6>
                 <p className="font-medium leading-normal text-primary">{el.description}</p>
               </div>
-              <RequestForm info={el.subForm} isLoading={false} isSubmitting={false} />
+              <RequestForm info={el} isLoading={false} isServiceForm />
             </div>
           </Tabs.Item>
         );

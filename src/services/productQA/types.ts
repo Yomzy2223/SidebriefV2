@@ -1,25 +1,3 @@
-import { TBusinessData } from "../business/types";
-import type { TProduct } from "../service/types";
-
-export type TProductRequest = {
-  id: string;
-  paid: boolean;
-  status: "PENDING" | "SUBMITTED" | "ASSIGNED" | "REJECTED" | "COMPLETED";
-  currentState: "SERVICEFORM" | "PAYMENT";
-  partnerInCharge: string;
-  isDeprecated: boolean;
-  createdAt: string;
-  updatedAt: string;
-  completedAt: string;
-  submittedAt: string;
-  assignedAt: string;
-  businessId: string;
-  productId: string;
-  requestQA: TFormQAGet[];
-  product: TProduct;
-  business: TBusinessData;
-};
-
 export type TFormQACreate = {
   title: string;
   description: string;
@@ -40,7 +18,7 @@ export type TSubformQACreate = {
   question: string;
   answer: string[];
   type: string;
-  compulsory: true;
+  compulsory: boolean;
   file: {
     name: string;
     link: string;
@@ -61,7 +39,7 @@ export type FileType = {
 };
 
 export type saveProductQAPayload = {
-  productId: string;
+  requestId: string;
   form: TFormQACreate;
 };
 

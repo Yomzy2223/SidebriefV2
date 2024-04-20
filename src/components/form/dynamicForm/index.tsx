@@ -5,11 +5,13 @@ import React, { useEffect, useMemo, useRef, useCallback, MutableRefObject } from
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { DynamicFormProps } from "./constants";
-import { BusinessNameInput, BusinessObjectiveInput, CountryInput, AllCOuntries } from "../input";
+import { DynamicFormProps } from "../constants";
+import { BusinessNameInput, BusinessObjectiveInput, CountryInput, AllCOuntries } from "../../input";
 import { useDynamic } from "@/hooks/useDynamic";
 import ComboBox from "./comboBox";
 import { cn } from "@/lib/utils";
+import MultiSelectCombo from "./multiSelectCombo";
+import InputWithTags from "@/components/input/inputWithTags";
 
 const DynamicForm = ({
   children,
@@ -100,6 +102,7 @@ const DynamicForm = ({
                   sizing="md"
                   helperText={<>{errorMsg}</>}
                   color={errorMsg && "failure"}
+                  className={errorMsg ? "focus:[&_input]:ring-0" : ""}
                   {...el.textInputProp}
                   {...register(el.name)}
                 />
@@ -112,6 +115,7 @@ const DynamicForm = ({
                   id={el.name}
                   type={el.type}
                   sizing="md"
+                  className={errorMsg ? "focus:[&_input]:outline-none" : ""}
                   helperText={<>{errorMsg}</>}
                   color={errorMsg && "failure"}
                   // {...el.textInputProp}
@@ -148,7 +152,7 @@ const DynamicForm = ({
                   errorMsg={errorMsg?.toString()}
                   selectProp={el.selectProp}
                   handleSelect={el.handleSelect}
-                  fieldName={el.fieldName}
+                  fieldName="options"
                   leftContent={el.leftContent}
                   defaultValue={el.value as string}
                   disabled={disableAll}
@@ -157,7 +161,38 @@ const DynamicForm = ({
                 />
               )}
 
+              {el.type === "objectives" && (
+                <MultiSelectCombo
+                  name={el.name}
+                  options={el.selectOptions}
+                  setValue={setValue}
+                  selectProp={el.selectProp}
+                  fieldName="objectives"
+                  defaultTags={el.value as string[]}
+                  disabled={disableAll}
+                  optionsLoading={el.optionsLoading}
+                  errorMsg={errorMsg?.toString()}
+                />
+              )}
+
               {el.type === "business name" && (
+                <InputWithTags
+                  submitErr={errorMsg}
+                  maxTag={4}
+                  minTagChars={3}
+                  handleKeyDown={(tags) => setValue(el.name, tags)}
+                  defaultTags={el.value as string[]}
+                  disabled={disableAll}
+                  errors={{
+                    empty: "Enter a business name",
+                    exists: "Business name already exists",
+                    length: "You can only enter 4 business names",
+                    minTagChars: "Business name must be more than 3 characters",
+                  }}
+                />
+              )}
+
+              {/* {el.type === "business name" && (
                 <BusinessNameInput
                   id={el.id!}
                   // question={el.}
@@ -165,9 +200,9 @@ const DynamicForm = ({
                   setValue={(value: string[]) => setValue(el.name, value)}
                   error={errorMsg as string | undefined}
                 />
-              )}
+              )} */}
 
-              {el.type === "objectives" && (
+              {/* {el.type === "objectives" && (
                 <BusinessObjectiveInput
                   id={el.id!}
                   // question={el.question}
@@ -176,7 +211,7 @@ const DynamicForm = ({
                   setValue={(value: string[]) => setValue(el.name, value)}
                   error={errorMsg as string | undefined}
                 />
-              )}
+              )} */}
 
               {el.type === "countries" && (
                 <CountryInput

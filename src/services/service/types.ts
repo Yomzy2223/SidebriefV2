@@ -45,16 +45,15 @@ type TFormCFields = {
   createdAt: string;
   isDeprecated: boolean;
   updatedAt: string;
+  subForm: TSubForm[];
 };
 
 export type TProductForm = TFormCFields & {
   productId: string;
-  productSubForm: TSubForm[];
 };
 
 export type TServiceForm = TFormCFields & {
   serviceId: string;
-  subForm: TSubForm[];
 };
 
 export type TSubForm = {

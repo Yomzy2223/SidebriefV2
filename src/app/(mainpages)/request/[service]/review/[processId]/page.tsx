@@ -4,7 +4,7 @@ import { BusinessInfoReview } from "./businessInfoReview";
 import { Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { ProprietorInfoReview } from "./proprietorInfoReview";
-import { useSubmitProductRequest } from "@/services/product";
+import { useSubmitProductRequest } from "@/services/productQA";
 import { useParams } from "next/navigation";
 import { useGetBusinessRequest } from "@/services/business";
 import { useRouter } from "next/navigation";

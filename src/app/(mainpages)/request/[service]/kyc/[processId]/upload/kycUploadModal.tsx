@@ -1,8 +1,8 @@
 "use client";
 
 import { Modal } from "@/components/flowbite";
-import { useGetProductQA } from "@/services/product";
-import { IForm } from "@/services/product/types";
+import { useGetProductQA } from "@/services/productQA";
+import { IForm } from "@/services/productQA/types";
 import { useState } from "react";
 import { useUploadActions } from "./uploadActions";
 import { UploadForm } from "./uploadform";

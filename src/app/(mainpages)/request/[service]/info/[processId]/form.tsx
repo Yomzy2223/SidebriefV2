@@ -7,7 +7,7 @@ import { ArrowRight, CogOutline } from "@/assets/icons";
 import { useGetServiceFormSubForms } from "@/services/service";
 import { LoadingSkeleton } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useGetProductQA } from "@/services/product";
+import { useGetProductQA } from "@/services/productQA";
 import { useGetCountries } from "@/services/service";
 import { isFileType, useActions, useRemember } from "./actions";
 import { MutableRefObject, useEffect, useState } from "react";

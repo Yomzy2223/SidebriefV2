@@ -1,6 +1,6 @@
 import { ProductInfoForm } from "./productinfoform";
 import { Forms } from "./forms";
-import { getProductRequest, getProductForm } from "@/services/product/operations";
+import { getProductRequest, getProductForm } from "@/services/productQA/operations";
 import { redirect } from "next/navigation";
 import { GetProcessRequest } from "@/services/business/operations";
 

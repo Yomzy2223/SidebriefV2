@@ -74,5 +74,12 @@ export const customTheme: ThemeProps = {
         base: "h-4 w-4 border border-border focus:ring-0 dark:border-gray-600 dark:bg-gray-700 dark:focus:bg-cyan-600 text-cyan-600",
       },
     },
+    textInput: {
+      field: {
+        input: {
+          base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50 outline-primary",
+        },
+      },
+    },
   },
 };

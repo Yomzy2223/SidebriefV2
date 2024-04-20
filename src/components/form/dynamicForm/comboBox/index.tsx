@@ -84,10 +84,6 @@ const ComboBox = ({
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopOverWrapper>
-      <Popover open={openSelect} onOpenChange={setOpenSelect}>
-        <PopoverTrigger asChild className="w-max"></PopoverTrigger>
-        <PopoverContent className="w-full p-0 max-h-96 overflow-y-auto"></PopoverContent>
-      </Popover>
       {errorMsg && <p className="text-sm text-destructive-foreground mt-1">{errorMsg}</p>}
     </>
   );

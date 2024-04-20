@@ -1,6 +1,10 @@
 import { IFormInput } from "@/components/form/constants";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
-import { useCreateBusinessRequest, useUpdateBusinessRequest } from "@/services/business";
+import {
+  useCreateBusinessRequest,
+  useCreateProductRequest,
+  useUpdateProductRequest,
+} from "@/services/business";
 import { TCreateBusinessPayload } from "@/services/business/types";
 import {
   useGetCountries,
@@ -54,7 +58,8 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
   const productInfo = products?.find((el) => el.name === selectedProduct);
 
   const createBusinessRequest = useCreateBusinessRequest();
-  const updateBusinessRequest = useUpdateBusinessRequest();
+  const createProductRequest = useCreateProductRequest();
+  const updateProductRequest = useUpdateProductRequest();
 
   const formInfo: IFormInput[] = [
     {
@@ -81,23 +86,55 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
 
   // Creates or updates a business
   const handleFormSubmit = (values: z.infer<typeof formSchema>) => {
+    const businessId = searchParams.get("businessId") || "";
+    const requestId = searchParams.get("requestId") || "";
     const productId = products?.find((el) => el.name === values.product)?.id || "";
-    const businessId = searchParams.get("businessId");
 
-    if (businessId) {
-      updateBusinessRequest.mutate(
-        { id: businessId, payload: { userId, productId } },
+    if (!businessId) {
+      if (requestId) {
+        //Updates the products of a request
+        updateProductRequest.mutate(
+          { id: requestId, productId },
+          {
+            onSuccess: (data) => {
+              const businessData = data.data.data;
+              setQueriesWithPath({
+                addPath: "/info",
+                queries: [
+                  { name: "productId", value: productId },
+                  {
+                    name: "requestId",
+                    value: businessData.productRequest[businessData.productRequest.length - 1].id,
+                  },
+                ],
+              });
+            },
+          }
+        );
+        return;
+      }
+      //Creates a product request
+      createProductRequest.mutate(
+        { businessId, productIds: [productId] },
         {
           onSuccess: (data) => {
+            const businessData = data.data.data;
             setQueriesWithPath({
               addPath: "/info",
-              queries: [{ name: "productId", value: productId }],
+              queries: [
+                { name: "productId", value: productId },
+                {
+                  name: "requestId",
+                  value: businessData.productRequest[businessData.productRequest.length - 1].id,
+                },
+              ],
             });
           },
         }
       );
       return;
     }
+    // Creates a business request
     createBusinessRequest.mutate(
       { userId, productId },
       {
@@ -109,6 +146,10 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
               { name: "productId", value: productId },
               { name: "businessId", value: businessData.id },
               { name: "progress", value: "1" },
+              {
+                name: "requestId",
+                value: businessData.productRequest[businessData.productRequest.length - 1].id,
+              },
             ],
           });
         },

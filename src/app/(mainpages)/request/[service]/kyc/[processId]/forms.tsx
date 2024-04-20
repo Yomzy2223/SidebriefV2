@@ -2,7 +2,7 @@
 
 import { Button, Tabs, TabsRef } from "@/components/flowbite";
 import DynamicForm from "@/components/form/dynamicForm";
-import { IForm, ISubForm } from "@/services/product/types";
+import { IForm, ISubForm } from "@/services/productQA/types";
 import { cn, sluggify } from "@/lib/utils";
 import { ArrowRight } from "@/assets/icons";
 import { useRef, useState } from "react";

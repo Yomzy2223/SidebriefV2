@@ -1,3 +1,6 @@
+import { TFormQAGet } from "../productQA/types";
+import { TProduct } from "../service/types";
+
 export type TCreateBusinessPayload = {
   userId: string;
   productId: string;
@@ -6,21 +9,6 @@ export type TCreateBusinessPayload = {
 export type TCreateRequestPayload = {
   businessId: string;
   productIds: string[];
-};
-
-export type TProductRequest = {
-  id: string;
-  paid: boolean;
-  completed: boolean;
-  status: string;
-  currentState: string;
-  partnerInCharge: string | null;
-  createdAt: string;
-  updatedAt: string;
-  completedAt: string;
-  submittedAt: string;
-  processId: string;
-  productId: string;
 };
 
 export type TBusinessData = {
@@ -48,4 +36,26 @@ export type TBusinessData = {
 
 export type TBusinessDataFull = TBusinessData & {
   productRequest: TProductRequest[];
+};
+
+export type TCreateRequest = {
+  id: string;
+  paid: boolean;
+  status: "PENDING" | "SUBMITTED" | "ASSIGNED" | "REJECTED" | "COMPLETED";
+  currentState: "SERVICEFORM" | "PAYMENT";
+  partnerInCharge: string;
+  isDeprecated: boolean;
+  createdAt: string;
+  updatedAt: string;
+  completedAt: string;
+  submittedAt: string;
+  assignedAt: string;
+  businessId: string;
+  productId: string;
+};
+
+export type TProductRequest = TCreateRequest & {
+  requestQA: TFormQAGet[];
+  product: TProduct;
+  business: TBusinessData;
 };

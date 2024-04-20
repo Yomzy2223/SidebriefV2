@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { ISubForm, IForm } from "@/services/service/types";
-import { useDeleteProductQA, useSaveProductQA, useUpdateProductQA } from "@/services/product";
-import { FileType, FormItem, IFormQA } from "@/services/product/types";
+import { useDeleteProductQA, useSaveProductQA, useUpdateProductQA } from "@/services/productQA";
+import { FileType, FormItem, IFormQA } from "@/services/productQA/types";
 import { useRouter, useParams } from "next/navigation";
 import { sluggify } from "@/lib/utils";
-import { IForm } from "@/services/product/types";
+import { IForm } from "@/services/productQA/types";
 import { MutableRefObject, useCallback, useEffect, useRef } from "react";
-import { useGetProductQA } from "@/services/product";
+import { useGetProductQA } from "@/services/productQA";
 import { useState } from "react";
 
 // typescript type guard

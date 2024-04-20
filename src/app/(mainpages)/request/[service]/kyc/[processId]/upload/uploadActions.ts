@@ -1,5 +1,5 @@
-import { useGetProductQA } from "@/services/product";
-import { IForm, IFormQA, ISubForm } from "@/services/product/types";
+import { useGetProductQA } from "@/services/productQA";
+import { IForm, IFormQA, ISubForm } from "@/services/productQA/types";
 import { useCallback } from "react";
 
 export const useUploadActions = ({ persons, forms }: { persons: IFormQA[]; forms: IForm[] }) => {

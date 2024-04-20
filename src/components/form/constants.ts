@@ -10,7 +10,7 @@ export interface IFormInput {
   textInputProp?: Record<string, any>;
   selectProp?: Record<string, any>;
   fileProp?: Record<string, any>;
-  selectOptions?: string[];
+  selectOptions: string[];
   value?: string | string[];
   leftContent?: string | ReactNode;
   handleSelect?: (selected?: string) => void;

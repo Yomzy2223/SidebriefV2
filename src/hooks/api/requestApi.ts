@@ -7,7 +7,13 @@ export const createRequest = async (formInfo: IRequest) => {
   return await client.post("/productRequest", formInfo);
 };
 
-export const updateRequest = async ({ id, formInfo }: { id: string; formInfo: IRequest }) => {
+export const updateProductRequest = async ({
+  id,
+  formInfo,
+}: {
+  id: string;
+  formInfo: IRequest;
+}) => {
   const client = await Client();
   return await client.put(`/productRequest${id}`, formInfo);
 };
