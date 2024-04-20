@@ -3,37 +3,37 @@ import { serviceType, countryType, TProduct, TServiceForm, TSubForm, TProductFor
 
 export const getServices = async () => {
   const client = await Client();
-  client.get<rootType<serviceType[]>>("/services");
+  return client.get<rootType<serviceType[]>>("/services");
 };
 
 export const getService = async ({ id }: { id: string }) => {
   const client = await Client();
-  client.get<rootType<serviceType>>(`/services/${id}`);
+  return client.get<rootType<serviceType>>(`/services/${id}`);
 };
 
 export const getServiceForms = async ({ serviceId }: { serviceId: string }) => {
   const client = await Client();
-  client.get<rootType<TServiceForm[]>>(`/services/forms/${serviceId}`);
+  return client.get<rootType<TServiceForm[]>>(`/services/forms/${serviceId}`);
 };
 
 export const getServiceFormSubForms = async ({ serviceFormId }: { serviceFormId: string }) => {
   const client = await Client();
-  client.get<rootType<TSubForm[]>>(`/services/subforms/${serviceFormId}`);
+  return client.get<rootType<TSubForm[]>>(`/services/subforms/${serviceFormId}`);
 };
 
 export const getCountries = async () => {
   const client = await Client();
-  client.get<rootType<countryType[]>>("/countries");
+  return client.get<rootType<countryType[]>>("/countries");
 };
 
 export const getProductById = async ({ id }: { id: string }) => {
   const client = await Client();
-  client.get<rootType<TProduct>>(`/products/${id}`);
+  return client.get<rootType<TProduct>>(`/products/${id}`);
 };
 
 export const getServiceProductsById = async ({ serviceId }: { serviceId?: string }) => {
   const client = await Client();
-  client.get<rootType<TProduct[]>>(`/products/service/${serviceId}`);
+  return client.get<rootType<TProduct[]>>(`/products/service/${serviceId}`);
 };
 
 export const getCountryServiceProducts = async ({
@@ -44,7 +44,7 @@ export const getCountryServiceProducts = async ({
   country: string;
 }) => {
   const client = await Client();
-  client.get<rootType<TProduct[]>>(
+  return client.get<rootType<TProduct[]>>(
     `/products/service/country/${serviceId}/${country.toLowerCase()}`
   );
 };

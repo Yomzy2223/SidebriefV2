@@ -15,7 +15,7 @@ import { useResponse } from "..";
 // BUSINESS ENDPOINTS HOOKS
 export const useCreateBusinessRequest = () => {
   const queryClient = useQueryClient();
-  const { handleSuccess, handleError } = useResponse();
+  const { handleError } = useResponse();
 
   return useMutation({
     mutationFn: (payload: TCreateBusinessPayload) => createBusinessRequest(payload),
@@ -24,7 +24,6 @@ export const useCreateBusinessRequest = () => {
       handleError({ title: "Failed", error });
     },
     onSuccess(data, variables, context) {
-      handleSuccess({ data });
       queryClient.invalidateQueries({ queryKey: ["product requests"] });
     },
   });
@@ -49,7 +48,7 @@ export const useGetUserBusinessRequests = ({ userId }: { userId: string }) =>
 
 export const useCreateProductRequest = () => {
   const queryClient = useQueryClient();
-  const { handleSuccess, handleError } = useResponse();
+  const { handleError } = useResponse();
 
   return useMutation({
     mutationFn: (payload: TCreateRequestPayload) => createProductRequest(payload),
@@ -58,7 +57,6 @@ export const useCreateProductRequest = () => {
       handleError({ title: "Failed", error });
     },
     onSuccess(data, variables, context) {
-      handleSuccess({ data });
       queryClient.invalidateQueries({ queryKey: ["product requests"] });
     },
   });
@@ -66,7 +64,7 @@ export const useCreateProductRequest = () => {
 
 export const useUpdateProductRequest = () => {
   const queryClient = useQueryClient();
-  const { handleSuccess, handleError } = useResponse();
+  const { handleError } = useResponse();
 
   return useMutation({
     mutationFn: ({ id, productId }: { id: string; productId: string }) =>
@@ -76,7 +74,6 @@ export const useUpdateProductRequest = () => {
       handleError({ title: "Failed", error });
     },
     onSuccess(data, variables, context) {
-      handleSuccess({ data });
       queryClient.invalidateQueries({ queryKey: ["product requests"] });
     },
   });

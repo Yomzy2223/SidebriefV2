@@ -5,7 +5,6 @@ import {
   useCreateProductRequest,
   useUpdateProductRequest,
 } from "@/services/business";
-import { TCreateBusinessPayload } from "@/services/business/types";
 import {
   useGetCountries,
   useGetCountryServiceProduct,
@@ -60,6 +59,10 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
   const createBusinessRequest = useCreateBusinessRequest();
   const createProductRequest = useCreateProductRequest();
   const updateProductRequest = useUpdateProductRequest();
+  const isPending =
+    createBusinessRequest.isPending ||
+    createProductRequest.isPending ||
+    updateProductRequest.isPending;
 
   const formInfo: IFormInput[] = [
     {
@@ -90,9 +93,9 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
     const requestId = searchParams.get("requestId") || "";
     const productId = products?.find((el) => el.name === values.product)?.id || "";
 
-    if (!businessId) {
+    if (businessId) {
       if (requestId) {
-        //Updates the products of a request
+        // Updates the product of a request
         updateProductRequest.mutate(
           { id: requestId, productId },
           {
@@ -104,34 +107,36 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
                   { name: "productId", value: productId },
                   {
                     name: "requestId",
-                    value: businessData.productRequest[businessData.productRequest.length - 1].id,
+                    value: businessData.id,
                   },
                 ],
               });
             },
           }
         );
+        console.log("Updated the product of the request");
         return;
       }
-      //Creates a product request
+      // Creates a product request with an existing business id
       createProductRequest.mutate(
         { businessId, productIds: [productId] },
         {
           onSuccess: (data) => {
-            const businessData = data.data.data;
+            const requestData = data.data.data;
             setQueriesWithPath({
               addPath: "/info",
               queries: [
                 { name: "productId", value: productId },
                 {
                   name: "requestId",
-                  value: businessData.productRequest[businessData.productRequest.length - 1].id,
+                  value: requestData.id,
                 },
               ],
             });
           },
         }
       );
+      console.log("Created a product with existing business id");
       return;
     }
     // Creates a business request
@@ -139,23 +144,24 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
       { userId, productId },
       {
         onSuccess: (data) => {
-          const businessData = data.data.data;
+          const requestData = data.data.data;
           setQueriesWithPath({
             addPath: "/info",
             queries: [
               { name: "productId", value: productId },
-              { name: "businessId", value: businessData.id },
+              { name: "businessId", value: requestData.businessId },
               { name: "progress", value: "1" },
               {
                 name: "requestId",
-                value: businessData.productRequest[businessData.productRequest.length - 1].id,
+                value: requestData.id,
               },
             ],
           });
         },
       }
     );
+    console.log("Created a business and a product request");
   };
 
-  return { formInfo, handleFormSubmit, createBusinessRequest, productInfo };
+  return { formInfo, handleFormSubmit, isPending, productInfo };
 };

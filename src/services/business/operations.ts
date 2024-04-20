@@ -11,24 +11,24 @@ import {
 // BUSINESS ENDPOINTS
 export const createBusinessRequest = async (payload: TCreateBusinessPayload) => {
   const client = await Client();
-  client.post<rootType<TCreateRequest>>("/businessRequest", payload);
+  return client.post<rootType<TCreateRequest>>("/businessRequest", payload);
 };
 
 export const getBusinessRequest = async ({ id }: { id: string }) => {
   const client = await Client();
-  client.get<rootType<TBusinessDataFull>>(`/businessRequest/${id}`);
+  return client.get<rootType<TBusinessDataFull>>(`/businessRequest/${id}`);
 };
 
 export const getUserBusinessRequests = async ({ userId }: { userId: string }) => {
   const client = await Client();
-  client.get<rootType<TBusinessDataFull[]>>(`/businessRequest/user/${userId}`);
+  return client.get<rootType<TBusinessDataFull[]>>(`/businessRequest/user/${userId}`);
 };
 
 //
 // PRODUCT REQUEST ENDPOINTS
 export const createProductRequest = async (payload: TCreateRequestPayload) => {
   const client = await Client();
-  client.post<rootType<TCreateRequest>>("/businessRequest/requests", payload);
+  return client.post<rootType<TCreateRequest>>("/businessRequest/requests", payload);
 };
 
 export const updateProductRequest = async ({
@@ -39,7 +39,7 @@ export const updateProductRequest = async ({
   productId: string;
 }) => {
   const client = await Client();
-  client.put<rootType<TCreateRequest>>(`/productRequest/product/${id}/${productId}`);
+  return client.put<rootType<TCreateRequest>>(`/productRequest/product/${id}/${productId}`);
 };
 
 export const getProductRequest = async ({ productRequestId }: { productRequestId: string }) => {

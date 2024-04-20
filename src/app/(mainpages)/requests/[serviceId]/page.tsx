@@ -8,16 +8,11 @@ import * as z from "zod";
 import { ArrowRightCircle } from "lucide-react";
 import { Oval } from "react-loading-icons";
 import { PlanCard } from "@/components/cards/PlanCard";
-import { useSession } from "next-auth/react";
 
 const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
-  const { formInfo, handleFormSubmit, createBusinessRequest, productInfo } = useActions({
+  const { formInfo, handleFormSubmit, isPending, productInfo } = useActions({
     serviceId: params.serviceId,
   });
-  const session = useSession();
-  console.log(session);
-
-  const isPending = createBusinessRequest.isPending;
 
   return (
     <div className="mb-6">

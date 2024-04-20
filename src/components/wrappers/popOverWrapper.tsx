@@ -30,7 +30,7 @@ const PopOverWrapper = ({
           </PopoverTrigger>
           <PopoverContent
             className={cn(
-              "min-w-[200px] !w-max max-w-[400px] p-0 max-h-[400px] overflow-auto mx-3",
+              "min-w-[200px] !w-max max-w-[400px] p-0 max-h-[400px] overflow-auto",
               {
                 "max-w-[1000px] p-0 max-h-[1000px]": big,
               },
