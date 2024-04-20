@@ -12,6 +12,7 @@ export type TFormQAGet = TFormQACreate & {
   requestId: string;
   createdAt: string;
   updatedAt: string;
+  formId: string;
 };
 
 export type TSubformQACreate = {
@@ -38,16 +39,17 @@ export type FileType = {
   type: string;
 };
 
-export type saveProductQAPayload = {
+export type saveRequestQAPayload = {
   requestId: string;
+  formId: string;
   form: TFormQACreate;
 };
 
-export type deleteProductQAPayload = {
+export type deleteRequestQAPayload = {
   requestFormId: string;
 };
 
-export type updateProductQAPayload = {
+export type updateRequestQAPayload = {
   requestFormId: string;
   form: TFormQACreate;
 };

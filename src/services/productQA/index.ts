@@ -1,16 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { saveProductQA, updateProductQA, getproductQA, deleteProductQA } from "./operations";
-import { saveProductQAPayload, updateProductQAPayload, deleteProductQAPayload } from "./types";
+import { saveRequestQA, updateRequestQA, getRequestQA, deleteRequestQA } from "./operations";
+import { saveRequestQAPayload, updateRequestQAPayload, deleteRequestQAPayload } from "./types";
 import { useToast } from "@/components/ui/use-toast";
 import { useResponse } from "@/hooks/useResponse";
 
-export const useSaveProductQA = () => {
+export const useSaveRequestQA = () => {
   const queryClient = useQueryClient();
   const { handleSuccess, handleError } = useResponse();
 
   return useMutation({
     mutationKey: ["save product QA"],
-    mutationFn: (payload: saveProductQAPayload) => saveProductQA(payload),
+    mutationFn: (payload: saveRequestQAPayload) => saveRequestQA(payload),
     onError(error, variables, context) {
       handleError({ title: "Failed", error });
     },
@@ -21,13 +21,13 @@ export const useSaveProductQA = () => {
   });
 };
 
-export const useUpdateProductQA = () => {
+export const useUpdateRequestQA = () => {
   const queryClient = useQueryClient();
   const { handleSuccess, handleError } = useResponse();
 
-  useMutation({
+  return useMutation({
     mutationKey: ["update product QA"],
-    mutationFn: (payload: updateProductQAPayload) => updateProductQA(payload),
+    mutationFn: (payload: updateRequestQAPayload) => updateRequestQA(payload),
     onError(error, variables, context) {
       handleError({ title: "Failed", error });
     },
@@ -38,13 +38,13 @@ export const useUpdateProductQA = () => {
   });
 };
 
-export const useDeleteProductQA = () => {
+export const useDeleteRequestQA = () => {
   const queryClient = useQueryClient();
   const { handleSuccess, handleError } = useResponse();
 
-  useMutation({
+  return useMutation({
     mutationKey: ["delete product QA"],
-    mutationFn: (payload: deleteProductQAPayload) => deleteProductQA(payload),
+    mutationFn: (payload: deleteRequestQAPayload) => deleteRequestQA(payload),
     onError(error, variables, context) {
       handleError({ title: "Failed", error });
     },
@@ -55,9 +55,9 @@ export const useDeleteProductQA = () => {
   });
 };
 
-export const useGetProductQA = (productId: string | undefined) =>
+export const useGetRequestQA = (requestId: string) =>
   useQuery({
-    queryKey: ["get product QA", productId],
-    queryFn: () => getproductQA({ productId }),
-    enabled: !!productId,
+    queryKey: ["get product QA", requestId],
+    queryFn: () => getRequestQA({ requestId }),
+    enabled: !!requestId,
   });

@@ -1,12 +1,12 @@
 import { z } from "zod";
 import { ISubForm, IForm } from "@/services/service/types";
-import { useDeleteProductQA, useSaveProductQA, useUpdateProductQA } from "@/services/productQA";
+import { useDeleteRequestQA, useSaveRequestQA, useUpdateRequestQA } from "@/services/productQA";
 import { FileType, FormItem, IFormQA } from "@/services/productQA/types";
 import { useRouter, useParams } from "next/navigation";
 import { sluggify } from "@/lib/utils";
 import { IForm } from "@/services/productQA/types";
 import { MutableRefObject, useCallback, useEffect, useRef } from "react";
-import { useGetProductQA } from "@/services/productQA";
+import { useGetRequestQA } from "@/services/productQA";
 import { useState } from "react";
 
 // typescript type guard
@@ -30,9 +30,9 @@ export function isFileType(obj: any): obj is FileType {
 }
 
 export const useActions = ({ form }: { form: IForm | IForm }) => {
-  const saveProductQA = useSaveProductQA();
-  const updateProductQA = useUpdateProductQA();
-  const deleteProductQA = useDeleteProductQA();
+  const saveRequestQA = useSaveRequestQA();
+  const updateRequestQA = useUpdateRequestQA();
+  const deleteRequestQA = useDeleteRequestQA();
 
   const saveFormProductQA = async ({
     productId,
@@ -65,7 +65,7 @@ export const useActions = ({ form }: { form: IForm | IForm }) => {
     });
 
     // save the answers
-    return saveProductQA.mutateAsync(
+    return saveRequestQA.mutateAsync(
       {
         productId,
         form: {
@@ -125,7 +125,7 @@ export const useActions = ({ form }: { form: IForm | IForm }) => {
       // }
     });
 
-    return updateProductQA.mutateAsync({
+    return updateRequestQA.mutateAsync({
       requestFormId: requestFormState.id,
       form: {
         title: fileDescription ? "document upload" : form.title,
@@ -145,16 +145,16 @@ export const useActions = ({ form }: { form: IForm | IForm }) => {
   }) => {
     if (!requestFormState) return;
 
-    return deleteProductQA.mutateAsync({ requestFormId: requestFormState?.id });
+    return deleteRequestQA.mutateAsync({ requestFormId: requestFormState?.id });
   };
 
   return {
     saveFormProductQA,
-    savingForm: saveProductQA.isPending,
+    savingForm: saveRequestQA.isPending,
     updateFormProductQA,
-    updatingForm: updateProductQA.isPending,
+    updatingForm: updateRequestQA.isPending,
     deleteFormProductQA,
-    deletingForm: deleteProductQA.isPending,
+    deletingForm: deleteRequestQA.isPending,
   };
 };
 
@@ -170,7 +170,7 @@ export const useRemember = ({
   form: IForm | IForm;
   selectedPerson?: number | null;
 }) => {
-  const productQA = useGetProductQA(productId);
+  const productQA = useGetRequestQA(productId);
 
   let prevFormstates = productQA.data?.data.data.filter((el) => el.title === form.title);
 

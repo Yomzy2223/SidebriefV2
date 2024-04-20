@@ -1,4 +1,4 @@
-import { useGetProductQA } from "@/services/productQA";
+import { useGetRequestQA } from "@/services/productQA";
 import { IForm, IFormQA, ISubForm } from "@/services/productQA/types";
 import { useCallback } from "react";
 

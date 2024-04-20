@@ -1,9 +1,8 @@
 import { sluggify } from "@/lib/utils";
-import { useSaveProductQA } from "@/services/productQA";
-import { TFormQACreate, TSubformQACreate } from "@/services/productQA/types";
-import { useGetServiceForms } from "@/services/service";
+import { useGetRequestQA, useSaveRequestQA, useUpdateRequestQA } from "@/services/productQA";
+import { TFormQACreate } from "@/services/productQA/types";
 import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export const useActions = ({
   info,
@@ -14,9 +13,22 @@ export const useActions = ({
 }) => {
   const searchParams = useSearchParams();
 
-  const requestId = searchParams.get("productId") || "";
+  const requestId = searchParams.get("requestId") || "";
 
-  const saveProductQA = useSaveProductQA();
+  const saveRequestQA = useSaveRequestQA();
+  const updateRequestQA = useUpdateRequestQA();
+
+  const requestQARes = useGetRequestQA(requestId);
+  const requestQA = requestQARes.data?.data?.data;
+
+  const isPending = saveRequestQA.isPending;
+  const formInRequesQA = requestQA?.find((el) => el.formId === info?.id);
+
+  const getValue = (field: TSubForm) => {
+    const QASubForm = formInRequesQA?.subForm;
+    const QAField = QASubForm?.find((el) => el.question === field.question);
+    return QAField?.answer;
+  };
 
   const formInfo = info?.subForm?.map((field) => {
     return {
@@ -26,7 +38,7 @@ export const useActions = ({
       type: field.type,
       selectOptions: field.options,
       compulsory: field.compulsory,
-      // value: rValue,
+      value: getValue(field),
     };
   })!;
 
@@ -52,8 +64,14 @@ export const useActions = ({
         },
       })),
     };
-    saveProductQA.mutate({ requestId, form: payload });
+    if (formInRequesQA?.id) {
+      updateRequestQA.mutate({ requestFormId: formInRequesQA.id, form: payload });
+      console.log("Updated request form");
+      return;
+    }
+    saveRequestQA.mutate({ requestId, formId: info.id, form: payload });
+    console.log("Created request form");
   };
 
-  return { formInfo, submitFormHandler, saveProductQA };
+  return { formInfo, submitFormHandler, isPending };
 };

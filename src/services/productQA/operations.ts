@@ -1,27 +1,31 @@
 import { Client, rootType } from "../index";
 import {
-  saveProductQAPayload,
-  updateProductQAPayload,
-  deleteProductQAPayload,
+  saveRequestQAPayload,
+  updateRequestQAPayload,
+  deleteRequestQAPayload,
   TFormQACreate,
+  TFormQAGet,
 } from "./types";
 
-export const saveProductQA = async ({ requestId, form }: saveProductQAPayload) => {
+export const saveRequestQA = async ({ requestId, formId, form }: saveRequestQAPayload) => {
   const client = await Client();
-  return client.post<rootType<TFormQACreate[]>>(`/productRequest/form/${requestId}`, form);
+  return client.post<rootType<TFormQACreate[]>>(
+    `/productRequest/form/${formId}/${requestId}`,
+    form
+  );
 };
 
-export const updateProductQA = async ({ requestFormId, form }: updateProductQAPayload) => {
+export const updateRequestQA = async ({ requestFormId, form }: updateRequestQAPayload) => {
   const client = await Client();
   return client.put<rootType<TFormQACreate[]>>(`/productRequest/form/${requestFormId}`, form);
 };
 
-export const deleteProductQA = async ({ requestFormId }: deleteProductQAPayload) => {
+export const deleteRequestQA = async ({ requestFormId }: deleteRequestQAPayload) => {
   const client = await Client();
   return client.delete<rootType<TFormQACreate[]>>(`/productRequest/form/${requestFormId}`);
 };
 
-export const getproductQA = async ({ productId }: { productId: string | undefined }) => {
+export const getRequestQA = async ({ requestId }: { requestId: string }) => {
   const client = await Client();
-  return client.get<rootType<TFormQACreate[]>>(`/productRequest/form/${productId}`);
+  return client.get<rootType<TFormQAGet[]>>(`/productRequest/form/${requestId}`);
 };

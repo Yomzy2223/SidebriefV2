@@ -1,5 +1,3 @@
-"use client";
-
 import { Checkbox, FileInput, Label, Radio, Select, TextInput } from "flowbite-react";
 import React, { useEffect, useMemo, useRef, useCallback, MutableRefObject } from "react";
 import { useForm, Controller } from "react-hook-form";

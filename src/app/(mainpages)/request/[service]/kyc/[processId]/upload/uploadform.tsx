@@ -2,7 +2,7 @@ import { Modal, Button, Badge } from "@/components/flowbite";
 import { SwatchBook } from "@/assets/icons";
 import { ExternalLink } from "lucide-react";
 import { FileInput } from "@/components/form/fileInput";
-import { useGetProductQA } from "@/services/productQA";
+import { useGetRequestQA } from "@/services/productQA";
 import { FileType, IForm, IFormQA } from "@/services/productQA/types";
 import { cn, sluggify } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
@@ -42,7 +42,7 @@ export const UploadForm = ({
 
   const [uploading, setUploading] = useState(false);
 
-  const productQA = useGetProductQA(productId);
+  const productQA = useGetRequestQA(productId);
 
   const allQA = productQA.data?.data.data;
 

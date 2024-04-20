@@ -16,9 +16,11 @@ const EachForm = ({
   isLoading: boolean;
   isServiceForm?: boolean;
 }) => {
-  const { formInfo, submitFormHandler, saveProductQA } = useActions({ info, isServiceForm });
+  const { formInfo, submitFormHandler, isPending } = useActions({
+    info,
+    isServiceForm,
+  });
 
-  const isSubmitting = saveProductQA.isPending;
   return (
     <DynamicForm
       formInfo={formInfo}
@@ -30,13 +32,13 @@ const EachForm = ({
         color="secondary"
         size={"lg"}
         type="submit"
-        isProcessing={isSubmitting}
-        disabled={isSubmitting}
+        isProcessing={isPending}
+        disabled={isPending}
         processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
       >
         <div className="space-x-2 flex items-center">
           <p>Continue</p>
-          {!isSubmitting && <ArrowRightCircle className="ml-1" />}
+          {!isPending && <ArrowRightCircle className="ml-1" />}
         </div>
       </Button>
     </DynamicForm>

@@ -1,5 +1,3 @@
-"use client";
-
 import { Button, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useActions } from "./actions";
