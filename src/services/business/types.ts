@@ -25,5 +25,23 @@ export type ProcessData = {
   createdAt: string;
   updatedAt: string;
   userId: string;
+  // businessId: string;
   productRequest: ProductRequest[];
+};
+
+export type BusinessDataType = {
+  id: string;
+  paid: boolean;
+  completed: boolean;
+  status: string;
+  currentState: string;
+  partnerInCharge: string | null;
+  createdAt: string;
+  isDeprecated: boolean;
+  updatedAt: string;
+  completedAt: string;
+  submittedAt: string;
+  assignedAt: string;
+  businessId: string;
+  productId: string;
 };

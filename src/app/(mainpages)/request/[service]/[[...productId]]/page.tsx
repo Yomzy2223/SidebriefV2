@@ -6,7 +6,7 @@ import { ArrowRight } from "@/assets/icons";
 import { ServicesModal } from "@/components/services/ServicesModal";
 import { useGetServiceproduct, useGetServices } from "@/services/service";
 import { useAddServiceToProduct, useGetProductRequest } from "@/services/product";
-import { useCreateNewProcessRequest } from "@/services/process";
+import { useCreateNewBusinessRequest } from "@/services/business";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { CountryInput } from "@/components/input";
@@ -25,7 +25,7 @@ export default function RegistrationPlan({
   params: { productId: string[]; service: string };
 }) {
   const getServices = useGetServices();
-  const createNewProcess = useCreateNewProcessRequest();
+  const createNewBusiness = useCreateNewBusinessRequest();
   const services = getServices.data?.data.data;
   const serviceSlug = params.service;
   const router = useRouter();
@@ -77,20 +77,20 @@ export default function RegistrationPlan({
       return;
     }
 
-    let productId = params.productId?.[0];
+    let businessId = params.productId?.[0];
 
-    if (!productId) {
-      const res = await createNewProcess.mutateAsync({
+    if (!businessId) {
+      const res = await createNewBusiness.mutateAsync({
         productId: selectedPlan?.id,
         userId: "5c99014f-4d5f-4771-9c6e-8e56d3afd819",
       });
 
-      productId = res.data.data.id;
+      businessId = res.data.data.businessId;
     }
 
-    // add country to QA
+    router.push(`/request/${params.service}/info/${businessId}`);
 
-    router.push(`/request/${params.service}/info/${productId}`);
+    // add country to QA
 
     // const planId = selectedPlan.id;
     // const productId = params.productId;
@@ -146,7 +146,7 @@ export default function RegistrationPlan({
         className="self-start"
         onClick={handleSubmit}
         disabled={loading || !selectedService}
-        isProcessing={createNewProcess.isPending}
+        isProcessing={createNewBusiness.isPending}
       >
         <div className="space-x-2 flex items-center">
           <p>Continue</p>
