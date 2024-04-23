@@ -1,5 +1,11 @@
+import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { sluggify } from "@/lib/utils";
-import { useGetRequestQA, useSaveRequestQA, useUpdateRequestQA } from "@/services/productQA";
+import {
+  useGetRequestQA,
+  useGetRequestFormQA,
+  useSaveRequestQA,
+  useUpdateRequestQA,
+} from "@/services/productQA";
 import { TFormQACreate } from "@/services/productQA/types";
 import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
 import { useSearchParams } from "next/navigation";
@@ -7,10 +13,13 @@ import { useSearchParams } from "next/navigation";
 export const useActions = ({
   info,
   isServiceForm,
+  onSubmit,
 }: {
   info?: TServiceForm | TProductForm;
   isServiceForm: boolean;
+  onSubmit: () => void;
 }) => {
+  const { setQueriesWithPath } = useGlobalFunctions();
   const searchParams = useSearchParams();
 
   const requestId = searchParams.get("requestId") || "";
@@ -18,16 +27,26 @@ export const useActions = ({
   const saveRequestQA = useSaveRequestQA();
   const updateRequestQA = useUpdateRequestQA();
 
-  const requestQARes = useGetRequestQA(requestId);
-  const requestQA = requestQARes.data?.data?.data;
+  // const requestQARes = useGetRequestQA(requestId);
+  // const requestQA = requestQARes.data?.data?.data;
 
-  const isPending = saveRequestQA.isPending;
-  const formInRequesQA = requestQA?.find((el) => el.formId === info?.id);
+  const requestFormQARes = useGetRequestFormQA(info?.id || "");
+  const requestFormQA = requestFormQARes.data?.data?.data;
+  // console.log(requestFormQA);
+
+  const isPending = saveRequestQA.isPending || updateRequestQA.isPending;
+  // const formInRequesQA = requestQA?.find((el) => el.formId === info?.id);
+  // console.log(requestQA);
 
   const getValue = (field: TSubForm) => {
-    const QASubForm = formInRequesQA?.subForm;
+    const QASubForm = requestFormQA?.subForm;
     const QAField = QASubForm?.find((el) => el.question === field.question);
-    return QAField?.answer;
+    const isTextInput =
+      QAField?.type === "email" ||
+      QAField?.type === "address" ||
+      QAField?.type === "short answer" ||
+      QAField?.type === "email address";
+    return isTextInput ? QAField?.answer[0] : QAField?.answer;
   };
 
   const formInfo = info?.subForm?.map((field) => {
@@ -41,6 +60,7 @@ export const useActions = ({
       value: getValue(field),
     };
   })!;
+  // console.log(formInfo);
 
   const submitFormHandler = (values: Record<any, any>) => {
     if (!info) return;
@@ -64,12 +84,18 @@ export const useActions = ({
         },
       })),
     };
-    if (formInRequesQA?.id) {
-      updateRequestQA.mutate({ requestFormId: formInRequesQA.id, form: payload });
+    if (requestFormQA?.id) {
+      updateRequestQA.mutate(
+        { requestFormId: requestFormQA.id, form: payload },
+        { onSuccess: () => onSubmit() }
+      );
       console.log("Updated request form");
       return;
     }
-    saveRequestQA.mutate({ requestId, formId: info.id, form: payload });
+    saveRequestQA.mutate(
+      { requestId, formId: info.id, form: payload },
+      { onSuccess: () => onSubmit() }
+    );
     console.log("Created request form");
   };
 

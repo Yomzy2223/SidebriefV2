@@ -9,6 +9,7 @@ import {
   useGetCountries,
   useGetCountryServiceProduct,
   useGetProductById,
+  useGetServiceForms,
 } from "@/services/service";
 import { countries, TCountryCode } from "countries-list";
 import { useSession } from "next-auth/react";
@@ -27,9 +28,16 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
   const session = useSession();
   const userId = session.data?.user?.id;
 
+  const productsRes = useGetCountryServiceProduct({ serviceId, country });
+  const products = productsRes.data?.data?.data || [];
+  const productsNames = products?.map((el) => el.name);
+
   const countriesRes = useGetCountries();
   const countriesData = countriesRes.data?.data?.data || [];
   const countriesNames = countriesData?.map((el) => el.name);
+
+  const serviceFormsRes = useGetServiceForms(serviceId);
+  const hasSForms = serviceFormsRes.data?.data?.data?.length ?? 0 > 0;
 
   const worldCountries = Object.keys(countries).map(
     (el: string) => countries[el as TCountryCode].name
@@ -37,10 +45,6 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
   const originalCountries = worldCountries.filter((el) =>
     countriesNames?.find((each) => each.toLowerCase() === el.toLowerCase())
   );
-
-  const productsRes = useGetCountryServiceProduct({ serviceId, country });
-  const products = productsRes.data?.data?.data || [];
-  const productsNames = products?.map((el) => el.name);
 
   // Populate the previously selected country and product
   const productRes = useGetProductById(searchParams.get("productId") || "");
@@ -92,6 +96,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
     const businessId = searchParams.get("businessId") || "";
     const requestId = searchParams.get("requestId") || "";
     const productId = products?.find((el) => el.name === values.product)?.id || "";
+    const addPath = hasSForms ? "/info" : "/payment";
 
     if (businessId) {
       if (requestId) {
@@ -102,7 +107,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
             onSuccess: (data) => {
               const businessData = data.data.data;
               setQueriesWithPath({
-                addPath: "/info",
+                addPath,
                 queries: [
                   { name: "productId", value: productId },
                   {
@@ -124,9 +129,11 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
           onSuccess: (data) => {
             const requestData = data.data.data;
             setQueriesWithPath({
-              addPath: "/info",
+              addPath,
               queries: [
                 { name: "productId", value: productId },
+                { name: "progress", value: "1" },
+                { name: "activePage", value: "1" },
                 {
                   name: "requestId",
                   value: requestData.id,
@@ -146,11 +153,12 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
         onSuccess: (data) => {
           const requestData = data.data.data;
           setQueriesWithPath({
-            addPath: "/info",
+            addPath,
             queries: [
               { name: "productId", value: productId },
               { name: "businessId", value: requestData.businessId },
               { name: "progress", value: "1" },
+              { name: "activePage", value: "1" },
               {
                 name: "requestId",
                 value: requestData.id,

@@ -59,7 +59,7 @@ export type TServiceForm = TFormCFields & {
 export type TSubForm = {
   id: string;
   question: string;
-  type: string;
+  type: TFieldTypes;
   options: string[];
   formId: string;
   compulsory: boolean;
@@ -77,3 +77,23 @@ export type TSubForm = {
   updatedAt: string;
   isDeprecated: boolean;
 };
+
+export type TFieldTypes =
+  | "text"
+  | "password"
+  | "address"
+  | "business name"
+  | "checkbox"
+  | "countries-operation"
+  | "countries-all"
+  | "document template"
+  | "document upload"
+  | "select"
+  | "email"
+  | "email address"
+  | "paragraph"
+  | "objectives"
+  | "phone number"
+  | "promocode"
+  | "multiple choice"
+  | "short answer";

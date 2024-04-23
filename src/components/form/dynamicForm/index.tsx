@@ -82,7 +82,17 @@ const DynamicForm = ({
     >
       <div className={cn("flex flex-col justify-start gap-8", className)}>
         {(formInfo || []).map((el, i: number) => {
-          const isTextInput = el.type === "text" || el.type === "password" || el.type === "email";
+          const isTextInput =
+            el.type === "text" ||
+            el.type === "password" ||
+            el.type === "email" ||
+            el.type === "email address" ||
+            el.type === "address" ||
+            el.type === "short answer";
+          const isSelect =
+            el.type === "select" ||
+            el.type === "countries-all" ||
+            el.type === "countries-operation";
           const errorMsg = errors[el.name]?.message;
 
           return (
@@ -92,7 +102,6 @@ const DynamicForm = ({
                   <Label htmlFor={el.name} value={el.label} />
                 </div>
               )}
-
               {isTextInput && (
                 <TextInput
                   id={el.name}
@@ -105,44 +114,25 @@ const DynamicForm = ({
                   {...register(el.name)}
                 />
               )}
-
-              {(el.type === "address" ||
-                el.type === "email address" ||
-                el.type === "short answer") && (
-                <TextInput
-                  id={el.name}
-                  type={el.type}
-                  sizing="md"
-                  className={errorMsg ? "focus:[&_input]:outline-none" : ""}
-                  helperText={<>{errorMsg}</>}
-                  color={errorMsg && "failure"}
-                  // {...el.textInputProp}
-                  {...register(el.name)}
-                />
-              )}
-
               {el.type === "countries-all" && (
                 <AllCOuntries
                   value={watch(el.name) || ""}
                   setValue={(value: string) => setValue(el.name, value)}
                 />
               )}
-
               {el.type === "checkbox" && (
                 <Checkbox id={el.name} defaultChecked {...register(el.name)} />
               )}
+              {el.type === "multiple choice" && <Radio id={el.name} {...register(el.name)} />}
 
-              {el.type === "radio" && <Radio id={el.name} {...register(el.name)} />}
-
-              {el.type === "file" && (
+              {(el.type === "document template" || el.type === "document upload") && (
                 <FileInput
                   id={el.name}
                   helperText="A profile picture is useful to confirm your are logged into your account"
                   {...register(el.name)}
                 />
               )}
-
-              {el.type === "select" && el.selectOptions && (
+              {isSelect && (
                 <ComboBox
                   name={el.name}
                   options={el.selectOptions}
@@ -158,7 +148,6 @@ const DynamicForm = ({
                   optionsErrorMsg={el.optionsErrorMsg}
                 />
               )}
-
               {el.type === "objectives" && (
                 <MultiSelectCombo
                   name={el.name}
@@ -172,7 +161,6 @@ const DynamicForm = ({
                   errorMsg={errorMsg?.toString()}
                 />
               )}
-
               {el.type === "business name" && (
                 <InputWithTags
                   submitErr={errorMsg}
@@ -189,7 +177,6 @@ const DynamicForm = ({
                   }}
                 />
               )}
-
               {/* {el.type === "business name" && (
                 <BusinessNameInput
                   id={el.id!}
@@ -199,7 +186,6 @@ const DynamicForm = ({
                   error={errorMsg as string | undefined}
                 />
               )} */}
-
               {/* {el.type === "objectives" && (
                 <BusinessObjectiveInput
                   id={el.id!}
@@ -210,14 +196,13 @@ const DynamicForm = ({
                   error={errorMsg as string | undefined}
                 />
               )} */}
-
-              {el.type === "countries" && (
+              {/* {el.type === "countries" && (
                 <CountryInput
                   id={el.id}
                   value={watch(el.name) || ""}
                   setValue={(value: string) => setValue(el.name, value)}
                 />
-              )}
+              )} */}
             </div>
           );
         })}

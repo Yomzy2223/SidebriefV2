@@ -1,3 +1,4 @@
+import { TFieldTypes } from "@/services/service/types";
 import { ReactNode } from "react";
 import { UseFormReset } from "react-hook-form";
 import { ZodType } from "zod";
@@ -6,7 +7,7 @@ export interface IFormInput {
   id?: string;
   name: string;
   label?: string;
-  type: string;
+  type: TFieldTypes;
   textInputProp?: Record<string, any>;
   selectProp?: Record<string, any>;
   fileProp?: Record<string, any>;

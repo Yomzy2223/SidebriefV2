@@ -9,26 +9,33 @@ export const useLaunchSteps = () => {
 
   const searchParams = useSearchParams();
   const progress = parseInt(searchParams.get("progress") || "0");
+  const activePage = parseInt(searchParams.get("activePage") || progress.toString());
 
   const productFormsRes = useGetProductForms(serviceId);
-  const noPForms = productFormsRes.data?.data?.data?.length === 0;
+  const hasPForms = productFormsRes.data?.data?.data?.length ?? 0 > 0;
 
   const serviceFormsRes = useGetServiceForms(serviceId);
-  const noSForms = serviceFormsRes.data?.data?.data?.length === 0;
+  const hasSForms = serviceFormsRes.data?.data?.data?.length ?? 0 > 0;
 
   const handleClick = (i: number, route: string) => {
-    if (progress >= i) setQueriesWithPath({ path: `/requests/${serviceId}${route}` });
+    if (progress >= i)
+      setQueriesWithPath({
+        path: `/requests/${serviceId}${route}`,
+        queries: [{ name: "activePage", value: i.toString() }],
+      });
   };
 
-  let launchSteps = [plansStep, paymentStep, reviewStep];
-  if (!noPForms && !noSForms)
-    launchSteps = [plansStep, infoStep, paymentStep, formsStep, reviewStep];
-  else if (!noSForms && noPForms) launchSteps = [plansStep, infoStep, paymentStep, reviewStep];
-  else if (!noPForms && noSForms) launchSteps = [plansStep, paymentStep, formsStep, reviewStep];
+  // Dynamic request steps
+  let requestSteps = [plansStep, paymentStep, reviewStep];
+  if (hasSForms && hasPForms)
+    requestSteps = [plansStep, infoStep, paymentStep, formsStep, reviewStep];
+  else if (hasSForms && !hasPForms) requestSteps = [plansStep, infoStep, paymentStep, reviewStep];
+  else if (!hasSForms && hasPForms) requestSteps = [plansStep, paymentStep, formsStep, reviewStep];
 
   return {
     progress,
     handleClick,
-    launchSteps,
+    requestSteps,
+    activePage,
   };
 };

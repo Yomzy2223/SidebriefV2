@@ -11,14 +11,17 @@ const EachForm = ({
   info,
   isLoading,
   isServiceForm = false,
+  onSubmit,
 }: {
   info: TServiceForm | TProductForm;
   isLoading: boolean;
   isServiceForm?: boolean;
+  onSubmit: () => void;
 }) => {
   const { formInfo, submitFormHandler, isPending } = useActions({
     info,
     isServiceForm,
+    onSubmit,
   });
 
   return (

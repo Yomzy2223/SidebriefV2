@@ -1,12 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { saveRequestQA, updateRequestQA, getRequestQA, deleteRequestQA } from "./operations";
+import {
+  saveRequestQA,
+  updateRequestQA,
+  getRequestQA,
+  deleteRequestQA,
+  getRequestFormQA,
+} from "./operations";
 import { saveRequestQAPayload, updateRequestQAPayload, deleteRequestQAPayload } from "./types";
 import { useToast } from "@/components/ui/use-toast";
 import { useResponse } from "@/hooks/useResponse";
 
 export const useSaveRequestQA = () => {
   const queryClient = useQueryClient();
-  const { handleSuccess, handleError } = useResponse();
+  const { handleError } = useResponse();
 
   return useMutation({
     mutationKey: ["save product QA"],
@@ -15,7 +21,6 @@ export const useSaveRequestQA = () => {
       handleError({ title: "Failed", error });
     },
     onSuccess(data, variables, context) {
-      handleSuccess({ data });
       queryClient.invalidateQueries({ queryKey: ["get product QA"] });
     },
   });
@@ -23,7 +28,7 @@ export const useSaveRequestQA = () => {
 
 export const useUpdateRequestQA = () => {
   const queryClient = useQueryClient();
-  const { handleSuccess, handleError } = useResponse();
+  const { handleError } = useResponse();
 
   return useMutation({
     mutationKey: ["update product QA"],
@@ -32,7 +37,6 @@ export const useUpdateRequestQA = () => {
       handleError({ title: "Failed", error });
     },
     onSuccess(data, variables, context) {
-      handleSuccess({ data });
       queryClient.invalidateQueries({ queryKey: ["get product QA"] });
     },
   });
@@ -60,4 +64,11 @@ export const useGetRequestQA = (requestId: string) =>
     queryKey: ["get product QA", requestId],
     queryFn: () => getRequestQA({ requestId }),
     enabled: !!requestId,
+  });
+
+export const useGetRequestFormQA = (formId: string) =>
+  useQuery({
+    queryKey: ["get product QA", formId],
+    queryFn: () => getRequestFormQA({ formId }),
+    enabled: !!formId,
   });

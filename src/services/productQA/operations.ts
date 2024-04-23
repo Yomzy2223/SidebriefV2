@@ -29,3 +29,8 @@ export const getRequestQA = async ({ requestId }: { requestId: string }) => {
   const client = await Client();
   return client.get<rootType<TFormQAGet[]>>(`/productRequest/form/${requestId}`);
 };
+
+export const getRequestFormQA = async ({ formId }: { formId: string }) => {
+  const client = await Client();
+  return client.get<rootType<TFormQAGet>>(`/productRequest/formByFormId/${formId}`);
+};

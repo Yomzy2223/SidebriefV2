@@ -22,7 +22,11 @@ const ComboContent = ({
     <Command className="min-w-40">
       {options.length > 10 && <CommandInput placeholder={`Search ${fieldName}...`} />}
       {!optionsLoading && options.length === 0 && (
-        <p className="text-sm text-foreground-5 p-2 pb-0">
+        <p
+          className={cn("text-sm text-foreground-5 p-2 pb-0", {
+            "text-destructive-foreground": optionsErrorMsg,
+          })}
+        >
           {optionsErrorMsg || `No ${fieldName || name} found`}
         </p>
       )}

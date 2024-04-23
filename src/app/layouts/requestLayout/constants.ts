@@ -1,7 +1,7 @@
 import { Thumbs, Profilecard, Clipboard, FileCheck } from "@/assets/icons";
 
 export const plansStep = {
-  name: "Plans",
+  name: "Product",
   description: "Your detail here",
   Icon: Profilecard,
   route: "/",

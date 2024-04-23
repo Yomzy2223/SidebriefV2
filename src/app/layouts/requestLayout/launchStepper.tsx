@@ -7,13 +7,13 @@ import Image from "next/image";
 import { Button } from "flowbite-react";
 
 export const LaunchStepper = () => {
-  const { launchSteps, progress, handleClick } = useLaunchSteps();
+  const { requestSteps, progress, handleClick, activePage } = useLaunchSteps();
 
   return (
     <>
       {/* Mobile stepper */}
       <ol className="flex flex-wrap md:hidden items-center w-full space-x-2 text-sm font-medium text-center text-gray-500 bg-white dark:text-gray-400 sm:text-base dark:bg-gray-800 sm:space-x-4 rtl:space-x-reverse">
-        {launchSteps.map((el, i, arr) => (
+        {requestSteps.map((el, i, arr) => (
           <Button
             color="transparent"
             size="fit"
@@ -22,8 +22,9 @@ export const LaunchStepper = () => {
             disabled={i > progress}
           >
             <li
-              className={cn("flex gap-3 sm:gap-[18px] items-center", {
+              className={cn("flex gap-3 sm:gap-[18px] items-center font-medium", {
                 "text-blue-600 dark:text-blue-500": progress >= i,
+                "font-bold": activePage === i,
               })}
             >
               <div className="flex gap-1.5">
@@ -37,7 +38,7 @@ export const LaunchStepper = () => {
       </ol>
       {/* Desktop stepper */}
       <ol className="hidden relative text-gray-500 border-s border-gray-200 dark:border-gray-700 dark:text-gray-400 md:flex md:flex-col">
-        {launchSteps.map((el, i) => (
+        {requestSteps.map((el, i) => (
           <Button
             color="transparent"
             size="fit"
@@ -62,7 +63,9 @@ export const LaunchStepper = () => {
                   <el.Icon className="w-4 h-4" />
                 </div>
               </span>
-              <h3 className="font-medium leading-tight">{el.name}</h3>
+              <h3 className={cn("font-medium leading-tight", { "font-bold": activePage === i })}>
+                {el.name}
+              </h3>
               {/* <p className="text-sm">{el.description}</p> */}
             </li>
           </Button>
