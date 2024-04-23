@@ -1,11 +1,11 @@
 "use client";
 
 import { ReactNode } from "react";
-import { RequestInfoPanel } from "@/app/layouts/requestLayout/requestInfoPanel";
-import { LaunchStepper } from "@/app/layouts/requestLayout/launchStepper";
+import { RequestInfoPanel } from "@/components/cards/launchStepper/requestInfoPanel";
+import { LaunchStepper } from "@/components/cards/launchStepper";
 import { usePathname } from "next/navigation";
 import { isValidUUID } from "@/lib/utils";
-import RequestLayout from "@/app/layouts/requestLayout";
+import RequestLayout from "@/components/cards/launchStepper";
 
 export default function LaunchLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();

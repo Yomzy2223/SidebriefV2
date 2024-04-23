@@ -19,7 +19,6 @@ export const useActions = ({
   isServiceForm: boolean;
   onSubmit: () => void;
 }) => {
-  const { setQueriesWithPath } = useGlobalFunctions();
   const searchParams = useSearchParams();
 
   const requestId = searchParams.get("requestId") || "";
@@ -38,18 +37,26 @@ export const useActions = ({
   // const formInRequesQA = requestQA?.find((el) => el.formId === info?.id);
   // console.log(requestQA);
 
-  const getValue = (field: TSubForm) => {
+  // Returns the
+  const getQAField = (question: string) => {
     const QASubForm = requestFormQA?.subForm;
-    const QAField = QASubForm?.find((el) => el.question === field.question);
+    const QAField = QASubForm?.find((el) => el.question === question);
+    return QAField;
+  };
+
+  const filteredSubform = info?.subForm?.filter(
+    (el) => el.type !== "document template" && el.type !== "document upload"
+  );
+  // Returns the information used to render the form
+  const formInfo = filteredSubform?.map((field) => {
+    const QAField = getQAField(field.question);
     const isTextInput =
       QAField?.type === "email" ||
       QAField?.type === "address" ||
       QAField?.type === "short answer" ||
       QAField?.type === "email address";
-    return isTextInput ? QAField?.answer[0] : QAField?.answer;
-  };
 
-  const formInfo = info?.subForm?.map((field) => {
+    // Each field
     return {
       id: field.id,
       name: sluggify(field.question),
@@ -57,11 +64,12 @@ export const useActions = ({
       type: field.type,
       selectOptions: field.options,
       compulsory: field.compulsory,
-      value: getValue(field),
+      // value: isTextInput ? QAField?.answer[0] || "" : QAField?.answer || [],
+      value: isTextInput ? "" : [],
     };
-  })!;
-  // console.log(formInfo);
+  });
 
+  // Used to create and update QA form
   const submitFormHandler = (values: Record<any, any>) => {
     if (!info) return;
 
@@ -72,6 +80,7 @@ export const useActions = ({
       compulsory: info.compulsory,
       isGeneral: isServiceForm,
       subForm: info.subForm.map((field) => ({
+        id: getQAField(field.question)?.id,
         question: field.question,
         answer: values[sluggify(field.question)],
         type: field.type,
@@ -87,16 +96,24 @@ export const useActions = ({
     if (requestFormQA?.id) {
       updateRequestQA.mutate(
         { requestFormId: requestFormQA.id, form: payload },
-        { onSuccess: () => onSubmit() }
+        {
+          onSuccess: (data) => {
+            console.log("Updated request form");
+            onSubmit();
+          },
+        }
       );
-      console.log("Updated request form");
       return;
     }
     saveRequestQA.mutate(
       { requestId, formId: info.id, form: payload },
-      { onSuccess: () => onSubmit() }
+      {
+        onSuccess: () => {
+          onSubmit();
+          console.log("Created request form");
+        },
+      }
     );
-    console.log("Created request form");
   };
 
   return { formInfo, submitFormHandler, isPending };

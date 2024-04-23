@@ -10,6 +10,7 @@ import ComboBox from "./comboBox";
 import { cn } from "@/lib/utils";
 import MultiSelectCombo from "./multiSelectCombo";
 import InputWithTags from "@/components/input/inputWithTags";
+import { countries } from "countries-list";
 
 const DynamicForm = ({
   children,
@@ -65,14 +66,14 @@ const DynamicForm = ({
   const prevFormInfoRef = useRef(formInfo);
 
   useEffect(() => {
-    if (JSON.stringify(prevFormInfoRef.current) !== JSON.stringify(formInfo)) {
-      (formInfo || []).forEach((form) => {
-        if (form.value) {
-          setValue(form.name, form.value);
-        }
-      });
-      prevFormInfoRef.current = formInfo;
-    }
+    // if (JSON.stringify(prevFormInfoRef.current) !== JSON.stringify(formInfo)) {
+    (formInfo || []).forEach((form) => {
+      if (form.value) {
+        setValue(form.name, form.value);
+      }
+    });
+    //   prevFormInfoRef.current = formInfo;
+    // }
   }, [setValue, formInfo]);
 
   return (
@@ -95,6 +96,12 @@ const DynamicForm = ({
             el.type === "countries-operation";
           const errorMsg = errors[el.name]?.message;
 
+          let selectOptions;
+          switch (el.type) {
+            case "countries-all":
+              selectOptions = Object.values(countries).map((country) => country.name);
+          }
+
           return (
             <div key={i}>
               {el.label && (
@@ -114,12 +121,12 @@ const DynamicForm = ({
                   {...register(el.name)}
                 />
               )}
-              {el.type === "countries-all" && (
+              {/* {el.type === "countries-all" && (
                 <AllCOuntries
                   value={watch(el.name) || ""}
                   setValue={(value: string) => setValue(el.name, value)}
                 />
-              )}
+              )} */}
               {el.type === "checkbox" && (
                 <Checkbox id={el.name} defaultChecked {...register(el.name)} />
               )}
@@ -135,7 +142,7 @@ const DynamicForm = ({
               {isSelect && (
                 <ComboBox
                   name={el.name}
-                  options={el.selectOptions}
+                  options={selectOptions || el.selectOptions}
                   setValue={setValue}
                   errorMsg={errorMsg?.toString()}
                   selectProp={el.selectProp}

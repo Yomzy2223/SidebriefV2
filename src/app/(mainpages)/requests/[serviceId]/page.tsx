@@ -8,6 +8,7 @@ import * as z from "zod";
 import { ArrowRightCircle } from "lucide-react";
 import { Oval } from "react-loading-icons";
 import { PlanCard } from "@/components/cards/PlanCard";
+import Wrapper from "./wrapper";
 
 const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
   const { formInfo, handleFormSubmit, isPending, productInfo } = useActions({
@@ -15,7 +16,7 @@ const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
   });
 
   return (
-    <div className="mb-6">
+    <Wrapper productInfo={productInfo}>
       <div className="flex flex-col mb-6">
         <h4 className="text-sm leading-normal text-foreground-3 mb-1">STEP 1</h4>
         <h6 className="text-2xl leading-normal font-semibold">Select Product</h6>
@@ -47,7 +48,7 @@ const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
           <span>Continue</span> {!isPending && <ArrowRightCircle className="ml-1" />}
         </Button>
       </DynamicForm>
-    </div>
+    </Wrapper>
   );
 };
 

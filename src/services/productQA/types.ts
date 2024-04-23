@@ -1,13 +1,15 @@
-export type TFormQACreate = {
+type IFormQA<ISubForm> = {
   title: string;
   description: string;
   type: string;
   compulsory: boolean;
   isGeneral: boolean;
-  subForm: TSubformQACreate[];
+  subForm: ISubForm[];
 };
 
-export type TFormQAGet = TFormQACreate & {
+export type TFormQACreate = IFormQA<TSubformQACreate>;
+
+export type TFormQAGet = IFormQA<TSubformQAGet> & {
   id: string;
   requestId: string;
   createdAt: string;

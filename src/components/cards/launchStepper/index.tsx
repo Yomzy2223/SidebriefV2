@@ -4,27 +4,28 @@ import { cn } from "@/lib/utils";
 import { useLaunchSteps } from "./actions";
 import { BadgeCheck } from "@/assets/svg";
 import Image from "next/image";
-import { Button } from "flowbite-react";
+import { Button, Timeline } from "flowbite-react";
 
 export const LaunchStepper = () => {
   const { requestSteps, progress, handleClick, activePage } = useLaunchSteps();
 
+  const activeRoute = activePage ? "/" + activePage?.toLowerCase() : "/";
   return (
     <>
       {/* Mobile stepper */}
       <ol className="flex flex-wrap md:hidden items-center w-full space-x-2 text-sm font-medium text-center text-gray-500 bg-white dark:text-gray-400 sm:text-base dark:bg-gray-800 sm:space-x-4 rtl:space-x-reverse">
         {requestSteps.map((el, i, arr) => (
           <Button
+            key={el.name}
             color="transparent"
             size="fit"
-            key={i}
             onClick={() => handleClick(i, el.route)}
             disabled={i > progress}
           >
             <li
               className={cn("flex gap-3 sm:gap-[18px] items-center font-medium", {
                 "text-blue-600 dark:text-blue-500": progress >= i,
-                "font-bold": activePage === i,
+                "font-bold": activeRoute === el.route,
               })}
             >
               <div className="flex gap-1.5">
@@ -37,40 +38,38 @@ export const LaunchStepper = () => {
         ))}
       </ol>
       {/* Desktop stepper */}
-      <ol className="hidden relative text-gray-500 border-s border-gray-200 dark:border-gray-700 dark:text-gray-400 md:flex md:flex-col">
+      <Timeline>
         {requestSteps.map((el, i) => (
-          <Button
-            color="transparent"
-            size="fit"
-            key={i}
-            onClick={() => handleClick(i, el.route)}
-            disabled={i > progress}
-          >
-            <li className="mb-10 ms-6">
-              <span
-                className={cn(
-                  "absolute flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700",
-                  {
-                    "bg-yellow-100 dark:bg-yellow-900": progress >= i,
-                  }
-                )}
-              >
-                <div
-                  className={cn("text-primary dark:text-primary", {
-                    "text-gray-500": !(progress >= i),
+          <Timeline.Item key={el.name}>
+            <Timeline.Point icon={el.Icon} />
+
+            <Button
+              size="fit"
+              color="transparent"
+              onClick={() => handleClick(i, el.route)}
+              disabled={i > progress}
+            >
+              <Timeline.Content>
+                <Timeline.Title
+                  className={cn(
+                    "text-base text-start leading-tight font-medium text-foreground-5",
+                    { "font-bold text-foreground-3": activeRoute === el.route }
+                  )}
+                >
+                  {el.name}
+                </Timeline.Title>
+                <Timeline.Body
+                  className={cn("text-xs font-normal text-foreground-5", {
+                    "font-semibold": activeRoute === el.route,
                   })}
                 >
-                  <el.Icon className="w-4 h-4" />
-                </div>
-              </span>
-              <h3 className={cn("font-medium leading-tight", { "font-bold": activePage === i })}>
-                {el.name}
-              </h3>
-              {/* <p className="text-sm">{el.description}</p> */}
-            </li>
-          </Button>
+                  {el.description}
+                </Timeline.Body>
+              </Timeline.Content>
+            </Button>
+          </Timeline.Item>
         ))}
-      </ol>
+      </Timeline>
     </>
   );
 };

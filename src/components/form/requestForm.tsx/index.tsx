@@ -15,12 +15,12 @@ const RequestForm = ({
   isServiceForm: boolean;
 }) => {
   const tabsRef = useRef<TabsRef>(null);
-  // const [activeTab, setActiveTab] = useState(0);
   const { serviceId } = useParams();
 
   const searchParams = useSearchParams();
   const { setQueriesWithPath } = useGlobalFunctions();
 
+  // Get and set active tab to url query
   const activeTab = parseInt(searchParams.get("activeTab") || "0");
   const setActiveTab = (active: number) =>
     setQueriesWithPath({ queries: [{ name: "activeTab", value: active.toString() }] });
@@ -33,13 +33,14 @@ const RequestForm = ({
         ? `/requests/${serviceId}/payment`
         : `/requests/${serviceId}/review`;
 
-      setQueriesWithPath({ path, queries: [{ name: "progress", value: progress }] });
+      setQueriesWithPath({
+        path,
+        queries: [{ name: "progress", value: progress }],
+      });
       return;
     }
-    setActiveTab(i + 1);
-    // setActiveTab(1);
+    tabsRef.current?.setActiveTab(i + 1);
   };
-  console.log(activeTab);
 
   return (
     <div className="flex flex-col gap-2 max-w-[500px] w-full">

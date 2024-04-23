@@ -5,10 +5,12 @@ import {
   useCreateProductRequest,
   useUpdateProductRequest,
 } from "@/services/business";
+import { TCreateRequest } from "@/services/business/types";
 import {
   useGetCountries,
   useGetCountryServiceProduct,
   useGetProductById,
+  useGetProductForms,
   useGetServiceForms,
 } from "@/services/service";
 import { countries, TCountryCode } from "countries-list";
@@ -18,6 +20,7 @@ import { useEffect, useState } from "react";
 import * as z from "zod";
 import { formSchema } from "./page";
 
+// ACTIONS
 export const useActions = ({ serviceId }: { serviceId: string }) => {
   const [country, setCountry] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -35,9 +38,6 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
   const countriesRes = useGetCountries();
   const countriesData = countriesRes.data?.data?.data || [];
   const countriesNames = countriesData?.map((el) => el.name);
-
-  const serviceFormsRes = useGetServiceForms(serviceId);
-  const hasSForms = serviceFormsRes.data?.data?.data?.length ?? 0 > 0;
 
   const worldCountries = Object.keys(countries).map(
     (el: string) => countries[el as TCountryCode].name
@@ -59,6 +59,12 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
   }, [product]);
 
   const productInfo = products?.find((el) => el.name === selectedProduct);
+
+  // Check service and product forms
+  const productFormsRes = useGetProductForms(productInfo?.id || "");
+  const hasPForms = (productFormsRes.data?.data?.data?.length ?? 0) > 0;
+  const serviceFormsRes = useGetServiceForms(serviceId);
+  const hasSForms = (serviceFormsRes.data?.data?.data?.length ?? 0) > 0;
 
   const createBusinessRequest = useCreateBusinessRequest();
   const createProductRequest = useCreateProductRequest();
@@ -98,6 +104,26 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
     const productId = products?.find((el) => el.name === values.product)?.id || "";
     const addPath = hasSForms ? "/info" : "/payment";
 
+    // Returns the queries to be set to the url
+    const getQueries = (requestData: TCreateRequest, action?: string) => {
+      let queries = [
+        { name: "productId", value: productId },
+        { name: "requestId", value: requestData.id },
+        { name: "hasSForms", value: hasSForms.toString() },
+        { name: "hasPForms", value: hasPForms.toString() },
+      ];
+      if (hasSForms) {
+        queries = [...queries, { name: "activeTab", value: "0" }];
+      }
+      if (action === "createReq" || action === "createBusiness") {
+        queries = [...queries, { name: "progress", value: "1" }];
+      }
+      if (action === "createBusiness") {
+        queries = [...queries, { name: "businessId", value: requestData.businessId }];
+      }
+      return queries;
+    };
+
     if (businessId) {
       if (requestId) {
         // Updates the product of a request
@@ -105,16 +131,10 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
           { id: requestId, productId },
           {
             onSuccess: (data) => {
-              const businessData = data.data.data;
+              const requestData = data.data.data;
               setQueriesWithPath({
                 addPath,
-                queries: [
-                  { name: "productId", value: productId },
-                  {
-                    name: "requestId",
-                    value: businessData.id,
-                  },
-                ],
+                queries: getQueries(requestData),
               });
             },
           }
@@ -130,15 +150,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
             const requestData = data.data.data;
             setQueriesWithPath({
               addPath,
-              queries: [
-                { name: "productId", value: productId },
-                { name: "progress", value: "1" },
-                { name: "activePage", value: "1" },
-                {
-                  name: "requestId",
-                  value: requestData.id,
-                },
-              ],
+              queries: getQueries(requestData, "createReq"),
             });
           },
         }
@@ -154,16 +166,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
           const requestData = data.data.data;
           setQueriesWithPath({
             addPath,
-            queries: [
-              { name: "productId", value: productId },
-              { name: "businessId", value: requestData.businessId },
-              { name: "progress", value: "1" },
-              { name: "activePage", value: "1" },
-              {
-                name: "requestId",
-                value: requestData.id,
-              },
-            ],
+            queries: getQueries(requestData, "createBusiness"),
           });
         },
       }
