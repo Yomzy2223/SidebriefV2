@@ -15,7 +15,7 @@ export interface FormInput {
 }
 
 export interface DynamicFormProps {
-  children: ReactNode;
+  children?: ReactNode;
   formInfo: FormInput[];
   onFormSubmit: (values: any) => void;
   defaultValues?: Record<string, any>;
@@ -23,4 +23,5 @@ export interface DynamicFormProps {
   watchValues?: (values: { [key: string]: string | string[] }) => void;
   // selectedPerson?: number | null;
   resetForm?: (reset: UseFormReset<any>) => void;
+  disabled?: boolean;
 }

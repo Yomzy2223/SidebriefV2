@@ -22,3 +22,6 @@ export const getCountries = () => axios.get<rootType<countryType[]>>("/countries
 
 export const getServiceProductsById = ({ serviceId }: { serviceId?: string }) =>
   axios.get<rootType<serviceProductType[]>>(`/products/service/${serviceId}`);
+
+export const getProductById = ({ productId }: { productId?: string }) =>
+  axios.get<rootType<serviceProductType>>(`/products/${productId}`);

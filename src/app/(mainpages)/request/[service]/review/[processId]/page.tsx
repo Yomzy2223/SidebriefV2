@@ -22,14 +22,14 @@ export default function Review() {
   return (
     <div className="pr-0 md:pr-20 w-full">
       <div className="space-y-14">
-        <BusinessInfoReview />
-        <ProprietorInfoReview />
+        <BusinessInfoReview productId={productRequestId || ""} />
+        <ProprietorInfoReview productId={productRequestId || ""} />
       </div>
       <Button
         disabled={process.isLoading}
         onClick={async () => {
           await submitRequest({ productRequestIds: [productRequestId || ""] });
-          router.push(`/dashboard/${service}/complete`);
+          router.push(`/request/${service}/complete`);
         }}
         color="secondary"
         size={"lg"}
