@@ -13,7 +13,6 @@ const Forms = () => {
   const productFormsRes = useGetProductForms(productId as string);
   const productForms = productFormsRes.data?.data?.data || [];
 
-  console.log(productForms);
   return (
     <RequestWrapper>
       <RequestForm forms={productForms} isServiceForm />

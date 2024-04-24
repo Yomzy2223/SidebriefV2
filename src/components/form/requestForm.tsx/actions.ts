@@ -46,15 +46,20 @@ export const useActions = ({
 
   const filteredSubform = info?.subForm?.filter(
     (el) => el.type !== "document template" && el.type !== "document upload"
+    // el.type !== "countries-all"
   );
   // Returns the information used to render the form
   const formInfo = filteredSubform?.map((field) => {
     const QAField = getQAField(field.question);
     const isTextInput =
-      QAField?.type === "email" ||
-      QAField?.type === "address" ||
-      QAField?.type === "short answer" ||
-      QAField?.type === "email address";
+      field.type === "email" ||
+      field.type === "address" ||
+      field.type === "short answer" ||
+      field.type === "email address";
+    const isSelect =
+      field.type === "select" ||
+      field.type === "countries-all" ||
+      field.type === "countries-operation";
 
     // Each field
     return {
@@ -64,8 +69,7 @@ export const useActions = ({
       type: field.type,
       selectOptions: field.options,
       compulsory: field.compulsory,
-      // value: isTextInput ? QAField?.answer[0] || "" : QAField?.answer || [],
-      value: isTextInput ? "" : [],
+      value: isTextInput || isSelect ? QAField?.answer[0] || "" : QAField?.answer || [],
     };
   });
 
