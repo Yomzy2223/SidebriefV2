@@ -31,19 +31,30 @@ const EachForm = ({
       className="gap-6"
       formClassName="gap-12 justify-between"
     >
-      <Button
-        color="secondary"
-        size={"lg"}
-        type="submit"
-        isProcessing={isPending}
-        disabled={isPending}
-        processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
-      >
-        <div className="space-x-2 flex items-center">
-          <p>Continue</p>
-          {!isPending && <ArrowRightCircle className="ml-1" />}
-        </div>
-      </Button>
+      <div className="flex justify-between gap-6">
+        <Button
+          color="secondary"
+          size="lg"
+          type="submit"
+          isProcessing={isPending}
+          disabled={isPending}
+          processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
+        >
+          <div className="space-x-2 flex items-center">
+            <p>Continue</p>
+            {!isPending && <ArrowRightCircle className="ml-1" />}
+          </div>
+        </Button>
+        <Button
+          color="transparent"
+          size="fit"
+          type="submit"
+          className="text-primary"
+          disabled={isPending}
+        >
+          {`Add new ${info.title}`}
+        </Button>
+      </div>
     </DynamicForm>
   );
 };
