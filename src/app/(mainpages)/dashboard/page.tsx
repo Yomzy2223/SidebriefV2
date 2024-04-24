@@ -53,10 +53,10 @@ export default function Dashboard() {
   const session = useSession();
   const userId = session.data?.user?.id;
 
-  const { useGetUserRequestsQuery } = useRequestApi();
-  const { data } = useGetUserRequestsQuery(userId);
-  const userRequests = data?.data?.data;
-  console.log(userRequests);
+  // const { useGetUserRequestsQuery } = useRequestApi();
+  // const { data } = useGetUserRequestsQuery(userId);
+  // const userRequests = data?.data?.data;
+  // console.log(userRequests);
 
   return (
     <div className="p-5 space-y-14 md:p-8">

@@ -44,6 +44,7 @@ export type FormItem = {
 
 export type saveProductQAPayload = {
   productId: string;
+  formId: string;
   form: {
     title: string;
     description: string;
@@ -82,6 +83,7 @@ export type productQAType = {
   title: string;
   type: string;
   updatedAt: string;
+  formId: string;
 };
 
 export type addServiceToProductPayload = {
@@ -136,3 +138,46 @@ export type productFormType = {
   productId: string;
   productSubForm: productSubFormType[];
 };
+
+export interface BusinessType {
+  id: string;
+  rcNumber: string | null;
+  companyName: string | null;
+  companyType: string | null;
+  registrationDate: string;
+  branchAddress: string | null;
+  companyEmail: string | null;
+  city: string | null;
+  classification: string | null;
+  headOfficeAddress: string | null;
+  lga: string | null;
+  affiliates: string[] | null;
+  shareCapital: number | null;
+  shareCapitalInWords: string | null;
+  state: string | null;
+  status: string;
+  isDeprecated: boolean;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+}
+
+export interface NewProductType {
+  id: string;
+  paid: boolean;
+  completed: boolean;
+  status: string;
+  currentState: string;
+  partnerInCharge: string | null;
+  createdAt: string;
+  isDeprecated: boolean;
+  updatedAt: string;
+  completedAt: string | null;
+  submittedAt: string | null;
+  assignedAt: string | null;
+  businessId: string;
+  productId: string;
+  requestQA: productQAType[]; // You might want to specify the type for this array
+  product: serviceProductType;
+  business: BusinessType;
+}

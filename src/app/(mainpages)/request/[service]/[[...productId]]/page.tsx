@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { CountryInput } from "@/components/input";
 import { TCountryCode, countries, getCountryCode } from "countries-list";
 import { sluggify } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 // const tabs = [
 // 	{ name: "Bank Transfer", href: "#", icon: BankIcon, current: false },
@@ -29,6 +30,10 @@ export default function RegistrationPlan({
   const services = getServices.data?.data.data;
   const serviceSlug = params.service;
   const router = useRouter();
+
+  const session = useSession();
+
+  const userId = session.data?.user?.id ?? "";
 
   const product = useGetProductRequest(params.productId?.[0]);
 
@@ -69,6 +74,12 @@ export default function RegistrationPlan({
     }
   }, [product.isLoading, product.data?.data.data.product]);
 
+  // redirect if user is not authenticated
+  if (session.status === "unauthenticated") {
+    router.push("/dashboard");
+    return null;
+  }
+
   const handleSubmit = async () => {
     const selectedPlan = serviceProducts?.find((el) => el.name === selectedService);
 
@@ -82,7 +93,7 @@ export default function RegistrationPlan({
     if (!businessId) {
       const res = await createNewBusiness.mutateAsync({
         productId: selectedPlan?.id,
-        userId: "5c99014f-4d5f-4771-9c6e-8e56d3afd819",
+        userId: userId,
       });
 
       businessId = res.data.data.businessId;
@@ -145,7 +156,7 @@ export default function RegistrationPlan({
         size={"lg"}
         className="self-start"
         onClick={handleSubmit}
-        disabled={loading || !selectedService}
+        disabled={loading || !selectedService || session.status === "loading"}
         isProcessing={createNewBusiness.isPending}
       >
         <div className="space-x-2 flex items-center">

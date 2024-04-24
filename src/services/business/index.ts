@@ -1,6 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createProcessPayload } from "./types";
-import { GetBusinessRequest, createNewBusinessRequest } from "./operations";
+import {
+  GetBusinessRequest,
+  GetUserBusinessRequests,
+  createNewBusinessRequest,
+} from "./operations";
 
 export const useCreateNewBusinessRequest = () =>
   useMutation({
@@ -13,4 +17,11 @@ export const useGetBusinessRequest = ({ id }: { id: string }) =>
     queryFn: () => GetBusinessRequest({ id }),
     queryKey: ["get process request", id],
     enabled: !!id,
+  });
+
+export const useGetUserBusinessRequests = ({ userId }: { userId: string }) =>
+  useQuery({
+    queryFn: () => GetUserBusinessRequests({ userId }),
+    queryKey: ["get user request", userId],
+    enabled: !!userId,
   });

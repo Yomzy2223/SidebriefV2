@@ -68,6 +68,7 @@ export const useActions = ({ form }: { form: serviceFormType | productFormType }
     return saveProductQA.mutateAsync(
       {
         productId,
+        formId: form.id,
         form: {
           title: fileDescription ? "document upload" : form.title,
           description: fileDescription ? fileDescription : form.description,

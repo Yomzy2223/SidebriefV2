@@ -130,5 +130,9 @@ export const useUploadActions = ({
     return !allUploaded.includes(false);
   }
 
+  function checkAllFilled(productQA: productQAType[]): boolean {
+    return true;
+  }
+
   return { withDocument, getForm, checkAllUploaded };
 };

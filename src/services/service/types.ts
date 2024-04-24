@@ -47,6 +47,7 @@ export type serviceProductType = {
   amount: number;
   timeline: string;
   feature: string[];
+  serviceId: string;
   // hasShares: boolean;
   // hasAgent: boolean;
   // hasOwner: boolean;

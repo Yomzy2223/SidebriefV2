@@ -7,11 +7,15 @@ import {
   productFormType,
   updateProductQAPayload,
   deleteProductQAPayload,
+  NewProductType,
 } from "./types";
 
-export const saveProductQA = async ({ productId, form }: saveProductQAPayload) => {
+export const saveProductQA = async ({ productId, formId, form }: saveProductQAPayload) => {
   const client = await Client();
-  return client.post<rootType<productQAType[]>>(`/productRequest/form/${productId}`, form);
+  return client.post<rootType<productQAType[]>>(
+    `/productRequest/form/${formId}/${productId}`,
+    form
+  );
 };
 
 export const updateProductQA = async ({ requestFormId, form }: updateProductQAPayload) => {
@@ -39,7 +43,7 @@ export const addServiceToProduct = async ({ productId, serviceId }: addServiceTo
 
 export const getProductRequest = async ({ productRequestId }: { productRequestId: string }) => {
   const client = await Client();
-  return client.get<rootType<productType>>(`/productRequest/${productRequestId}`);
+  return client.get<rootType<NewProductType>>(`/productRequest/${productRequestId}`);
 };
 
 export const getProductForm = async ({ productId }: { productId: string }) => {
