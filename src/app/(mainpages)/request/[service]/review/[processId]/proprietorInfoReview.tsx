@@ -2,13 +2,21 @@ import { Button, Card, Badge } from "@/components/flowbite";
 import { PencilLine } from "lucide-react";
 import { SwatchBook } from "@/assets/icons";
 import { MemberInfoReviewCards } from "@/components/cards/proprietorInfoReviewCard";
+import { useGetProductForm, useGetProductQA } from "@/services/product";
+import { productQAType } from "@/services/product/types";
 
 export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
   const productQA = useGetProductQA(productId);
 
+  const getProductForm = useGetProductForm(productId);
+
+  const forms = getProductForm.data?.data.data;
+
   const allQA = productQA.data?.data.data;
 
   const onlyPersons = allQA?.filter((el) => el.type == "person");
+
+  console.log(onlyPersons);
 
   const onlyPersonsDocuments = onlyPersons?.filter((el) => el.title.includes("document"));
 
@@ -41,11 +49,27 @@ export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
           Edit <PencilLine strokeWidth={1} size={16} />
         </Button>
       </div>
-      <div className="flex flex-wrap gap-6">
+      {forms?.map((el) => {
+        return (
+          <MemberInfoReviewCards
+            key={el.id}
+            title={el.title}
+            info={
+              onlyPersons?.map((el) =>
+                el.subForm.map((sub) => ({
+                  field: sub.question,
+                  value: sub.answer[0],
+                }))
+              ) || []
+            }
+          />
+        );
+      })}
+      {/* <div className="flex flex-wrap gap-6">
         <MemberInfoReviewCard />
         <MemberInfoReviewCard />
         <MemberInfoReviewCard />
-      </div>
+      </div> */}
     </div>
   );
 };
