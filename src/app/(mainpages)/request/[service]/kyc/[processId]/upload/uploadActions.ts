@@ -24,7 +24,7 @@ export const useUploadActions = ({
 
     const allDocuments = (subForms: productSubFormType[]) => {
       return subForms
-        .map((subForm) => {
+        ?.map((subForm) => {
           if (subForm.type === "document upload" || subForm.type === "document template") {
             return subForm;
           } else return;

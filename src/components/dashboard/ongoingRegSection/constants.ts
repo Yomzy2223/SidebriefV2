@@ -43,7 +43,7 @@ export const useSteps = ({
   type booleanFunc = () => boolean;
 
   const checkStep2: booleanFunc = () => {
-    // if prroductQA is empty or undefined
+    // if prroductQA is empty or undefinedr
     if (!productQA || productQA.length === 0) {
       return false;
     }
@@ -52,14 +52,16 @@ export const useSteps = ({
     for (const form of serviceForm || []) {
       const formAnswers = productQA.find((answer) => answer.formId === form.id);
       if (!formAnswers) {
-        // If a form does not have an answer, return false
         return false;
       }
 
       // Check if each subForm in the form has been answered
       for (const subForm of form.subForm) {
-        const subFormAnswer = formAnswers.subForm.find((subAnswer) => subAnswer.id === subForm.id);
+        const subFormAnswer = formAnswers.subForm.find(
+          (subAnswer) => subAnswer.question === subForm.question
+        );
         if (!subFormAnswer || subFormAnswer.answer.length === 0) {
+          console.log("here 1");
           // If a subForm does not have an answer or the answer is empty, return false
           return false;
         }

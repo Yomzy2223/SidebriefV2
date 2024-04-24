@@ -63,7 +63,8 @@ const OngoingRegSection = () => {
           urlSuffix = "info";
           break;
         case "Step 3":
-          urlSuffix = "payment";
+          // urlSuffix = "payment";
+          urlSuffix = "kyc";
           break;
         case "Step 4":
           urlSuffix = "kyc";

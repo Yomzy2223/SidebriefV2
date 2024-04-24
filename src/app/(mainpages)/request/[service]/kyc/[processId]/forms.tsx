@@ -112,7 +112,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
   };
 
   const noDocuments: (form: productFormType) => productSubFormType[] = (form: productFormType) => {
-    return form.productSubForm.filter(
+    return form.productSubForm?.filter(
       (subform) => subform.type !== "document upload" && subform.type !== "document template"
     );
   };
@@ -177,7 +177,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
                     </Badge> */}
                   </div>
                 )}
-                {noDocuments(form).length <= 0 ? (
+                {noDocuments(form)?.length <= 0 ? (
                   <form
                     onSubmit={(event) => {
                       event.preventDefault();
@@ -209,7 +209,7 @@ export const Forms = ({ forms, productId }: { forms: productFormType[]; productI
                       </div>
                     ) : (
                       <DynamicForm
-                        formInfo={noDocuments(form).map((subform) => {
+                        formInfo={noDocuments(form)?.map((subform) => {
                           const value = values[sluggify(subform.question)];
                           const rValue = !isFileType(value) ? value : "";
                           return {
