@@ -64,7 +64,7 @@ export const LaunchForm1 = ({
       tabsRef.current.setActiveTab(currentTab + 1);
     }
     if (currentTab === totalNumOfTabs - 1) {
-      router.push(`/request/${params.service}/kyc/${params.processId}`);
+      router.push(`/request/${params.service}/payment/${params.processId}`);
     }
   };
 
