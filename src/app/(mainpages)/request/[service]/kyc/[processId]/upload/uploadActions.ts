@@ -96,8 +96,6 @@ export const useUploadActions = ({ persons, forms }: { persons: IFormQA[]; forms
       }
       const formState = prevFormstates[0];
 
-      console.log(formState);
-
       if (formState === undefined) return false;
 
       for (let i = 0; i < doc.docs.length; i++) {
@@ -118,8 +116,6 @@ export const useUploadActions = ({ persons, forms }: { persons: IFormQA[]; forms
 
       return true;
     });
-
-    console.log(allUploaded);
 
     return !allUploaded.includes(false);
   }

@@ -5,8 +5,13 @@ import { Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { ServicesModal } from "@/components/services/ServicesModal";
 import { useGetServiceproduct, useGetServices } from "@/services/service";
+<<<<<<< HEAD:src/app/(mainpages)/request/[service]/[[...productId]]/page.tsx
 import { useAddServiceToProduct, useGetProductRequest } from "@/services/productQA";
 import { useCreateBusinessRequest } from "@/services/business";
+=======
+import { useAddServiceToProduct, useGetProductRequest } from "@/services/product";
+import { useCreateNewProcessRequest } from "@/services/process";
+>>>>>>> origin/staging:src/app/(mainpages)/request/[service]/[[...processId]]/page.tsx
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { CountryInput } from "@/components/input";

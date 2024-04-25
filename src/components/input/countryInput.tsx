@@ -10,6 +10,7 @@ export default function CountryInput({
   question,
   value,
   setValue,
+  disabled,
 }: // loading,
 // countries,
 {
@@ -19,6 +20,7 @@ export default function CountryInput({
   setValue: (value: string) => void;
   // loading: boolean;
   // countries: countryType[];
+  disabled?: boolean;
 }) {
   const countriesData = useGetCountries();
 
@@ -52,9 +54,9 @@ const LoadingSkeleton = () => (
       {/* <div className="relative w-8 h-8 grid place-items-center"> */}
       <SVGSkeleton className="w-5 h-5" />
       {/* </div> */}
-      <p className="leading-snug">
+      <div className="leading-snug">
         <Skeleton className="w-[56px] max-w-full" />
-      </p>
+      </div>
     </div>
   </>
 );

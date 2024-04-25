@@ -3,7 +3,11 @@ import { getServices, getServiceForms } from "@/services/service/operations";
 import { redirect } from "next/navigation";
 import { ProductTabs } from "./tabs";
 import { sluggify } from "@/lib/utils";
+<<<<<<< HEAD
 import { getBusinessRequest } from "@/services/business/operations";
+=======
+import { GetProcessRequest } from "@/services/process/operations";
+>>>>>>> origin/staging
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +39,11 @@ export default async function LaunchInfo({
 
   const processId = params.processId;
 
+<<<<<<< HEAD
   const process = await getBusinessRequest({ id: processId });
+=======
+  const process = await GetProcessRequest({ id: processId });
+>>>>>>> origin/staging
 
   const processData = process.data.data;
 

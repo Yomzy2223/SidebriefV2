@@ -2,14 +2,22 @@
 
 import { Tabs, TabsRef } from "flowbite-react";
 import { LaunchForm1 } from "./form";
+<<<<<<< HEAD
 import { IForm } from "@/services/service/types";
+=======
+import { serviceFormType } from "@/services/service/types";
+>>>>>>> origin/staging
 import { useRef, useState } from "react";
 
 export const ProductTabs = ({
   allServiceForms,
   productId,
 }: {
+<<<<<<< HEAD
   allServiceForms: IForm[];
+=======
+  allServiceForms: serviceFormType[];
+>>>>>>> origin/staging
   productId: string;
 }) => {
   const tabsRef = useRef<TabsRef>(null);
