@@ -1,6 +1,6 @@
 "use client";
 
-import ComboBoxComp from "@/components/form/comboBoxComp";
+import ComboBoxComp from "@/components/form/dynamicForm/comboBox";
 import React, { useState } from "react";
 import { IProductFull } from "@/hooks/api/types";
 import useProductApi from "@/hooks/useProductApi";
@@ -32,7 +32,7 @@ const SelectProduct = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const onSelect = (selected: string) => {
+  const onSelect = (selected?: string) => {
     const selectedProduct = productsData?.find((el: IProductFull) => el.name === selected);
     setSelectedPlan(selectedProduct);
   };
@@ -56,7 +56,8 @@ const SelectProduct = () => {
         <ComboBoxComp
           name="product"
           options={products || []}
-          selectProp={{ onSelect: onSelect }}
+          handleSelect={onSelect}
+          // selectProp={{ onSelect: onSelect }}
           optionsLoading={isLoading}
         />
 
