@@ -34,7 +34,7 @@ export const useGlobalFunctions = () => {
 
       return newQuery.toString();
     },
-    [searchParams]
+    [searchParams, pathname, router]
   );
 
   const setQuery = (name: string, value: string | number) => {

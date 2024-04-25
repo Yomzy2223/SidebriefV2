@@ -56,7 +56,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
       setCountry(country);
       setSelectedProduct(product.name);
     }
-  }, [product]);
+  }, [product, worldCountries]);
 
   const productInfo = products?.find((el) => el.name === selectedProduct);
 
@@ -98,7 +98,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
   ];
 
   // Creates or updates a business
-  const handleFormSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleFormSubmit = ({ values }: { values: z.infer<typeof formSchema> }) => {
     const businessId = searchParams.get("businessId") || "";
     const requestId = searchParams.get("requestId") || "";
     const productId = products?.find((el) => el.name === values.product)?.id || "";
