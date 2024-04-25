@@ -6,7 +6,9 @@ import {
   getServiceFormSubForms,
   getCountries,
   getServiceProductsById,
+  getCountryServiceProducts,
   getProductById,
+  getProductForm,
 } from "./operations";
 
 export const useGetServices = () => {
@@ -23,7 +25,7 @@ export const useGetService = (id: string) => {
   });
 };
 
-export const useGetServiceForm = (serviceId: string) =>
+export const useGetServiceForms = (serviceId: string) =>
   useQuery({
     queryKey: ["serviceForm", serviceId],
     queryFn: () => getServiceForms({ serviceId }),
@@ -41,16 +43,35 @@ export const useGetCountries = () =>
     queryFn: getCountries,
   });
 
-export const useGetServiceproduct = (serviceId?: string) =>
+export const useGetProductById = (id: string) =>
   useQuery({
-    queryKey: ["products", serviceId],
+    queryKey: ["product", id],
+    queryFn: () => getProductById({ id }),
+    enabled: !!id,
+  });
+
+export const useGetServiceproduct = (serviceId: string) =>
+  useQuery({
+    queryKey: ["product", serviceId],
     queryFn: () => getServiceProductsById({ serviceId }),
     enabled: !!serviceId,
   });
 
-export const useGetProductById = (productId?: string) =>
+export const useGetCountryServiceProduct = ({
+  serviceId,
+  country,
+}: {
+  serviceId: string;
+  country: string;
+}) =>
   useQuery({
-    queryKey: ["product", productId],
-    queryFn: () => getProductById({ productId }),
-    enabled: !!productId,
+    queryKey: ["product", serviceId, country],
+    queryFn: () => getCountryServiceProducts({ serviceId, country }),
+    enabled: !!serviceId && !!country,
+  });
+
+export const useGetProductForms = (productId: string) =>
+  useQuery({
+    queryKey: ["get product form", productId],
+    queryFn: () => getProductForm({ productId: productId }),
   });

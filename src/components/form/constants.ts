@@ -1,27 +1,34 @@
+import { TFieldTypes } from "@/services/service/types";
 import { ReactNode } from "react";
 import { UseFormReset } from "react-hook-form";
 import { ZodType } from "zod";
 
-export interface FormInput {
+export interface IFormInput {
   id?: string;
   name: string;
   label?: string;
-  type: string;
+  type: TFieldTypes;
   textInputProp?: Record<string, any>;
   selectProp?: Record<string, any>;
   fileProp?: Record<string, any>;
-  selectOptions?: string[];
+  selectOptions: string[];
   value?: string | string[];
+  leftContent?: string | ReactNode;
+  handleSelect?: (selected?: string) => void;
+  fieldName?: string;
+  optionsLoading?: boolean;
+  optionsErrorMsg?: string;
 }
 
 export interface DynamicFormProps {
-  children?: ReactNode;
-  formInfo: FormInput[];
-  onFormSubmit: (values: any) => void;
+  children: ReactNode;
+  formInfo: IFormInput[];
+  onFormSubmit: ({ values, reset }: { values: any; reset: UseFormReset<any> }) => void;
   defaultValues?: Record<string, any>;
   formSchema?: ZodType<any, any, any>;
   watchValues?: (values: { [key: string]: string | string[] }) => void;
   // selectedPerson?: number | null;
-  resetForm?: (reset: UseFormReset<any>) => void;
-  disabled?: boolean;
+  disableAll?: boolean;
+  formClassName?: string;
+  className?: string;
 }

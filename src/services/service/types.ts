@@ -6,29 +6,6 @@ export type serviceType = {
   updatedAt: string;
 };
 
-export type serviceFormType = {
-  id: string;
-  title: string;
-  description: string;
-  type: string;
-  compulsory: boolean;
-  createdAt: string;
-  updatedAt: string;
-  serviceId: string;
-  subForm: serviceFormSubFormType[];
-};
-
-export type serviceFormSubFormType = {
-  id: string;
-  question: string;
-  type: string;
-  options: string[];
-  compulsory: boolean;
-  createdAt: string;
-  updatedAt: string;
-  formId: string;
-};
-
 export type countryType = {
   id: string;
   name: string;
@@ -38,7 +15,7 @@ export type countryType = {
   flagUrl: string;
 };
 
-export type serviceProductType = {
+export type TProduct = {
   id: string;
   name: string;
   description: string;
@@ -59,3 +36,65 @@ export type serviceProductType = {
   // updatedAt: string;
   // serviceCategoryId: string;
 };
+
+type TFormCFields = {
+  id: string;
+  title: string;
+  type: string;
+  description: string;
+  compulsory: boolean;
+  createdAt: string;
+  isDeprecated: boolean;
+  updatedAt: string;
+  subForm: TSubForm[];
+};
+
+export type TProductForm = TFormCFields & {
+  productId: string;
+};
+
+export type TServiceForm = TFormCFields & {
+  serviceId: string;
+};
+
+export type TSubForm = {
+  id: string;
+  question: string;
+  type: TFieldTypes;
+  options: string[];
+  formId: string;
+  compulsory: boolean;
+  fileName: string;
+  fileLink: string;
+  fileType: string;
+  fileSize: string;
+  allowOther: boolean;
+  documentType: string;
+  dependsOn: {
+    field: string;
+    options: string[];
+  };
+  createdAt: string;
+  updatedAt: string;
+  isDeprecated: boolean;
+};
+
+export type TFieldTypes =
+  | "text"
+  | "password"
+  | "address"
+  | "business name"
+  | "checkbox"
+  | "countries-operation"
+  | "countries-all"
+  | "document template"
+  | "document upload"
+  | "select"
+  | "email"
+  | "email address"
+  | "paragraph"
+  | "objectives"
+  | "phone number"
+  | "promocode"
+  | "multiple choice"
+  | "short answer";

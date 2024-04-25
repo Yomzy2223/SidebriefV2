@@ -1,6 +1,6 @@
 "use client";
 
-import AuthFormWrapper from "@/components/features/auth/authFormWrapper";
+import AuthFormWrapper from "@/components/wrappers/authFormWrapper";
 import DynamicForm from "@/components/form/dynamicForm";
 import * as z from "zod";
 import { Button } from "flowbite-react";

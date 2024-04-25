@@ -1,17 +1,51 @@
-export type createProcessPayload = {
+import { TFormQAGet } from "../productQA/types";
+import { TProduct } from "../service/types";
+
+export type TCreateBusinessPayload = {
   userId: string;
   productId: string;
 };
 
-export type ProductRequestType = {
+export type TCreateRequestPayload = {
+  businessId: string;
+  productIds: string[];
+};
+
+export type TBusinessData = {
+  id: string;
+  rcNumber: string;
+  companyName: string;
+  companyType: string;
+  registrationDate: string;
+  branchAddress: string;
+  companyEmail: string;
+  city: string;
+  classification: string;
+  headOfficeAddress: string;
+  lga: string;
+  affiliates: string;
+  shareCapital: string;
+  shareCapitalInWords: string;
+  state: string;
+  status: string;
+  isDeprecated: boolean;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+};
+
+export type TBusinessDataFull = TBusinessData & {
+  productRequest: TProductRequest[];
+};
+
+export type TCreateRequest = {
   id: string;
   paid: boolean;
-  completed: boolean;
-  status: string;
-  currentState: string;
-  partnerInCharge: string | null;
-  createdAt: string;
+  status: "PENDING" | "SUBMITTED" | "ASSIGNED" | "REJECTED" | "COMPLETED";
+  currentState: "SERVICEFORM" | "PAYMENT";
+  partnerInCharge: string;
   isDeprecated: boolean;
+  createdAt: string;
   updatedAt: string;
   completedAt: string;
   submittedAt: string;
@@ -20,13 +54,8 @@ export type ProductRequestType = {
   productId: string;
 };
 
-export type ProcessData = {
-  id: string;
-  businessName: string | null;
-  isDeprecated: boolean;
-  createdAt: string;
-  updatedAt: string;
-  userId: string;
-  // businessId: string;
-  productRequest: ProductRequestType[];
+export type TProductRequest = TCreateRequest & {
+  requestQA: TFormQAGet[];
+  product: TProduct;
+  business: TBusinessData;
 };

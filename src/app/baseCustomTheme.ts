@@ -37,6 +37,7 @@ export const customTheme: ThemeProps = {
       },
       size: {
         fit: "p-0 h-max w-max !p-0",
+        xl: "text-sm !min-w-[150px] !px-4 !py-3 lg:text-base lg:!min-w-[200px] lg:!px-6 lg:!py-3 ",
       },
       inner: {
         base: "flex justify-center items-center gap-2 !px-4 !py-2",
@@ -71,6 +72,13 @@ export const customTheme: ThemeProps = {
     radio: {
       root: {
         base: "h-4 w-4 border border-border focus:ring-0 dark:border-gray-600 dark:bg-gray-700 dark:focus:bg-cyan-600 text-cyan-600",
+      },
+    },
+    textInput: {
+      field: {
+        input: {
+          base: "block w-full border disabled:cursor-not-allowed disabled:opacity-50 outline-primary",
+        },
       },
     },
   },

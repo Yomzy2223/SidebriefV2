@@ -5,8 +5,13 @@ import { Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { ServicesModal } from "@/components/services/ServicesModal";
 import { useGetServiceproduct, useGetServices } from "@/services/service";
+<<<<<<< HEAD:src/app/(mainpages)/request/[service]/[[...productId]]/page.tsx
+import { useAddServiceToProduct, useGetProductRequest } from "@/services/productQA";
+import { useCreateBusinessRequest } from "@/services/business";
+=======
 import { useAddServiceToProduct, useGetProductRequest } from "@/services/product";
-import { useCreateNewBusinessRequest } from "@/services/business";
+import { useCreateNewProcessRequest } from "@/services/process";
+>>>>>>> origin/staging:src/app/(mainpages)/request/[service]/[[...processId]]/page.tsx
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { CountryInput } from "@/components/input";
@@ -16,7 +21,7 @@ import { useSession } from "next-auth/react";
 
 // const tabs = [
 // 	{ name: "Bank Transfer", href: "#", icon: BankIcon, current: false },
-// 	{ name: "Card Payment", href: "#", icon: CardIcon, current: false },
+// 	{ name: "Card xPayment", href: "#", icon: CardIcon, current: false },
 // 	{ name: "Bank USSD", href: "#", icon: CreditCardIcon, current: false },
 // ];
 
@@ -26,7 +31,7 @@ export default function RegistrationPlan({
   params: { productId: string[]; service: string };
 }) {
   const getServices = useGetServices();
-  const createNewBusiness = useCreateNewBusinessRequest();
+  const createNewProcess = useCreateBusinessRequest();
   const services = getServices.data?.data.data;
   const serviceSlug = params.service;
   const router = useRouter();
