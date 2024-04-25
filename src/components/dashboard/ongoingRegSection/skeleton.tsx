@@ -11,9 +11,9 @@ export const OngoingRegSkeleton = () => {
             </h2>
             <Skeleton className="w-16 h-6" />
           </div>
-          <p className="text-sm w-4/5">
+          <div className="text-sm w-4/5">
             <Skeleton className="w-full h-4" />
-          </p>
+          </div>
         </div>
         <div className="flex items-center gap-10 md:gap-16">
           <Skeleton className="w-20 h-8" />

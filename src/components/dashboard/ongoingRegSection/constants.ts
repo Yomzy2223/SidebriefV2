@@ -1,12 +1,14 @@
 import { InfoGif, PaymentCardGif, ProfileGif, ReviewGif } from "@/assets/gif";
-import { useGetProductForm, useGetProductQA } from "@/services/product";
-import { getproductQA } from "@/services/product/operations";
-import { productFormType, productSubFormType } from "@/services/product/types";
-import { useGetServiceForm } from "@/services/service";
-import { useUploadActions } from "@/app/(mainpages)/request/[service]/kyc/[processId]/upload/uploadActions";
+import { useGetProductForms } from "@/services/service";
+import { useGetRequestQA } from "@/services/productQA";
+// import { getRequestQA } from "@/services/productQA/operations";
+import { TFormQAGet, TSubformQAGet } from "@/services/productQA/types";
+import { TProductForm, TSubForm } from "@/services/service/types";
+import { useGetServiceForms } from "@/services/service";
+// import { useUploadActions } from "@/app/(mainpages)/request/[service]/kyc/[processId]/upload/uploadActions";
 
-const noDocuments: (form: productFormType) => productSubFormType[] = (form: productFormType) => {
-  return form.productSubForm?.filter(
+const noDocuments: (form: TProductForm) => TSubForm[] = (form: TProductForm) => {
+  return form.subForm?.filter(
     (subform) => subform.type !== "document upload" && subform.type !== "document template"
   );
 };
@@ -19,24 +21,24 @@ export const useSteps = ({
   serviceId: string;
   productId: string;
 }) => {
-  const getProductQA = useGetProductQA(productRequestId);
+  const getProductQA = useGetRequestQA(productRequestId);
 
   const productQA = getProductQA.data?.data.data;
 
   const persons = productQA?.filter((qa) => qa.type === "person");
 
-  const getServiceForm = useGetServiceForm(serviceId);
+  const getServiceForm = useGetServiceForms(serviceId);
 
   const serviceForm = getServiceForm.data?.data.data;
 
-  const getProductForm = useGetProductForm(productId);
+  const getProductForm = useGetProductForms(productId);
 
   const productForms = getProductForm.data?.data.data;
 
-  const { checkAllUploaded } = useUploadActions({
-    persons: persons || [],
-    forms: productForms || [],
-  });
+  // const { checkAllUploaded } = useUploadActions({
+  //   persons: persons || [],
+  //   forms: productForms || [],
+  // });
 
   // console.log(productForms);
 
@@ -78,7 +80,7 @@ export const useSteps = ({
     }
 
     // check the no documents part first
-    const noDocumentForms: productFormType[] =
+    const noDocumentForms: TProductForm[] =
       productForms
         ?.filter((form) => form.type !== "person")
         ?.map((form) => ({
@@ -94,7 +96,7 @@ export const useSteps = ({
       }
 
       // Check if each subForm in the form has been answered
-      for (const subForm of form.productSubForm) {
+      for (const subForm of form.subForm) {
         const subFormAnswer = formAnswers.subForm.find((subAnswer) => subAnswer.id === subForm.id);
         if (!subFormAnswer || subFormAnswer.answer.length === 0) {
           // If a subForm does not have an answer or the answer is empty, return false
@@ -103,9 +105,9 @@ export const useSteps = ({
       }
     }
 
-    if (!checkAllUploaded(productQA)) {
-      return false;
-    }
+    // if (!checkAllUploaded(productQA)) {
+    //   return false;
+    // }
 
     return true;
   };

@@ -7,7 +7,7 @@ import { useGetUserBusinessRequests } from "@/services/business";
 import { useSession } from "next-auth/react";
 import { OngoingRegSkeleton } from "./skeleton";
 import Link from "next/link";
-import { useGetProductRequest } from "@/services/product";
+import { useGetProductRequest } from "@/services/business";
 import { useGetService } from "@/services/service";
 import { sluggify } from "@/lib/utils";
 
@@ -82,7 +82,7 @@ const OngoingRegSection = () => {
         <div className="md:max-w-[50%]">
           <div className="flex items-center gap-4">
             <h2 className="sb-text-24 font-semibold whitespace-nowrap text-ellipsis overflow-hidden max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] 2xl:max-w-[800px]">
-              {latest?.businessName ? latest.businessName : "No Registered Name Yet"}
+              {latest?.companyName ? latest.companyName : "No Registered Name Yet"}
             </h2>
             <Badge color="pink" icon={() => <InfoIcon size={10} />}>
               Ongoing

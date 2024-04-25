@@ -20,7 +20,7 @@ export const ConfettiDesign = (): void => {
     return Math.random() * (max - min) + min;
   }
 
-  const interval: NodeJS.Timeout = setInterval((): void => {
+  const interval: ReturnType<typeof setInterval> = setInterval((): void => {
     const timeLeft: number = animationEnd - Date.now();
 
     if (timeLeft <= 0) {

@@ -52,7 +52,7 @@ export default function Dashboard() {
   const { tableHeaders, tableBody } = useTableInfo();
   const session = useSession();
   const userId = session.data?.user?.id;
-  console.log(session);
+  // console.log(session);
 
   const { useGetUserRequestsQuery } = useRequestApi();
   const { data } = useGetUserRequestsQuery(userId);
