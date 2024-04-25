@@ -1,22 +1,20 @@
-import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { sluggify } from "@/lib/utils";
-import {
-  useGetRequestQA,
-  useGetRequestFormQA,
-  useSaveRequestQA,
-  useUpdateRequestQA,
-} from "@/services/productQA";
+import { useGetRequestFormQA, useSaveRequestQA, useUpdateRequestQA } from "@/services/productQA";
 import { TFormQACreate } from "@/services/productQA/types";
-import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
+import { TProductForm, TServiceForm } from "@/services/service/types";
 import { useSearchParams } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
+import { UseFormReset } from "react-hook-form";
 
 export const useActions = ({
   info,
   isServiceForm,
+  setOnlyCreate,
   onSubmit,
 }: {
   info?: TServiceForm | TProductForm;
   isServiceForm: boolean;
+  setOnlyCreate: Dispatch<SetStateAction<boolean>>;
   onSubmit: () => void;
 }) => {
   const searchParams = useSearchParams();
@@ -34,6 +32,7 @@ export const useActions = ({
   // console.log(requestFormQA);
 
   const isPending = saveRequestQA.isPending || updateRequestQA.isPending;
+  const isSuccess = saveRequestQA.isSuccess || updateRequestQA.isSuccess;
   // const formInRequesQA = requestQA?.find((el) => el.formId === info?.id);
   // console.log(requestQA);
 
@@ -44,12 +43,12 @@ export const useActions = ({
     return QAField;
   };
 
-  const filteredSubform = info?.subForm?.filter(
-    (el) => el.type !== "document template" && el.type !== "document upload"
-    // el.type !== "countries-all"
-  );
+  const filteredSubform =
+    info?.subForm?.filter(
+      (el) => el.type !== "document template" && el.type !== "document upload"
+    ) || [];
   // Returns the information used to render the form
-  const formInfo = filteredSubform?.map((field) => {
+  const formInfo = filteredSubform.map((field) => {
     const QAField = getQAField(field.question);
     const isTextInput =
       field.type === "email" ||
@@ -74,7 +73,11 @@ export const useActions = ({
   });
 
   // Used to create and update QA form
-  const submitFormHandler = (values: Record<any, any>) => {
+  const submitFormHandler = (
+    values: Record<any, any>,
+    reset: UseFormReset<any>,
+    onlyCreate: boolean
+  ) => {
     if (!info) return;
 
     const payload: TFormQACreate = {
@@ -97,13 +100,13 @@ export const useActions = ({
         },
       })),
     };
-    if (requestFormQA?.id) {
+    if (requestFormQA?.id && !onlyCreate) {
       updateRequestQA.mutate(
         { requestFormId: requestFormQA.id, form: payload },
         {
           onSuccess: (data) => {
             console.log("Updated request form");
-            onSubmit();
+            onSubmit && onSubmit();
           },
         }
       );
@@ -113,12 +116,16 @@ export const useActions = ({
       { requestId, formId: info.id, form: payload },
       {
         onSuccess: () => {
-          onSubmit();
+          if (onlyCreate) {
+            setOnlyCreate(false);
+            reset();
+            console.log("Form reset successfully");
+          } else onSubmit && onSubmit();
           console.log("Created request form");
         },
       }
     );
   };
 
-  return { formInfo, submitFormHandler, isPending };
+  return { formInfo, submitFormHandler, isPending, isSuccess };
 };

@@ -19,7 +19,6 @@ const DynamicForm = ({
   formSchema,
   onFormSubmit,
   watchValues,
-  resetForm,
   disableAll,
   formClassName,
   className,
@@ -49,31 +48,20 @@ const DynamicForm = ({
   // Submit handler
   function onSubmit(values: formType) {
     // console.log(values);
-    onFormSubmit && onFormSubmit(values);
+    onFormSubmit && onFormSubmit({ values, reset });
   }
-
-  const setResetter = useCallback(() => {
-    resetForm && resetForm(reset);
-  }, [reset, resetForm]);
-
-  setResetter();
 
   useEffect(() => {
     const subscription = watch((values) => watchValues && watchValues(values));
     return () => subscription.unsubscribe();
   }, [watch, watchValues]);
 
-  const prevFormInfoRef = useRef(formInfo);
-
   useEffect(() => {
-    // if (JSON.stringify(prevFormInfoRef.current) !== JSON.stringify(formInfo)) {
     (formInfo || []).forEach((form) => {
       if (form.value) {
         setValue(form.name, form.value);
       }
     });
-    //   prevFormInfoRef.current = formInfo;
-    // }
   }, [setValue, formInfo]);
 
   return (
