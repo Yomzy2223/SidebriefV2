@@ -9,14 +9,17 @@ export const useGlobalFunctions = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const isDesktop = useMediaQuery("(min-width: 800px)");
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
+  // searchParams with a provided key/value pair(s)
   const createQueryString = useCallback(
-    (name: string, value: string | number) => {
+    (queries?: { name: string; value: string | string[] }[]) => {
       const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value.toString());
+      if (!queries) return params;
+      queries.forEach((query) => {
+        params.set(query.name, query.value.toString());
+      });
 
       return params.toString();
     },
@@ -35,7 +38,34 @@ export const useGlobalFunctions = () => {
   );
 
   const setQuery = (name: string, value: string | number) => {
-    router.push(pathname + "?" + createQueryString(name, value), {
+    router.push(pathname + "?" + createQueryString([{ name, value: value.toString() }]), {
+      scroll: false,
+    });
+  };
+
+  const getRandColor = (i: number) => {
+    return tagColors[i % 5];
+  };
+
+  // Use this to set a pathname (uses current pathname, if not provided)
+  // alongside queries (uses current queries, if not provided)
+  const setQueriesWithPath = ({
+    path,
+    addPath,
+    queries,
+    returnUrl,
+  }: {
+    path?: string;
+    addPath?: string;
+    queries?: { name: string; value: string | string[] }[];
+    returnUrl?: boolean;
+  }) => {
+    let realPath = path || pathname;
+    if (addPath) realPath = realPath + "/" + addPath;
+    realPath = realPath + "?" + createQueryString(queries);
+
+    if (returnUrl) return realPath;
+    router.push(realPath, {
       scroll: false,
     });
   };
@@ -44,7 +74,9 @@ export const useGlobalFunctions = () => {
     createQueryString,
     deleteQueryString,
     setQuery,
+    setQueriesWithPath,
     isDesktop,
+    getRandColor,
   };
 };
 
@@ -94,3 +126,30 @@ export const getFileImage = (type: string) => {
   if (type.includes("jpg")) return jpg;
   else return pdf;
 };
+
+export const tagColors = [
+  {
+    text: "hsl(300,100%,41%)",
+    bg: "bg-[hsl(300,100%,91%)]",
+  },
+  {
+    text: "hsl(250, 100%, 41%)",
+    bg: "bg-[hsl(250,100%,91%)]",
+  },
+  {
+    text: "hsl(200, 100%, 41%)",
+    bg: "bg-[hsl(200,100%,91%)]",
+  },
+  {
+    text: "hsl(150, 100%, 41%)",
+    bg: "bg-[hsl(150,100%,91%)]",
+  },
+  {
+    text: "hsl(100, 100%, 41%)",
+    bg: "bg-[hsl(100,100%,91%)]",
+  },
+  {
+    text: "hsl(50, 100%, 41%)",
+    bg: "bg-[hsl(50,100%,91%)]",
+  },
+];

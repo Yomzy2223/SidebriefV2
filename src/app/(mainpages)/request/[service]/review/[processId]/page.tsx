@@ -4,15 +4,15 @@ import { BusinessInfoReview } from "./businessInfoReview";
 import { Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { ProprietorInfoReview } from "./proprietorInfoReview";
-import { useSubmitProductRequest } from "@/services/product";
+import { useSubmitProductRequest } from "@/services/productQA";
 import { useParams } from "next/navigation";
-import { useGetProcessRequest } from "@/services/process";
+import { useGetBusinessRequest } from "@/services/business";
 import { useRouter } from "next/navigation";
 
 export default function Review() {
   const { mutateAsync: submitRequest, isPending: submittingRequest } = useSubmitProductRequest();
   const { processId, service }: { service: string; processId: string } = useParams();
-  const process = useGetProcessRequest({ id: processId });
+  const process = useGetBusinessRequest({ id: processId });
   const router = useRouter();
 
   const processData = process.data?.data.data;

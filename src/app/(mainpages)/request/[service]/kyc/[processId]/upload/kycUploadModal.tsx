@@ -1,8 +1,8 @@
 "use client";
 
 import { Modal } from "@/components/flowbite";
-import { useGetProductQA } from "@/services/product";
-import { productFormType } from "@/services/product/types";
+import { useGetRequestQA } from "@/services/productQA";
+import { IForm } from "@/services/productQA/types";
 import { useState } from "react";
 import { useUploadActions } from "./uploadActions";
 import { UploadForm } from "./uploadform";
@@ -17,11 +17,11 @@ export const KycUploadModal = ({
   open: boolean;
   closer: () => void;
   productId: string;
-  forms: productFormType[];
+  forms: IForm[];
 }) => {
   const [selected, setSelected] = useState(1);
 
-  const productQA = useGetProductQA(productId);
+  const productQA = useGetRequestQA(productId);
 
   const allQA = productQA.data?.data.data;
 

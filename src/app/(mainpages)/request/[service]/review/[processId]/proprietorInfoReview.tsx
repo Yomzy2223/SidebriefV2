@@ -2,6 +2,10 @@ import { Button, Card, Badge } from "@/components/flowbite";
 import { PencilLine } from "lucide-react";
 import { SwatchBook } from "@/assets/icons";
 import { MemberInfoReviewCard } from "@/components/cards/proprietorInfoReviewCard";
+<<<<<<< HEAD
+
+export const ProprietorInfoReview = () => {
+=======
 import { useGetProductQA } from "@/services/product";
 import { productQAType } from "@/services/product/types";
 
@@ -32,6 +36,7 @@ export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
       }
     });
 
+>>>>>>> origin/staging
   return (
     <div className="space-y-8">
       <div className="flex justify-between w-full">
@@ -44,6 +49,11 @@ export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
         </Button>
       </div>
       <div className="flex flex-wrap gap-6">
+<<<<<<< HEAD
+        <MemberInfoReviewCard />
+        <MemberInfoReviewCard />
+        <MemberInfoReviewCard />
+=======
         {consolidated.map((person, i) => (
           <MemberInfoReviewCard
             key={i}
@@ -55,6 +65,7 @@ export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
 
         {/* <MemberInfoReviewCard />
         <MemberInfoReviewCard /> */}
+>>>>>>> origin/staging
       </div>
     </div>
   );

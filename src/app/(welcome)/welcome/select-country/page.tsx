@@ -2,7 +2,7 @@
 
 import { CountryCard } from "@/components/cards/CountryCard";
 import CountryCardSK from "@/components/cards/CountryCard/CountryCardSK";
-import { AuthStepper } from "@/components/stepper/auth";
+import { AuthStepper } from "@/app/(welcome)/auth/authStepper";
 import { ICountry } from "@/hooks/api/types";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { useCountryApi } from "@/hooks/useCountryApi";

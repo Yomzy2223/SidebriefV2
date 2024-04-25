@@ -1,35 +1,29 @@
-import { useGetProductQA } from "@/services/product";
-import { productFormType, productQAType, productSubFormType } from "@/services/product/types";
+import { useGetRequestQA } from "@/services/productQA";
+import { IForm, IFormQA, ISubForm } from "@/services/productQA/types";
 import { useCallback } from "react";
 
-export const useUploadActions = ({
-  persons,
-  forms,
-}: {
-  persons: productQAType[];
-  forms: productFormType[];
-}) => {
+export const useUploadActions = ({ persons, forms }: { persons: IFormQA[]; forms: IForm[] }) => {
   const withDocument = useCallback(() => {
     const uploads: {
       title: string;
       isPerson: boolean;
       personType?: string;
-      docs: productSubFormType[];
+      docs: ISubForm[];
     }[] = [];
 
-    const isContainDocument = (form: productFormType) =>
+    const isContainDocument = (form: IForm) =>
       form.productSubForm.some(
         (subForm) => subForm.type === "document upload" || subForm.type === "document template"
       );
 
-    const allDocuments = (subForms: productSubFormType[]) => {
+    const allDocuments = (subForms: ISubForm[]) => {
       return subForms
         .map((subForm) => {
           if (subForm.type === "document upload" || subForm.type === "document template") {
             return subForm;
           } else return;
         })
-        .filter((subForm): subForm is productSubFormType => subForm !== undefined);
+        .filter((subForm): subForm is ISubForm => subForm !== undefined);
     };
 
     forms
@@ -64,10 +58,10 @@ export const useUploadActions = ({
     return uploads;
   }, [persons, forms]);
 
-  function getForm(selected: number): productFormType {
+  function getForm(selected: number): IForm {
     const selectedForm = withDocument()[selected - 1];
 
-    let form: productFormType;
+    let form: IForm;
 
     if (!selectedForm.isPerson) {
       // find by title
@@ -85,7 +79,7 @@ export const useUploadActions = ({
     return form;
   }
 
-  function checkAllUploaded(productQA: productQAType[]): boolean {
+  function checkAllUploaded(productQA: IFormQA[]): boolean {
     const allUploaded: boolean[] = withDocument().map((doc, index) => {
       const form = {
         ...getForm(index + 1),

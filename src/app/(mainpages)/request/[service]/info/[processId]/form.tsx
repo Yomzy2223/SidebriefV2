@@ -7,13 +7,21 @@ import { ArrowRight, CogOutline } from "@/assets/icons";
 import { useGetServiceFormSubForms } from "@/services/service";
 import { LoadingSkeleton } from "@/components/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+<<<<<<< HEAD
+import { useGetRequestQA } from "@/services/productQA";
+=======
 import { useGetProductQA } from "@/services/product";
+>>>>>>> origin/staging
 import { useGetCountries } from "@/services/service";
 import { isFileType, useActions, useRemember } from "./actions";
 import { MutableRefObject, useEffect, useState } from "react";
 import DynamicForm from "@/components/form/dynamicForm";
 import { sluggify } from "@/lib/utils";
+<<<<<<< HEAD
+import { IForm } from "@/services/service/types";
+=======
 import { serviceFormType } from "@/services/service/types";
+>>>>>>> origin/staging
 import { useRouter, useParams } from "next/navigation";
 
 export const LaunchForm1 = ({
@@ -23,10 +31,17 @@ export const LaunchForm1 = ({
   currentTab = 0,
   totalNumOfTabs = 1,
 }: {
+<<<<<<< HEAD
+  // subForms: ISubForm[];
+  // serviceFormId: string;
+  urlProductId: string;
+  form: IForm;
+=======
   // subForms: serviceFormSubFormType[];
   // serviceFormId: string;
   urlProductId: string;
   form: serviceFormType;
+>>>>>>> origin/staging
   tabsRef?: MutableRefObject<any>;
   currentTab?: number;
   totalNumOfTabs?: number;
@@ -64,7 +79,11 @@ export const LaunchForm1 = ({
       tabsRef.current.setActiveTab(currentTab + 1);
     }
     if (currentTab === totalNumOfTabs - 1) {
+<<<<<<< HEAD
+      router.push(`/request/${params.service}/kyc/${params.processId}`);
+=======
       router.push(`/request/${params.service}/payment/${params.processId}`);
+>>>>>>> origin/staging
     }
   };
 

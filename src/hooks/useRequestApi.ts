@@ -6,7 +6,7 @@ import {
   deleteRequest,
   getRequest,
   getUserRequests,
-  updateRequest,
+  updateProductRequest,
 } from "./api/requestApi";
 
 const useRequestApi = () => {
@@ -27,7 +27,7 @@ const useRequestApi = () => {
   });
 
   const updateRequestMutation = useMutation({
-    mutationFn: updateRequest,
+    mutationFn: updateProductRequest,
     onError(error, variables, context) {
       handleError({ title: "Failed", error });
     },
