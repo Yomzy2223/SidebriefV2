@@ -16,8 +16,6 @@ export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
 
   const onlyPersons = allQA?.filter((el) => el.type == "person");
 
-  console.log(onlyPersons);
-
   const onlyPersonsDocuments = onlyPersons?.filter((el) => el.title.includes("document"));
 
   const consolidated: productQAType[] | undefined = [];

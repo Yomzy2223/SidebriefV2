@@ -61,7 +61,6 @@ export const useSteps = ({
           (subAnswer) => subAnswer.question === subForm.question
         );
         if (!subFormAnswer || subFormAnswer.answer.length === 0) {
-          console.log("here 1");
           // If a subForm does not have an answer or the answer is empty, return false
           return false;
         }
