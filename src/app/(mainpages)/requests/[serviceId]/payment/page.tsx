@@ -1,5 +1,6 @@
 "use client";
 
+import { IFormInput } from "@/components/form/constants";
 import DynamicForm from "@/components/form/dynamicForm";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { Button } from "flowbite-react";
@@ -49,14 +50,14 @@ const Payment = () => {
 
 export default Payment;
 
-const formInfo = [
+const formInfo: IFormInput[] = [
   {
     id: "1",
     name: "name1",
     label: "label1",
     type: "short answer",
     selectOptions: [],
-    compulsory: true,
+    // compulsory: true,
     value: "value1",
   },
   {
@@ -65,7 +66,7 @@ const formInfo = [
     label: "label2",
     type: "short answer",
     selectOptions: [],
-    compulsory: true,
+    // compulsory: true,
     value: "value2",
   },
 ];

@@ -2,7 +2,7 @@
 
 import RequestForm from "@/components/form/requestForm.tsx";
 import { useGetProductForms } from "@/services/service";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import RequestWrapper from "../wrapper";
 

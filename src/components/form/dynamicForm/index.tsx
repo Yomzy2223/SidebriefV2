@@ -130,7 +130,7 @@ const DynamicForm = ({
               {isSelect && (
                 <ComboBox
                   name={el.name}
-                  options={selectOptions || el.selectOptions}
+                  options={selectOptions || el.selectOptions || []}
                   setValue={setValue}
                   errorMsg={errorMsg?.toString()}
                   selectProp={el.selectProp}
@@ -146,7 +146,7 @@ const DynamicForm = ({
               {el.type === "objectives" && (
                 <MultiSelectCombo
                   name={el.name}
-                  options={el.selectOptions}
+                  options={el.selectOptions || []}
                   setValue={setValue}
                   selectProp={el.selectProp}
                   fieldName="objectives"

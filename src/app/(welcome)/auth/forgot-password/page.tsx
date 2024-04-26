@@ -6,11 +6,12 @@ import * as z from "zod";
 import { Button } from "flowbite-react";
 import { ArrowRightCircle } from "lucide-react";
 import { useForgotPassword } from "@/services/auth";
+import { IFormInput } from "@/components/form/constants";
 
 export default function ForgotPassword() {
   const forgotPassword = useForgotPassword();
 
-  const handleForgot = async (values: { email: string }) => {
+  const handleForgot = async ({ values }: { values: { email: string } }) => {
     forgotPassword.mutate(
       { email: values.email },
       {
@@ -40,7 +41,7 @@ export default function ForgotPassword() {
   );
 }
 
-const formInfo = [
+const formInfo: IFormInput[] = [
   {
     name: "email",
     label: "Enter Email Address",
