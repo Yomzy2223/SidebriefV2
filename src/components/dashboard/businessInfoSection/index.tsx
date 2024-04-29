@@ -10,10 +10,21 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { useSession } from "next-auth/react";
+import { useGetUserBusinessRequests } from "@/services/business";
 
 const BusinessInfoSecion = () => {
   const [open, setOpen] = useState(false);
   const [selectedBusiness, setSelectedBusiness] = useState(businesses[0]);
+  const session = useSession();
+
+  const userId = session.data?.user.id;
+
+  const getUserBusinessRequests = useGetUserBusinessRequests({ userId });
+
+  const userBusinessRequests = getUserBusinessRequests.data?.data.data;
+
+  console.log(userBusinessRequests);
 
   const handleSelect = (selected?: string) => {
     selected && setSelectedBusiness(selected);
