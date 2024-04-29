@@ -4,15 +4,17 @@ import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { TProductForm, TServiceForm } from "@/services/service/types";
 import { Tabs, TabsRef } from "flowbite-react";
 import { useParams, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import EachForm from "./eachForm";
 
 const RequestForm = ({
   forms,
   isServiceForm,
+  showOnlyDocs,
 }: {
   forms: (TServiceForm | TProductForm)[];
-  isServiceForm: boolean;
+  isServiceForm?: boolean;
+  showOnlyDocs?: boolean;
 }) => {
   const tabsRef = useRef<TabsRef>(null);
   const { serviceId } = useParams();
@@ -27,16 +29,20 @@ const RequestForm = ({
 
   // Navigate to the next form if not on the last form. Next page, if otherwise
   const handeNext = (i?: number) => {
-    if (i === undefined || forms.length - 1 === activeTab) {
+    const isOnLastForm = forms.length - 1 === activeTab;
+    if (i === undefined || isOnLastForm) {
       const progress = isServiceForm ? "2" : "4";
-      const path = isServiceForm
-        ? `/requests/${serviceId}/payment`
-        : `/requests/${serviceId}/review`;
-
-      setQueriesWithPath({
-        path,
-        queries: [{ name: "progress", value: progress }],
-      });
+      isServiceForm
+        ? setQueriesWithPath({
+            path: `/requests/${serviceId}/payment`,
+            queries: [{ name: "progress", value: progress }],
+          })
+        : setQueriesWithPath({
+            queries: [
+              { name: "progress", value: progress },
+              { name: "openDocument", value: "true" },
+            ],
+          });
       return;
     }
     tabsRef.current?.setActiveTab(i + 1);

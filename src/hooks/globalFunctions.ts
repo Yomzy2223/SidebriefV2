@@ -4,12 +4,16 @@ import { useCallback, useState } from "react";
 import { saveAs } from "file-saver";
 import { useMediaQuery } from "./useMediaQuery";
 import { pdf, png, jpg } from "@/assets/images";
+import { useSession } from "next-auth/react";
 
 export const useGlobalFunctions = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const session = useSession();
+  const userCloudFolder = session.data?.user?.fullName + "-" + session.data?.user?.id;
 
   // Get a new searchParams string by merging the current
   // searchParams with a provided key/value pair(s)
@@ -77,21 +81,24 @@ export const useGlobalFunctions = () => {
     setQueriesWithPath,
     isDesktop,
     getRandColor,
+    userCloudFolder,
   };
 };
 
 export const uploadFileToCloudinary = async ({
   getProgress,
   file,
+  folderName,
 }: {
   file: File;
   getProgress?: (e: number) => void;
+  folderName?: string;
 }) => {
   const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/raw/upload`;
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", `${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}`);
-  formData.append("folder", "App V2");
+  formData.append("folder", folderName ? `App V2/${folderName}` : "App V2");
 
   return await axios.post(url, formData, {
     onUploadProgress: (progressEvent) => {

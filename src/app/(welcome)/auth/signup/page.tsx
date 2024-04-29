@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Oval } from "react-loading-icons";
 import * as z from "zod";
+import { IFormInput } from "@/components/form/constants";
 
 const SignUp = () => {
   const [isPending, setIsPending] = useState(false);
@@ -20,7 +21,7 @@ const SignUp = () => {
   const { handleError, handleSuccess } = useResponse();
   const { isDesktop } = useGlobalFunctions();
 
-  const handleSignUp = async (values: signUpType) => {
+  const handleSignUp = async ({ values }: { values: signUpType }) => {
     setIsPending(true);
     const response = await signIn("signUp", {
       redirect: false,
@@ -98,7 +99,7 @@ const SignUp = () => {
 
 export default SignUp;
 
-const formInfo = [
+const formInfo: IFormInput[] = [
   {
     name: "name",
     label: "Hello, Tell us your name",

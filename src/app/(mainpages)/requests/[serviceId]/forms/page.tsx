@@ -1,8 +1,9 @@
 "use client";
 
-import RequestForm from "@/components/form/requestForm.tsx";
+import RequestDocForm from "@/components/form/requestDocForm";
+import RequestForm from "@/components/form/requestForm";
 import { useGetProductForms } from "@/services/service";
-import { useParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import RequestWrapper from "../wrapper";
 
@@ -15,7 +16,8 @@ const Forms = () => {
 
   return (
     <RequestWrapper>
-      <RequestForm forms={productForms} isServiceForm />
+      <RequestForm forms={productForms} />
+      <RequestDocForm forms={productForms} />
     </RequestWrapper>
   );
 };

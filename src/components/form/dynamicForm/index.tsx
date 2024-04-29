@@ -1,16 +1,16 @@
-import { Checkbox, FileInput, Label, Radio, Select, TextInput } from "flowbite-react";
+import { Checkbox, Label, Radio, Select, TextInput } from "flowbite-react";
 import React, { useEffect, useMemo, useRef, useCallback, MutableRefObject } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, FormState } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DynamicFormProps } from "../constants";
-import { BusinessNameInput, BusinessObjectiveInput, CountryInput, AllCOuntries } from "../../input";
 import { useDynamic } from "@/hooks/useDynamic";
 import ComboBox from "./comboBox";
 import { cn } from "@/lib/utils";
 import MultiSelectCombo from "./multiSelectCombo";
 import InputWithTags from "@/components/input/inputWithTags";
 import { countries } from "countries-list";
+import { FileInput } from "@/components/file/fileInput";
 
 const DynamicForm = ({
   children,
@@ -22,6 +22,7 @@ const DynamicForm = ({
   disableAll,
   formClassName,
   className,
+  setFormState,
 }: DynamicFormProps) => {
   const dynamic = useDynamic({ subForms: formInfo });
 
@@ -58,16 +59,19 @@ const DynamicForm = ({
 
   useEffect(() => {
     (formInfo || []).forEach((form) => {
-      if (form.value) {
-        setValue(form.name, form.value);
-      }
+      // if (form.value) {
+      setValue(form.name, form.value, { shouldValidate: true });
+      // }
     });
   }, [setValue, formInfo]);
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={cn("flex flex-col gap-8 justify-between flex-1 max-w-[500px]", formClassName)}
+      className={cn(
+        "flex flex-col gap-8 justify-between flex-1 max-w-[500px] min-h-full",
+        formClassName
+      )}
     >
       <div className={cn("flex flex-col justify-start gap-8", className)}>
         {(formInfo || []).map((el, i: number) => {
@@ -122,15 +126,23 @@ const DynamicForm = ({
 
               {(el.type === "document template" || el.type === "document upload") && (
                 <FileInput
-                  id={el.name}
-                  helperText="A profile picture is useful to confirm your are logged into your account"
-                  {...register(el.name)}
+                  onFileChange={(file) => setValue(el.name, file, { shouldValidate: true })}
+                  fileName={el.fileName || ""}
+                  fileLink={el.fileLink || ""}
+                  fileType={el.fileType || ""}
+                  fileSize={el.fileSize || ""}
+                  errorMsg={errorMsg as string}
                 />
+                // <FileInput
+                //   id={el.name}
+                //   helperText="A profile picture is useful to confirm your are logged into your account"
+                //   {...register(el.name)}
+                // />
               )}
               {isSelect && (
                 <ComboBox
                   name={el.name}
-                  options={selectOptions || el.selectOptions}
+                  options={selectOptions || el.selectOptions || []}
                   setValue={setValue}
                   errorMsg={errorMsg?.toString()}
                   selectProp={el.selectProp}
@@ -146,7 +158,7 @@ const DynamicForm = ({
               {el.type === "objectives" && (
                 <MultiSelectCombo
                   name={el.name}
-                  options={el.selectOptions}
+                  options={el.selectOptions || []}
                   setValue={setValue}
                   selectProp={el.selectProp}
                   fieldName="objectives"

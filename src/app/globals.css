@@ -24,6 +24,9 @@
     --secondary: 325 100% 46%; /* Sidebrief's secondary color - Magenta */
     --secondary-foreground: 0 0% 100%; /* For secondary background's foreground */
 
+    --tertiary: 60 100% 50% / 0.24; /* Sidebrief's tertiary color - Yellow */
+    --tertiary-foreground: 60 74% 18%; /* For tertiary background's foreground */
+
     --label: 200 4% 15%; /* Label color - Grey 1 */
 
     --muted: 216 37% 95%;
