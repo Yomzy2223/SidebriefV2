@@ -9,25 +9,26 @@ export const useDynamic = ({
   subForms?: IFormInput[];
 }) => {
   const fileValidation = (file: File) => {
-    if (!file) {
-      return false;
-    }
+    // if (!file) {
+    //   return false;
+    // }
 
-    const validImageTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/gif",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.documen",
-    ];
-    if (!validImageTypes.includes(file.type)) {
-      return false;
-    }
+    // const validImageTypes = [
+    //   "image/jpeg",
+    //   "image/png",
+    //   "image/gif",
+    //   "application/msword",
+    //   "application/pdf",
+    //   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    // ];
+    // if (!validImageTypes.includes(file.type)) {
+    //   return false;
+    // }
 
-    const maxFileSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxFileSize) {
-      return false;
-    }
+    // const maxFileSize = 5 * 1024 * 1024; // 5MB
+    // if (file.size > maxFileSize) {
+    //   return false;
+    // }
 
     return true;
   };
