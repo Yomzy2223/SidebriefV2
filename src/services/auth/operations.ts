@@ -1,30 +1,27 @@
-import { axios } from "../index";
+import { Client } from "../index";
 
 type forgotPasswordResponse = {};
 export type forgetPasswordPayload = {
-	email: string;
+  email: string;
 };
 
-export const forgetPassword = ({ email }: forgetPasswordPayload) => {
-	return axios.post<forgotPasswordResponse, forgetPasswordPayload>(
-		"/users/forgotpassword",
-		{
-			email: email,
-		}
-	);
+export const forgetPassword = async ({ email }: forgetPasswordPayload) => {
+  const axios = await Client();
+  return axios.post<forgotPasswordResponse, forgetPasswordPayload>("/users/forgotpassword", {
+    email: email,
+  });
 };
 
 type resetPasswordResponse = {};
 export type resetPasswordPayload = {
-	password: string;
-	token: string;
+  password: string;
+  token: string;
 };
 
-export const resetPassword = ({ password, token }: resetPasswordPayload) =>
-	axios.post<resetPasswordResponse, resetPasswordPayload>(
-		"/users/resetpassword",
-		{
-			token: token,
-			password: password,
-		}
-	);
+export const resetPassword = async ({ password, token }: resetPasswordPayload) => {
+  const axios = await Client();
+  return axios.post<resetPasswordResponse, resetPasswordPayload>("/users/resetpassword", {
+    token: token,
+    password: password,
+  });
+};

@@ -24,6 +24,7 @@ export type TProduct = {
   amount: number;
   timeline: string;
   feature: string[];
+  serviceId: string;
   // hasShares: boolean;
   // hasAgent: boolean;
   // hasOwner: boolean;
