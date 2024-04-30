@@ -51,7 +51,6 @@ export const useActions = ({
 
   const QAForms = getQAForms(info?.title);
   const activeForm = QAForms?.[activeSubTab] || {};
-  console.log(activeForm);
 
   // Returns the QA for a field
   const getQAField = (question: string) => {
@@ -67,11 +66,24 @@ export const useActions = ({
       return isDoc;
     }) || [];
 
+  const docTemplateSubforms = docSubforms.filter((el) => el.type === "document template") || [];
+
   const nonDocSubforms =
     info?.subForm?.filter((el) => {
       const isDoc = el.type === "document template" || el.type === "document upload";
       return !isDoc;
     }) || [];
+  const nonDocSubformsUpdated = nonDocSubforms?.map((el) => ({
+    id: el.id,
+    question: el.question,
+    answer: getQAField(el.question)?.answer || [],
+    type: el.type,
+    compulsory: el.compulsory,
+    fileName: "",
+    fileLink: "",
+    fileType: "",
+    fileSize: "",
+  }));
 
   // Returns the information used to render the form
   const formInfo = docSubforms.map((field) => {
@@ -118,7 +130,7 @@ export const useActions = ({
       compulsory: info.compulsory,
       isGeneral: isServiceForm,
       subForm: [
-        ...nonDocSubforms,
+        ...nonDocSubformsUpdated,
         ...docSubforms.map((field, i) => ({
           id: getQAField(field.question)?.id,
           question: field.question,
@@ -155,5 +167,7 @@ export const useActions = ({
     isPending,
     isSuccess,
     QAForms,
+    docSubforms,
+    docTemplateSubforms,
   };
 };
