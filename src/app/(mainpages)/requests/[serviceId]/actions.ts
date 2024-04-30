@@ -98,7 +98,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
   ];
 
   // Creates or updates a business
-  const handleFormSubmit = (values: z.infer<typeof formSchema>) => {
+  const handleFormSubmit = ({ values }: { values: z.infer<typeof formSchema> }) => {
     const businessId = searchParams.get("businessId") || "";
     const requestId = searchParams.get("requestId") || "";
     const productId = products?.find((el) => el.name === values.product)?.id || "";
@@ -136,10 +136,10 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
                 addPath,
                 queries: getQueries(requestData),
               });
+              console.log("Updated the product of the request");
             },
           }
         );
-        console.log("Updated the product of the request");
         return;
       }
       // Creates a product request with an existing business id
@@ -148,17 +148,25 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
         {
           onSuccess: (data) => {
             const requestData = data.data.data;
+            // console.log(data);
+            // console.log(requestData);
+            // console.log({
+            //   addPath,
+            //   queries: getQueries(requestData, "createReq"),
+            // });
             setQueriesWithPath({
               addPath,
               queries: getQueries(requestData, "createReq"),
             });
+            console.log("Created a product with existing business id");
           },
         }
       );
-      console.log("Created a product with existing business id");
+
       return;
     }
     // Creates a business request
+
     createBusinessRequest.mutate(
       { userId, productId },
       {
@@ -168,10 +176,10 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
             addPath,
             queries: getQueries(requestData, "createBusiness"),
           });
+          console.log("Created a business and a product request");
         },
       }
     );
-    console.log("Created a business and a product request");
   };
 
   return { formInfo, handleFormSubmit, isPending, productInfo };

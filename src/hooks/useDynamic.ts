@@ -63,8 +63,10 @@ export const useDynamic = ({
                   return [field.name, z.string().min(1, "Select a country")];
                 case "address":
                   return [field.name, z.string().min(1, "This field is required")];
-                case "email address":
+                case "email":
                   return [field.name, z.string().email().min(1, "Enter email address")];
+                case "phone number":
+                  return [field.name, z.coerce.number().min(1, "Enter phone number")];
                 case "short answer":
                   return [field.name, z.string().min(1, "This field is required")];
                 case "countries-all":

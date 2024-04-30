@@ -37,20 +37,27 @@ const EachForm = ({
   const setActiveSubTab = (active: number) =>
     setQueriesWithPath({ queries: [{ name: "activeSubTab", value: active.toString() }] });
 
-  const { formInfo, submitFormHandler, isPending, QAForms, deleteQAForm, deletePending } =
-    useActions({
-      info,
-      isServiceForm,
-      setOnlyCreate,
-      onSubmit,
-      activeSubTab,
-      setActiveSubTab,
-      tabsRef,
-      newForm,
-      newFormInfo,
-      setNewForm,
-      setOpenDelete,
-    });
+  const {
+    formInfo,
+    submitFormHandler,
+    isPending,
+    QAForms,
+    deleteQAForm,
+    deletePending,
+    formHasTabs,
+  } = useActions({
+    info,
+    isServiceForm,
+    setOnlyCreate,
+    onSubmit,
+    activeSubTab,
+    setActiveSubTab,
+    tabsRef,
+    newForm,
+    newFormInfo,
+    setNewForm,
+    setOpenDelete,
+  });
 
   const addNewForm = () => {
     if (activeSubTab === QAForms?.length) {
@@ -74,7 +81,7 @@ const EachForm = ({
 
   return (
     <>
-      {QAForms?.length > 1 && (
+      {formHasTabs && (
         <Tabs
           id="subFormTabs"
           aria-label="Form tabs"
@@ -124,18 +131,20 @@ const EachForm = ({
           </Button>
           {info?.type === "person" && (
             <div className="flex gap-6 items-center">
-              <Button
-                type="button"
-                color="transparent"
-                size="fit"
-                className="text-destructive-foreground"
-                disabled={deletePending || isPending}
-                onClick={() =>
-                  activeSubTab === QAForms?.length ? removeLastForm() : setOpenDelete(true)
-                }
-              >
-                Delete
-              </Button>
+              {formHasTabs && (
+                <Button
+                  type="button"
+                  color="transparent"
+                  size="fit"
+                  className="text-destructive-foreground"
+                  disabled={deletePending || isPending}
+                  onClick={() =>
+                    activeSubTab === QAForms?.length ? removeLastForm() : setOpenDelete(true)
+                  }
+                >
+                  Delete
+                </Button>
+              )}
               <Button
                 type={activeSubTab === QAForms?.length ? "submit" : "button"}
                 // type="button"

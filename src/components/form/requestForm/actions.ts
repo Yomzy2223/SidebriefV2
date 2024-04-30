@@ -2,6 +2,7 @@ import { sluggify } from "@/lib/utils";
 import {
   useDeleteRequestQA,
   useGetRequestFormQA,
+  useGetRequestQA,
   useSaveRequestQA,
   useUpdateRequestQA,
 } from "@/services/productQA";
@@ -24,7 +25,6 @@ export const useActions = ({
   newFormInfo,
   setNewForm,
   setOpenDelete,
-  showOnlyDocs,
 }: {
   info?: TServiceForm | TProductForm;
   isServiceForm: boolean;
@@ -37,7 +37,6 @@ export const useActions = ({
   newFormInfo: Record<any, any>;
   setNewForm: Dispatch<SetStateAction<boolean>>;
   setOpenDelete: Dispatch<SetStateAction<boolean>>;
-  showOnlyDocs?: boolean;
 }) => {
   const searchParams = useSearchParams();
 
@@ -47,12 +46,12 @@ export const useActions = ({
   const updateRequestQA = useUpdateRequestQA();
   const deleteRequestQA = useDeleteRequestQA();
 
-  // const requestQARes = useGetRequestQA(requestId);
-  // const requestQA = requestQARes.data?.data?.data;
+  const requestQARes = useGetRequestQA(requestId);
+  const requestQA = requestQARes.data?.data?.data;
+  const requestFormQA = requestQA?.filter((el) => el.formId === info?.id);
 
-  const requestFormQARes = useGetRequestFormQA(info?.id || "");
-  const requestFormQA = requestFormQARes.data?.data?.data;
-  // console.log(requestFormQA);
+  // const requestFormQARes = useGetRequestFormQA(info?.id || "");
+  // const requestFormQA = requestFormQARes.data?.data?.data;
 
   const isPending = saveRequestQA.isPending || updateRequestQA.isPending;
   const isSuccess = saveRequestQA.isSuccess || updateRequestQA.isSuccess;
@@ -66,7 +65,8 @@ export const useActions = ({
   };
 
   const QAForms = getQAForms(info?.title);
-  const activeForm = QAForms?.[activeSubTab] || {};
+  const formHasTabs = QAForms?.length > 1;
+  const activeForm = QAForms?.[formHasTabs ? activeSubTab : 0] || {};
 
   // Returns the QA for a field
   const getQAField = (question: string) => {
@@ -76,28 +76,31 @@ export const useActions = ({
     return QAField;
   };
 
-  const filteredSubform =
+  const nonDocSubforms =
     info?.subForm?.filter((el) => {
       const isDoc = el.type === "document template" || el.type === "document upload";
-      if (showOnlyDocs) return isDoc;
-      else return !isDoc;
+      return !isDoc;
     }) || [];
   // Returns the information used to render the form
-  const formInfo = filteredSubform.map((field) => {
+  const formInfo = nonDocSubforms.map((field) => {
     const QAField = getQAField(field.question);
 
     const isTextInput =
       field.type === "email" ||
+      field.type === "phone number" ||
+      field.type === "paragraph" ||
       field.type === "address" ||
-      field.type === "short answer" ||
-      field.type === "email address";
+      field.type === "promocode" ||
+      field.type === "short answer";
     const isSelect =
       field.type === "select" ||
       field.type === "countries-all" ||
-      field.type === "countries-operation";
+      field.type === "countries-operation" ||
+      field.type === "multiple choice";
 
     let value = isTextInput || isSelect ? QAField?.answer[0] || "" : QAField?.answer || [];
-    if (activeSubTab === QAForms?.length) value = newFormInfo[sluggify(field.question)];
+    if (formHasTabs && activeSubTab === QAForms?.length)
+      value = newFormInfo[sluggify(field.question)];
 
     // Each field
     return {
@@ -125,7 +128,7 @@ export const useActions = ({
       type: info.type,
       compulsory: info.compulsory,
       isGeneral: isServiceForm,
-      subForm: info.subForm.map((field) => ({
+      subForm: nonDocSubforms.map((field) => ({
         id: getQAField(field.question)?.id,
         question: field.question,
         answer: values[sluggify(field.question)],
@@ -137,13 +140,14 @@ export const useActions = ({
         fileSize: "",
       })),
     };
+
     if (activeForm?.id && !onlyCreate) {
       updateRequestQA.mutate(
         { requestFormId: activeForm.id, form: payload },
         {
           onSuccess: (data) => {
             console.log("Updated request form");
-            if (QAForms?.length - 1 === activeSubTab) {
+            if (!formHasTabs || QAForms?.length - 1 === activeSubTab) {
               onSubmit && onSubmit();
               return;
             }
@@ -191,5 +195,6 @@ export const useActions = ({
     QAForms,
     deleteQAForm,
     deletePending,
+    formHasTabs,
   };
 };

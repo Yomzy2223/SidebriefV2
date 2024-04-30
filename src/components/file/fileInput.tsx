@@ -16,19 +16,21 @@ export const FileInput = ({
   fileType,
   fileSize,
   errorMsg,
+  onlyDownload,
 }: {
   fileName: string;
   fileLink: string;
   fileType: string;
   fileSize: string;
-  onFileChange: (file: File) => void;
+  onFileChange?: (file: File) => void;
   errorMsg?: string;
+  onlyDownload?: boolean;
 }) => {
   const [file, setFile] = useState<File>();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
-    onFileChange(acceptedFiles[0]);
+    onFileChange && onFileChange(acceptedFiles[0]);
   }, []);
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
@@ -41,10 +43,11 @@ export const FileInput = ({
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [],
       "application/pdf": [],
     },
-    disabled: false,
+    disabled: onlyDownload || false,
   });
 
   const fileExtension = file?.name.split(".").pop() || fileType;
+  console.log(fileExtension);
 
   let size: string | number = Math.ceil(file?.size ? file?.size / 1000 : 0) || parseInt(fileSize);
   if (size >= 1000) size = (size / 1000).toFixed(2) + "MB";
@@ -91,9 +94,11 @@ export const FileInput = ({
             </div>
           </div>
           <div className="flex gap-3">
-            <Button color="link" size="fit" onClick={open}>
-              change
-            </Button>
+            {!onlyDownload && (
+              <Button color="link" size="fit" onClick={open}>
+                change
+              </Button>
+            )}
             {(file || fileLink) && (
               <Button
                 color="link"

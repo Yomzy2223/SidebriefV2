@@ -74,4 +74,5 @@ export const useGetProductForms = (productId: string) =>
   useQuery({
     queryKey: ["get product form", productId],
     queryFn: () => getProductForm({ productId: productId }),
+    enabled: !!productId,
   });

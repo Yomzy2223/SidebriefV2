@@ -77,13 +77,15 @@ const RequestDocForm = ({ forms }: { forms: (TServiceForm | TProductForm)[] }) =
             })}
           </Tabs>
         ) : (
-          <EachForm
-            info={forms[0]}
-            isLoading={false}
-            onSubmit={handeNext}
-            isOnLastForm={isOnLastForm}
-            isServiceForm
-          />
+          <>
+            <EachForm
+              info={forms[0]}
+              isLoading={false}
+              onSubmit={handeNext}
+              isOnLastForm={isOnLastForm}
+              isServiceForm
+            />
+          </>
         )}
       </div>
     </DialogWrapper>

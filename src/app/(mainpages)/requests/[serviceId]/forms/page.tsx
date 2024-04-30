@@ -17,7 +17,7 @@ const Forms = () => {
   return (
     <RequestWrapper>
       <RequestForm forms={productForms} />
-      <RequestDocForm forms={productForms} />
+      <RequestDocForm forms={productForms?.filter((el) => el.type.toLowerCase() === "person")} />
     </RequestWrapper>
   );
 };

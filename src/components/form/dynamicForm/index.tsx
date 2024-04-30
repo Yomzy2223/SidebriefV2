@@ -11,6 +11,7 @@ import MultiSelectCombo from "./multiSelectCombo";
 import InputWithTags from "@/components/input/inputWithTags";
 import { countries } from "countries-list";
 import { FileInput } from "@/components/file/fileInput";
+import { useGetCountries } from "@/services/service";
 
 const DynamicForm = ({
   children,
@@ -60,10 +61,13 @@ const DynamicForm = ({
   useEffect(() => {
     (formInfo || []).forEach((form) => {
       // if (form.value) {
-      setValue(form.name, form.value, { shouldValidate: true });
+      setValue(form.name, form.value);
       // }
     });
   }, [setValue, formInfo]);
+
+  const countriesRes = useGetCountries();
+  const sidebriefCountries = countriesRes.data?.data?.data?.map((el) => el.name);
 
   return (
     <form
@@ -76,22 +80,26 @@ const DynamicForm = ({
       <div className={cn("flex flex-col justify-start gap-8", className)}>
         {(formInfo || []).map((el, i: number) => {
           const isTextInput =
-            el.type === "text" ||
-            el.type === "password" ||
             el.type === "email" ||
-            el.type === "email address" ||
+            el.type === "phone number" ||
+            el.type === "paragraph" ||
             el.type === "address" ||
+            el.type === "promocode" ||
             el.type === "short answer";
           const isSelect =
             el.type === "select" ||
             el.type === "countries-all" ||
-            el.type === "countries-operation";
+            el.type === "countries-operation" ||
+            el.type === "multiple choice";
           const errorMsg = errors[el.name]?.message;
 
           let selectOptions;
           switch (el.type) {
             case "countries-all":
               selectOptions = Object.values(countries).map((country) => country.name);
+              break;
+            case "countries-operation":
+              selectOptions = sidebriefCountries;
           }
 
           return (
@@ -151,7 +159,7 @@ const DynamicForm = ({
                   leftContent={el.leftContent}
                   defaultValue={el.value as string}
                   disabled={disableAll}
-                  optionsLoading={el.optionsLoading}
+                  optionsLoading={el.optionsLoading || countriesRes.isLoading}
                   optionsErrorMsg={el.optionsErrorMsg}
                 />
               )}
