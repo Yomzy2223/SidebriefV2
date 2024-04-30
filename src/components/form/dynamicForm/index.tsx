@@ -85,6 +85,7 @@ const DynamicForm = ({
             el.type === "paragraph" ||
             el.type === "address" ||
             el.type === "promocode" ||
+            el.type === "password" ||
             el.type === "short answer";
           const isSelect =
             el.type === "select" ||
