@@ -1,7 +1,7 @@
 import { Badge, Button } from "@/components/flowbite";
 import PopOverWrapper from "@/components/wrappers/popOverWrapper";
 import { ArrowRightCircle, ChevronDown, Info } from "lucide-react";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import {
   Command,
   CommandEmpty,
@@ -12,11 +12,24 @@ import {
 } from "@/components/ui/command";
 import { useSession } from "next-auth/react";
 import { useGetUserBusinessRequests } from "@/services/business";
+import { useQueries } from "@tanstack/react-query";
+import { getRequestQA } from "@/services/productQA/operations";
+import { Skeleton } from "@/components/ui/skeleton";
+import { format } from "date-fns";
+import Link from "next/link";
+import { Oval } from "react-loading-icons";
+import { useGetServices } from "@/services/service";
 
 const BusinessInfoSecion = () => {
   const [open, setOpen] = useState(false);
-  const [selectedBusiness, setSelectedBusiness] = useState(businesses[0]);
+  const [selectedBusiness, setSelectedBusiness] = useState("");
   const session = useSession();
+  const businessInit = useRef(false);
+
+  const getServices = useGetServices();
+  const services = getServices.data?.data.data;
+
+  const priority1 = services?.find((el) => el.priority === 1);
 
   const userId = session.data?.user.id;
 
@@ -24,11 +37,73 @@ const BusinessInfoSecion = () => {
 
   const userBusinessRequests = getUserBusinessRequests.data?.data.data;
 
-  console.log(userBusinessRequests);
+  const sortedUserBusinessRequests = userBusinessRequests?.sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
+  // console.log(sortedUserBusinessRequests);
+
+  const getProductQAQueries = useQueries({
+    queries:
+      sortedUserBusinessRequests?.map((request) => {
+        return {
+          queryKey: ["get product QA", request.productRequest[0].id],
+          queryFn: () => getRequestQA({ requestId: request.productRequest[0].id }),
+        };
+      }) || [],
+  });
+
+  const productQAQueries = getProductQAQueries.map((QA) => QA.data?.data.data);
+
+  const loadingProductQA = getProductQAQueries.some((QA) => QA.isLoading);
+
+  // console.log(productQAQueries);
+
+  const businesses = sortedUserBusinessRequests?.map((business, index) => {
+    return {
+      id: business.id,
+      name:
+        business.companyName ||
+        productQAQueries[index]
+          ?.find((qa) => qa.subForm.some((subform) => subform.type === "business name"))
+          ?.subForm.find((subform) => subform.type === "business name")?.answer[0] ||
+        `No added name ${index}`,
+    };
+  });
 
   const handleSelect = (selected?: string) => {
     selected && setSelectedBusiness(selected);
   };
+
+  useEffect(() => {
+    if (businesses && businesses.length > 0 && !businessInit.current) {
+      setSelectedBusiness(businesses[0].id);
+      businessInit.current = true;
+    }
+  }, [businesses]);
+
+  // console.log(businesses);
+
+  const loading =
+    loadingProductQA || session.status === "loading" || getUserBusinessRequests.isLoading;
+
+  const selectBusiness = businesses?.find((el) => el.id === selectedBusiness)?.name;
+
+  const selectAddress =
+    sortedUserBusinessRequests?.find((each) => each.id === selectedBusiness)?.headOfficeAddress ||
+    sortedUserBusinessRequests?.findIndex((each) => each.id === selectedBusiness)
+      ? productQAQueries[
+          sortedUserBusinessRequests?.findIndex((each) => each.id === selectedBusiness)
+        ]
+          ?.find((qa) => qa.subForm.some((subform) => subform.type === "address"))
+          ?.subForm.find((subform) => subform.type === "address")?.answer[0] || "No address found"
+      : "No address found";
+
+  const selectdate = sortedUserBusinessRequests?.find(
+    (each) => each.id === selectedBusiness
+  )?.createdAt;
+
+  console.log(sortedUserBusinessRequests);
 
   return (
     <div className="flex flex-col gap-12 md:justify-between md:flex-row md:gap-3">
@@ -39,12 +114,20 @@ const BusinessInfoSecion = () => {
             setOpen={setOpen}
             onClose={() => console.log("Closed")}
             content={
-              <BusinessList businesses={businesses} handleSelect={handleSelect} setOpen={setOpen} />
+              !loading ? (
+                <BusinessList
+                  businesses={businesses || []}
+                  handleSelect={handleSelect}
+                  setOpen={setOpen}
+                />
+              ) : (
+                <Skeleton className="w-full h-full" />
+              )
             }
           >
             <Button color="ghost" size="fit" className="text-start [&>span]:justify-start ">
               <h2 className="sb-text-24 font-bold whitespace-nowrap text-ellipsis overflow-hidden max-w-[200px] sm:max-w-[400px] lg:max-w-[500px] 2xl:max-w-[800px]">
-                {selectedBusiness}
+                {selectBusiness || <Skeleton className="w-20 h-full" />}
               </h2>
               <ChevronDown />
             </Button>
@@ -57,12 +140,21 @@ const BusinessInfoSecion = () => {
             My business
           </Badge>
         </div>
-        <p className="sb-text-18 mb-3">Nō 22 Alamala Rd., Ajanlekoko, Lagos</p>
+        <p className="sb-text-18 mb-3">
+          {selectBusiness ? selectAddress : <Skeleton className="w-full h-6" />}
+        </p>
         <div className="flex items-center gap-2">
           <Badge color="green" className="sb-text-14">
+            {/* TODO: do this status part */}
             Completed
           </Badge>
-          <span className="sb-text-14">12th August, 2022</span>
+          <span className="sb-text-14">
+            {selectBusiness ? (
+              `${format(selectdate || "", "do MMMM, yyyy")}`
+            ) : (
+              <Skeleton className="w-20 h-full" />
+            )}
+          </span>
         </div>
       </div>
 
@@ -71,10 +163,21 @@ const BusinessInfoSecion = () => {
           <span>Manage this business</span>
           <ArrowRightCircle fill="hsl(var(--foreground))" stroke="white" />
         </Button>
-        <Button color="secondary">
-          <span>Register new business</span>{" "}
-          <ArrowRightCircle fill="white" stroke="hsl(var(--secondary))" />
-        </Button>
+        <div>
+          {!getServices.isLoading ? (
+            <Link href={`/requests/${priority1?.id}`}>
+              <Button
+                color="secondary"
+                processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
+              >
+                <span>{priority1?.label}</span>
+                <ArrowRightCircle fill="white" stroke="hsl(var(--secondary))" />
+              </Button>
+            </Link>
+          ) : (
+            <Skeleton className="w-48 h-12" />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -87,7 +190,7 @@ export const BusinessList = ({
   handleSelect,
   setOpen,
 }: {
-  businesses: string[];
+  businesses: { name: string; id: string }[];
   handleSelect: (selected?: string) => void;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -100,22 +203,18 @@ export const BusinessList = ({
         )}
         <CommandGroup>
           {businesses
-            .sort((a, b) => a.localeCompare(b))
-            .map((item: string) => (
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((item) => (
               <CommandItem
-                key={item}
-                value={item}
+                key={item.id}
+                value={item.id}
                 onSelect={(value) => {
-                  handleSelect(
-                    [...businesses].find(
-                      (each: string) => each.toLowerCase() === value.toLowerCase()
-                    )
-                  );
+                  handleSelect([...businesses].find((each) => each.id === value)?.id);
                   setOpen(false);
                 }}
                 // className="text-foreground-7 capitalize"
               >
-                {item}
+                {item.name}
               </CommandItem>
             ))}
         </CommandGroup>
