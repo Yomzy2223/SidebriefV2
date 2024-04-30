@@ -103,8 +103,6 @@ const BusinessInfoSecion = () => {
     (each) => each.id === selectedBusiness
   )?.createdAt;
 
-  console.log(sortedUserBusinessRequests);
-
   return (
     <div className="flex flex-col gap-12 md:justify-between md:flex-row md:gap-3">
       <div className="text-foreground-3">
