@@ -47,7 +47,6 @@ export const FileInput = ({
   });
 
   const fileExtension = file?.name.split(".").pop() || fileType;
-  console.log(fileExtension);
 
   let size: string | number = Math.ceil(file?.size ? file?.size / 1000 : 0) || parseInt(fileSize);
   if (size >= 1000) size = (size / 1000).toFixed(2) + "MB";

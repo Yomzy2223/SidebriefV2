@@ -18,17 +18,18 @@ import { IFormInput } from "../constants";
 export const useActions = ({
   info,
   activeSubTab,
+  newForm,
 }: {
   info?: TServiceForm | TProductForm;
   activeSubTab: number;
+  newForm: boolean;
 }) => {
   const searchParams = useSearchParams();
 
   const requestId = searchParams.get("requestId") || "";
 
-  const requestQARes = useGetRequestQA(requestId);
-  const requestQA = requestQARes.data?.data?.data;
-  const requestFormQA = requestQA?.filter((el) => el.formId === info?.id);
+  const requestFormQARes = useGetRequestFormQA({ formId: info?.id || "", requestId });
+  const requestFormQA = requestFormQARes.data?.data?.data;
 
   // Returns the QAs for a formI
   const getQAForms = (title?: string) => {
@@ -37,8 +38,8 @@ export const useActions = ({
   };
 
   const QAForms = getQAForms(info?.title);
-  const formHasTabs = QAForms?.length >= 1;
-  const isOnLastSubTab = activeSubTab === QAForms?.length;
+  const formHasTabs = QAForms?.length >= 1 && info?.type?.toLowerCase() === "person";
+  const isOnLastSubTab = activeSubTab === QAForms?.length - (newForm ? 0 : 1);
 
   return {
     QAForms,
@@ -52,10 +53,12 @@ export const useNewFormAction = ({
   QAForm,
   isServiceForm,
   setOpenDelete,
-  handelSubmit,
+  handeleSubmit,
   isNewForm,
   setNewForm,
   onFormDelete,
+  onlyCreate,
+  setOnlyCreate,
 }: INewFormActionProps) => {
   const saveRequestQA = useSaveRequestQA();
   const updateRequestQA = useUpdateRequestQA();
@@ -63,10 +66,6 @@ export const useNewFormAction = ({
 
   const searchParams = useSearchParams();
   const requestId = searchParams.get("requestId") || "";
-
-  const { setQueriesWithPath } = useGlobalFunctions();
-  const setActiveSubTab = (active: number) =>
-    setQueriesWithPath({ queries: [{ name: "activeSubTab", value: active.toString() }] });
 
   // Returns the QA for a field
   const getQAField = (question: string) => {
@@ -115,8 +114,7 @@ export const useNewFormAction = ({
   // Used to create and update QA form
   const submitFormHandler = (
     values: Record<any, any>
-    // reset: UseFormReset<any>,
-    // onlyCreate: boolean
+    // reset: UseFormReset<any>
   ) => {
     if (!info) return;
 
@@ -150,7 +148,7 @@ export const useNewFormAction = ({
         { requestFormId: QAForm.id, form: payload },
         {
           onSuccess: (data) => {
-            handelSubmit();
+            handeleSubmit();
             console.log("Updated request form");
           },
         }
@@ -163,9 +161,9 @@ export const useNewFormAction = ({
         onSuccess: (data) => {
           if (isNewForm) {
             setNewForm(false);
-            // reset();
-            console.log("Form reset successfully");
-          } else handelSubmit();
+            setOnlyCreate(false);
+            if (!onlyCreate) handeleSubmit();
+          } else handeleSubmit();
           console.log("Created request form");
         },
       }
@@ -195,8 +193,10 @@ interface INewFormActionProps {
   QAForm?: TFormQAGet;
   isServiceForm: boolean;
   setOpenDelete: Dispatch<SetStateAction<boolean>>;
-  handelSubmit: () => void;
+  handeleSubmit: () => void;
   isNewForm?: boolean;
   setNewForm: Dispatch<SetStateAction<boolean>>;
   onFormDelete?: (isNew?: boolean) => void;
+  onlyCreate: boolean;
+  setOnlyCreate: Dispatch<SetStateAction<boolean>>;
 }

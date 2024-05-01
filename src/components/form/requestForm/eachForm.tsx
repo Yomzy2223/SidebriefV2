@@ -6,7 +6,7 @@ import { Oval } from "react-loading-icons";
 import { ArrowRightCircle } from "lucide-react";
 import { useActions, useNewFormAction } from "./actions";
 import { TProductForm, TServiceForm } from "@/services/service/types";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import ConfirmAction from "@/components/confirmAction";
@@ -16,12 +16,14 @@ const EachForm = ({
   info,
   isLoading,
   isServiceForm = false,
-  onSubmit,
+  handeNext,
+  isOnLastForm,
 }: {
   info: TServiceForm | TProductForm;
   isLoading: boolean;
   isServiceForm?: boolean;
-  onSubmit: () => void;
+  handeNext: (tabsRef: RefObject<TabsRef>) => void;
+  isOnLastForm: boolean;
 }) => {
   const [newForm, setNewForm] = useState<boolean>(false);
 
@@ -29,21 +31,29 @@ const EachForm = ({
   const searchParams = useSearchParams();
   const { setQueriesWithPath } = useGlobalFunctions();
 
-  // Get and set active tab to url query
+  // Get and set active tab and sub tab to url query
+  const activeTab = parseInt(searchParams.get("activeTab") || "0");
   const activeSubTab = parseInt(searchParams.get("activeSubTab") || "0");
   const setActiveSubTab = (active: number) =>
     setQueriesWithPath({ queries: [{ name: "activeSubTab", value: active.toString() }] });
 
+  useEffect(() => {
+    // Reset activeSubTab when activeTab changes
+    tabsRef.current?.setActiveTab(0);
+    setActiveSubTab(0);
+  }, [activeTab]);
+
   const { QAForms, formHasTabs, isOnLastSubTab } = useActions({
     info,
     activeSubTab,
+    newForm,
   });
 
-  const isOnLastForm = QAForms.length - 1 === activeSubTab;
-
-  const handelSubmit = () => {
-    if (isOnLastForm) {
-      onSubmit && onSubmit();
+  const handeleSubmit = () => {
+    if (isOnLastSubTab) {
+      handeNext(tabsRef);
+      // tabsRef.current?.setActiveTab(0); //navigate to the next sub tab
+      // setActiveSubTab(0);
       return;
     }
     tabsRef.current?.setActiveTab(activeSubTab + 1); //navigate to the next sub tab
@@ -54,7 +64,8 @@ const EachForm = ({
   };
 
   const onFormDelete = (isNew?: boolean) => {
-    const newActiveTab = isNew ? QAForms?.length - 1 : activeSubTab - 1;
+    let newActiveTab = isNew ? QAForms?.length - 1 : activeSubTab;
+    if (activeSubTab === QAForms?.length - 1) newActiveTab = activeSubTab - 1;
     tabsRef.current?.setActiveTab(newActiveTab);
     setActiveSubTab(newActiveTab);
     isNew && setNewForm(false);
@@ -66,7 +77,6 @@ const EachForm = ({
     setNewForm(true);
   };
 
-  // info.title === "Title" && console.log(formInfo);
   return (
     <>
       {formHasTabs ? (
@@ -76,7 +86,6 @@ const EachForm = ({
           style="pills"
           ref={tabsRef}
           onActiveTabChange={(tab) => setActiveSubTab(tab)}
-          // className="flex flex-row flex-nowrap overflow-auto whitespace-nowrap"
         >
           {QAForms.map((el, i) => {
             const title = el.title + " " + (i + 1);
@@ -89,11 +98,11 @@ const EachForm = ({
               >
                 <FormInstance
                   i={i}
-                  QAForm={el}
                   info={info}
+                  QAForm={el}
                   isServiceForm={isServiceForm}
                   setNewForm={setNewForm}
-                  handelSubmit={handelSubmit}
+                  handeleSubmit={handeleSubmit}
                   addNewForm={addNewForm}
                   onFormDelete={onFormDelete}
                   formHasTabs
@@ -107,7 +116,7 @@ const EachForm = ({
                 info={info}
                 isServiceForm={isServiceForm}
                 setNewForm={setNewForm}
-                handelSubmit={handelSubmit}
+                handeleSubmit={handeleSubmit}
                 onFormDelete={onFormDelete}
                 formHasTabs
                 isNewForm
@@ -121,8 +130,9 @@ const EachForm = ({
           QAForm={QAForms?.[0]}
           isServiceForm={isServiceForm}
           setNewForm={setNewForm}
-          handelSubmit={handelSubmit}
+          handeleSubmit={handeleSubmit}
           formHasTabs={false}
+          isNewForm
         />
       )}
     </>
@@ -139,21 +149,24 @@ const FormInstance = ({
   setNewForm,
   isServiceForm,
   isNewForm,
-  handelSubmit,
+  handeleSubmit,
   addNewForm,
   onFormDelete,
 }: IEachFormComp) => {
   const [openDelete, setOpenDelete] = useState(false);
+  const [onlyCreate, setOnlyCreate] = useState(false);
 
   const { deletePending, deleteQAForm, submitFormHandler, formInfo, isPending } = useNewFormAction({
     info,
     setOpenDelete,
     isServiceForm,
     QAForm,
-    handelSubmit,
+    handeleSubmit,
     isNewForm,
     setNewForm,
     onFormDelete,
+    onlyCreate,
+    setOnlyCreate,
   });
 
   return (
@@ -199,7 +212,10 @@ const FormInstance = ({
               size="fit"
               className="text-primary lowercase"
               disabled={isPending}
-              onClick={() => !isNewForm && addNewForm && addNewForm()}
+              onClick={() => {
+                !isNewForm && addNewForm && addNewForm();
+                setOnlyCreate(true);
+              }}
             >
               <span className="lowercase first-letter:uppercase">
                 {isNewForm ? "Save" : `Add new ${info?.title || ""}`}
@@ -232,7 +248,7 @@ interface IEachFormComp {
   formHasTabs: boolean;
   setNewForm: Dispatch<SetStateAction<boolean>>;
   isNewForm?: boolean;
-  handelSubmit: () => void;
+  handeleSubmit: () => void;
   addNewForm?: () => void;
   onFormDelete?: (isNew?: boolean) => void;
 }

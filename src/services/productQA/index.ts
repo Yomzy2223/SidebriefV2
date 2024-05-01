@@ -62,7 +62,7 @@ export const useDeleteRequestQA = () => {
 export const useGetRequestQA = (requestId: string) =>
   useQuery({
     queryKey: ["get product QA", requestId],
-    queryFn: () => getRequestQA({ requestId }),
+    queryFn: ({ queryKey }) => getRequestQA({ requestId: queryKey[1] }),
     enabled: !!requestId,
   });
 
