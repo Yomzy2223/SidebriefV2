@@ -34,7 +34,7 @@ export const useActions = ({
   // const requestQARes = useGetRequestQA(requestId);
   // const requestQA = requestQARes.data?.data?.data;
 
-  const requestFormQARes = useGetRequestFormQA(info?.id || "");
+  const requestFormQARes = useGetRequestFormQA({ formId: info?.id || "", requestId });
   const requestFormQA = requestFormQARes.data?.data?.data;
   // console.log(requestFormQA);
 

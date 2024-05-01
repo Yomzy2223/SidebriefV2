@@ -28,7 +28,7 @@ export const getUserBusinessRequests = async ({ userId }: { userId: string }) =>
 // PRODUCT REQUEST ENDPOINTS
 export const createProductRequest = async (payload: TCreateRequestPayload) => {
   const client = await Client();
-  return client.post<rootType<TCreateRequest>>("/businessRequest/requests", payload);
+  return client.post<rootType<TCreateRequest[]>>("/businessRequest/requests", payload);
 };
 
 export const updateProductRequest = async ({

@@ -4,7 +4,7 @@ import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { TProductForm, TServiceForm } from "@/services/service/types";
 import { Tabs, TabsRef } from "flowbite-react";
 import { useParams, useSearchParams } from "next/navigation";
-import { useRef } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import EachForm from "./eachForm";
 
 const RequestForm = ({
@@ -24,28 +24,33 @@ const RequestForm = ({
 
   // Get and set active tab to url query
   const activeTab = parseInt(searchParams.get("activeTab") || "0");
-  const setActiveTab = (active: number) =>
-    setQueriesWithPath({ queries: [{ name: "activeTab", value: active.toString() }] });
+  const setActiveTab = (active: number) => {
+    setQueriesWithPath({ queries: [{ name: "activeTab", value: active?.toString() }] });
+  };
 
   // Navigate to the next form if not on the last form. Next page, if otherwise
-  const handeNext = (i?: number) => {
-    const isOnLastForm = forms.length - 1 === activeTab;
-    if (i === undefined || isOnLastForm) {
-      const progress = isServiceForm ? "2" : "4";
+  const isOnLastForm = forms.length - 1 === activeTab;
+
+  const handeNext = (i: number, subTabRef: RefObject<TabsRef>) => {
+    if (isOnLastForm) {
       isServiceForm
         ? setQueriesWithPath({
             path: `/requests/${serviceId}/payment`,
-            queries: [{ name: "progress", value: progress }],
+            queries: [{ name: "progress", value: "2" }],
           })
         : setQueriesWithPath({
-            queries: [
-              { name: "progress", value: progress },
-              { name: "openDocument", value: "true" },
-            ],
+            queries: [{ name: "openDocument", value: "true" }],
           });
       return;
     }
-    tabsRef.current?.setActiveTab(i + 1);
+    tabsRef.current?.setActiveTab(i + 1); // Navigate to the next tab
+    subTabRef.current?.setActiveTab(0); // Reset subTab
+    setQueriesWithPath({
+      queries: [
+        { name: "activeTab", value: (i + 1)?.toString() },
+        { name: "activeSubTab", value: "0" }, // Reset activeSubTab
+      ],
+    });
   };
 
   return (
@@ -56,7 +61,7 @@ const RequestForm = ({
           aria-label="Form tabs"
           style="underline"
           ref={tabsRef}
-          onActiveTabChange={(tab) => setActiveTab(tab)}
+          onActiveTabChange={(tabs) => setActiveTab(tabs)}
         >
           {forms.map((el, i) => {
             return (
@@ -70,7 +75,8 @@ const RequestForm = ({
                     info={el}
                     isLoading={false}
                     isServiceForm={isServiceForm}
-                    onSubmit={() => handeNext(i)}
+                    handeNext={(subTabRef) => handeNext(i, subTabRef)}
+                    isOnLastForm={isOnLastForm}
                   />
                 </div>
               </Tabs.Item>
@@ -86,8 +92,9 @@ const RequestForm = ({
           <EachForm
             info={forms[0]}
             isLoading={false}
-            onSubmit={handeNext}
+            handeNext={(subTabRef) => handeNext(0, subTabRef)}
             isServiceForm={isServiceForm}
+            isOnLastForm
           />
         </div>
       )}
