@@ -20,9 +20,14 @@ import Link from "next/link";
 import { Oval } from "react-loading-icons";
 import { useGetServices } from "@/services/service";
 
-const BusinessInfoSecion = () => {
+const BusinessInfoSecion = ({
+  selectedBusiness,
+  setSelectedBusiness,
+}: {
+  selectedBusiness: string;
+  setSelectedBusiness: (id: string) => void;
+}) => {
   const [open, setOpen] = useState(false);
-  const [selectedBusiness, setSelectedBusiness] = useState("");
   const session = useSession();
   const businessInit = useRef(false);
 
@@ -80,7 +85,7 @@ const BusinessInfoSecion = () => {
       setSelectedBusiness(businesses[0].id);
       businessInit.current = true;
     }
-  }, [businesses]);
+  }, [businesses, setSelectedBusiness]);
 
   // console.log(businesses);
 
@@ -201,7 +206,7 @@ export const BusinessList = ({
         )}
         <CommandGroup>
           {businesses
-            .sort((a, b) => a.name.localeCompare(b.name))
+            // .sort((a, b) => a.name.localeCompare(b.name))
             .map((item) => (
               <CommandItem
                 key={item.id}
