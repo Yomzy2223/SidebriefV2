@@ -3,21 +3,44 @@
 import Image from "next/image";
 import { Tabs } from "flowbite-react";
 import { getFileImage } from "@/hooks/globalFunctions";
+import { useGetBusinessRequest } from "@/services/business";
+import { useGetRequestQA } from "@/services/productQA";
 
-export const DocumentComponent = ({ files }: { files: { received: File[]; uploaded: File[] } }) => {
+export const DocumentComponent = ({
+  files,
+  businessId,
+}: {
+  files: { received: File[]; uploaded: File[] };
+  businessId: string;
+}) => {
+  const getBusinessRequest = useGetBusinessRequest({ id: businessId });
+
+  const businessRequest = getBusinessRequest.data?.data.data;
+
+  const productRequestId = businessRequest?.productRequest[0].id;
+
+  const getProductRequestQA = useGetRequestQA(productRequestId || "");
+
+  const productRequestQA = getProductRequestQA.data?.data.data;
+
+  const loading = getBusinessRequest.isLoading || getProductRequestQA.isLoading || !businessId;
+
+  // console.log(productRequestQA);
+  // console.log(loading);
+
   return (
     <Tabs style="underline">
       <Tabs.Item active title="Received" className="p-1">
-        {renderFile(files.received)}
+        <RenderFile files={files.received} />
       </Tabs.Item>
       <Tabs.Item title="Uploaded" className="p-1">
-        {renderFile(files.uploaded)}
+        <RenderFile files={files.uploaded} />
       </Tabs.Item>
     </Tabs>
   );
 };
 
-const renderFile = (files: File[]) => {
+const RenderFile = ({ files }: { files: File[] }) => {
   return (
     <div className="space-y-4 max-h-[380px] overflow-auto">
       {files.map((file, i) => (

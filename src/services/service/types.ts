@@ -4,6 +4,8 @@ export type serviceType = {
   description: string;
   createdAt: string;
   updatedAt: string;
+  label: string;
+  priority: number;
 };
 
 export type countryType = {

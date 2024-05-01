@@ -11,22 +11,6 @@ import { cn } from "@/lib/utils";
 import QueryNav3 from "../navbar/querynav3";
 import TextWithDetails from "../text/textWithDetails";
 
-function getInitials(name: string): string {
-  const words = name.trim().split(/\s+/);
-
-  let initials = "";
-
-  for (let i = 0; i < 2 && i < words.length; i++) {
-    const word = words[i];
-
-    const initial = word.charAt(0).toUpperCase();
-
-    initials += initial;
-  }
-
-  return initials;
-}
-
 // export const MemberInfoReviewCard = ({
 //   type,
 //   name,

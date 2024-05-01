@@ -12,6 +12,7 @@ import OngoingRegSection from "@/components/dashboard/ongoingRegSection";
 import useRequestApi from "@/hooks/useRequestApi";
 import { useSession } from "next-auth/react";
 import { serviceTableNav } from "./constants";
+import { useState } from "react";
 
 // interface BadgeProps {
 //   size?: "sm" | "lg";
@@ -52,7 +53,9 @@ export default function Dashboard() {
   const { tableHeaders, tableBody } = useTableInfo();
   const session = useSession();
   const userId = session.data?.user?.id;
-  console.log(session);
+  // console.log(session);
+
+  const [selectedBusiness, setSelectedBusiness] = useState("");
 
   const { useGetUserRequestsQuery } = useRequestApi();
   const { data } = useGetUserRequestsQuery(userId);
@@ -61,15 +64,18 @@ export default function Dashboard() {
   return (
     <div className="p-5 space-y-14 md:p-8">
       <WelcomeSection />
-      <BusinessInfoSecion />
       <HandpickedSection />
       <SuggestionSection />
-      <BusinessMembersSection />
+      <BusinessInfoSecion
+        selectedBusiness={selectedBusiness}
+        setSelectedBusiness={(id: string) => setSelectedBusiness(id)}
+      />
+      <BusinessMembersSection selectedBusiness={selectedBusiness} />
       <OngoingRegSection />
       <Card>
         <GeneralTable
           tableHeaders={tableHeaders}
-          tableBody={tableBody}
+          tableBody={tableBody || []}
           serviceTableNav={serviceTableNav}
           title="All Services"
         />
