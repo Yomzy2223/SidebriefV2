@@ -136,10 +136,10 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
                 addPath,
                 queries: getQueries(requestData),
               });
+              console.log("Updated the product of the request");
             },
           }
         );
-        console.log("Updated the product of the request");
         return;
       }
       // Creates a product request with an existing business id
@@ -147,18 +147,20 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
         { businessId, productIds: [productId] },
         {
           onSuccess: (data) => {
-            const requestData = data.data.data;
+            const requestData = data.data.data?.[0];
             setQueriesWithPath({
               addPath,
               queries: getQueries(requestData, "createReq"),
             });
+            console.log("Created a product with existing business id");
           },
         }
       );
-      console.log("Created a product with existing business id");
+
       return;
     }
     // Creates a business request
+
     createBusinessRequest.mutate(
       { userId, productId },
       {
@@ -168,10 +170,10 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
             addPath,
             queries: getQueries(requestData, "createBusiness"),
           });
+          console.log("Created a business and a product request");
         },
       }
     );
-    console.log("Created a business and a product request");
   };
 
   return { formInfo, handleFormSubmit, isPending, productInfo };

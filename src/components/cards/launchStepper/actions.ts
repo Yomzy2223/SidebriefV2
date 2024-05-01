@@ -18,7 +18,10 @@ export const useLaunchSteps = () => {
     if (progress >= i)
       setQueriesWithPath({
         path: `/requests/${serviceId}${route}`,
-        queries: [{ name: "activeTab", value: "0" }],
+        queries: [
+          { name: "activeTab", value: "0" },
+          { name: "activeSubTab", value: "0" },
+        ],
       });
   };
 

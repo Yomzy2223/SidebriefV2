@@ -10,6 +10,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useResponse } from "@/hooks/useResponse";
 import { Oval } from "react-loading-icons";
+import { IFormInput } from "@/components/form/constants";
 
 const SignIn = () => {
   const [isPending, setIsPending] = useState(false);
@@ -92,7 +93,7 @@ const SignIn = () => {
 
 export default SignIn;
 
-const formInfo = [
+const formInfo: IFormInput[] = [
   {
     name: "email",
     label: "Enter Email Address",
@@ -115,6 +116,7 @@ const signInSchema = z.object({
   email: z.string().email("Enter a valid email").min(1, { message: "Enter your email address" }),
   password: z.string().min(6, "Password must be 6 or more characters"),
 });
+type signInType = z.infer<typeof signInSchema>;
 
 const defaultValues = {
   email: "",

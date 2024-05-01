@@ -65,6 +65,13 @@ export const customTheme: ThemeProps = {
                 off: "border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300",
               },
             },
+            pills: {
+              base: "px-2.5 py-0.5 text-xs rounded-md font-medium",
+              active: {
+                on: "rounded-lg bg-tertiary text-tertiary-foreground",
+                off: "rounded-lg opacity-70 bg-green-200 text-green-800 hover:opacity-80",
+              },
+            },
           },
         },
       },

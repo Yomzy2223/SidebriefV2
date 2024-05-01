@@ -6,11 +6,12 @@ import * as z from "zod";
 import { Button } from "flowbite-react";
 import { ArrowRightCircle } from "lucide-react";
 import { useResetPassword } from "@/services/auth";
+import { IFormInput } from "@/components/form/constants";
 
 export default function ForgotPassword() {
   const resetPassword = useResetPassword();
 
-  const handleForgot = (values: { password: string }) => {
+  const handleForgot = ({ values }: { values: { password: string } }) => {
     console.log("Reset Password");
     console.log(values);
     resetPassword.mutate({ password: values.password, token: "" });
@@ -32,7 +33,7 @@ export default function ForgotPassword() {
   );
 }
 
-const formInfo = [
+const formInfo: IFormInput[] = [
   {
     name: "password",
     label: "Enter new password",

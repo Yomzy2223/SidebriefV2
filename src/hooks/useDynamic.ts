@@ -9,25 +9,26 @@ export const useDynamic = ({
   subForms?: IFormInput[];
 }) => {
   const fileValidation = (file: File) => {
-    if (!file) {
-      return false;
-    }
+    // if (!file) {
+    //   return false;
+    // }
 
-    const validImageTypes = [
-      "image/jpeg",
-      "image/png",
-      "image/gif",
-      "application/msword",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.documen",
-    ];
-    if (!validImageTypes.includes(file.type)) {
-      return false;
-    }
+    // const validImageTypes = [
+    //   "image/jpeg",
+    //   "image/png",
+    //   "image/gif",
+    //   "application/msword",
+    //   "application/pdf",
+    //   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    // ];
+    // if (!validImageTypes.includes(file.type)) {
+    //   return false;
+    // }
 
-    const maxFileSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxFileSize) {
-      return false;
-    }
+    // const maxFileSize = 5 * 1024 * 1024; // 5MB
+    // if (file.size > maxFileSize) {
+    //   return false;
+    // }
 
     return true;
   };
@@ -62,13 +63,23 @@ export const useDynamic = ({
                   return [field.name, z.string().min(1, "Select a country")];
                 case "address":
                   return [field.name, z.string().min(1, "This field is required")];
-                case "email address":
+                case "email":
                   return [field.name, z.string().email().min(1, "Enter email address")];
+                case "phone number":
+                  return [field.name, z.coerce.number().min(1, "Enter phone number")];
                 case "short answer":
                   return [field.name, z.string().min(1, "This field is required")];
                 case "countries-all":
                   return [field.name, z.string().min(1, "Select a country")];
                 case "document upload":
+                  return [
+                    field.name,
+                    z.any().refine(fileValidation, {
+                      message:
+                        "Invalid file. Please upload an image file (JPEG, PNG, GIF) with a size not more than 5MB.",
+                    }),
+                  ];
+                case "document template":
                   return [
                     field.name,
                     z.any().refine(fileValidation, {

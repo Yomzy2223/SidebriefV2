@@ -22,12 +22,10 @@ export type TSubformQACreate = {
   answer: string[];
   type: string;
   compulsory: boolean;
-  file: {
-    name: string;
-    link: string;
-    size: string;
-    type: string;
-  };
+  fileName: string;
+  fileLink: string;
+  fileType: string;
+  fileSize: string;
 };
 
 export type TSubformQAGet = TSubformQACreate & {

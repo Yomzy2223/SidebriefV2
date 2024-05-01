@@ -1,7 +1,6 @@
 "use client";
 
 import ServiceCard from "@/components/cards/ServiceCard";
-import { AuthStepper } from "../../auth/authStepper";
 import useServiceApi from "@/hooks/useServiceApi";
 import { Button } from "flowbite-react";
 import { ArrowRightCircle, ChevronRight } from "lucide-react";
@@ -11,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { IServiceFull } from "@/hooks/api/types";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import ServiceCardSK from "@/components/cards/ServiceCard/ServiceCardSK";
+import { AuthStepper } from "../../auth/authStepper";
 
 const SelectService = () => {
   const { setQuery } = useGlobalFunctions();
