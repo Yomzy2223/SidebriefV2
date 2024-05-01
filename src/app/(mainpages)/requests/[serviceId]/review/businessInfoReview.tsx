@@ -3,12 +3,13 @@
 import { Button, TextInput, Label, Badge } from "@/components/flowbite";
 import { PencilLine } from "lucide-react";
 import { SwatchBook } from "@/assets/icons";
-import { useGetProductQA } from "@/services/product";
 import { sluggify } from "@/lib/utils";
-import { productQAType } from "@/services/product/types";
+import { useGetRequestQA } from "@/services/productQA";
+import { TProductRequest } from "@/services/business/types";
+import { TFormQAGet } from "@/services/productQA/types";
 
 export const BusinessInfoReview = ({ productId }: { productId: string }) => {
-  const productQA = useGetProductQA(productId);
+  const productQA = useGetRequestQA(productId);
 
   const allQA = productQA.data?.data.data;
 
@@ -16,7 +17,7 @@ export const BusinessInfoReview = ({ productId }: { productId: string }) => {
 
   const onlyFormsDocuments = onlyForms?.filter((el) => el.title.includes("document"));
 
-  const consolidated: productQAType[] | undefined = [];
+  const consolidated: TFormQAGet[] | undefined = [];
   const uniqueObjects = new Set();
 
   onlyForms

@@ -79,6 +79,14 @@ export const useDynamic = ({
                         "Invalid file. Please upload an image file (JPEG, PNG, GIF) with a size not more than 5MB.",
                     }),
                   ];
+                case "document template":
+                  return [
+                    field.name,
+                    z.any().refine(fileValidation, {
+                      message:
+                        "Invalid file. Please upload an image file (JPEG, PNG, GIF) with a size not more than 5MB.",
+                    }),
+                  ];
                 // Add more cases as needed
                 default:
                   return [field.type, z.any()]; // Default validation if no specific type matches

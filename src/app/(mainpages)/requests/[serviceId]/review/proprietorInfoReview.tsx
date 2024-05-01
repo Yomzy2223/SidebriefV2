@@ -2,11 +2,12 @@ import { Button, Card, Badge } from "@/components/flowbite";
 import { PencilLine } from "lucide-react";
 import { SwatchBook } from "@/assets/icons";
 import { MemberInfoReviewCard } from "@/components/cards/proprietorInfoReviewCard";
-import { useGetProductQA } from "@/services/product";
-import { productQAType } from "@/services/product/types";
+import { useGetRequestQA } from "@/services/productQA";
+import { TProductRequest } from "@/services/business/types";
+import { TFormQAGet } from "@/services/productQA/types";
 
 export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
-  const productQA = useGetProductQA(productId);
+  const productQA = useGetRequestQA(productId);
 
   const allQA = productQA.data?.data.data;
 
@@ -14,7 +15,7 @@ export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
 
   const onlyPersonsDocuments = onlyPersons?.filter((el) => el.title.includes("document"));
 
-  const consolidated: productQAType[] | undefined = [];
+  const consolidated: TFormQAGet[] | undefined = [];
   const uniqueObjects = new Set();
 
   onlyPersons
