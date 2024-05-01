@@ -1,19 +1,14 @@
-import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { sluggify } from "@/lib/utils";
 import {
   useDeleteRequestQA,
   useGetRequestFormQA,
-  useGetRequestQA,
   useSaveRequestQA,
   useUpdateRequestQA,
 } from "@/services/productQA";
 import { TFormQACreate, TFormQAGet } from "@/services/productQA/types";
 import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
-import { TabsRef } from "flowbite-react";
 import { useSearchParams } from "next/navigation";
-import { Dispatch, RefObject, SetStateAction } from "react";
-import { UseFormReset } from "react-hook-form";
-import { IFormInput } from "../constants";
+import { Dispatch, SetStateAction } from "react";
 
 export const useActions = ({
   info,
@@ -48,6 +43,11 @@ export const useActions = ({
   };
 };
 
+//
+
+//
+
+//
 export const useNewFormAction = ({
   info,
   QAForm,

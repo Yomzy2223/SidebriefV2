@@ -1,22 +1,12 @@
-"use client";
-
 import DialogWrapper from "@/components/wrappers/dialogWrapper";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { TProductForm, TServiceForm } from "@/services/service/types";
 import { Tabs, TabsRef } from "flowbite-react";
 import { useParams, useSearchParams } from "next/navigation";
-import { RefObject, useRef } from "react";
+import React, { useRef } from "react";
 import EachForm from "./eachForm";
 
-const RequestForm = ({
-  forms,
-  isServiceForm,
-  showOnlyDocs,
-}: {
-  forms: (TServiceForm | TProductForm)[];
-  isServiceForm?: boolean;
-  showOnlyDocs?: boolean;
-}) => {
+const RequestDocForm = ({ forms }: { forms: (TServiceForm | TProductForm)[] }) => {
   const tabsRef = useRef<TabsRef>(null);
   const { serviceId } = useParams();
 
@@ -25,29 +15,20 @@ const RequestForm = ({
 
   // Get and set active tab to url query
   const activeTab = parseInt(searchParams.get("activeTab") || "0");
-  const setActiveTab = (active: number) => {
-    setQueriesWithPath({ queries: [{ name: "activeTab", value: active?.toString() }] });
-  };
-
-  const isOnLastForm = forms.length - 1 === activeTab;
+  const setActiveTab = (active: number) =>
+    setQueriesWithPath({ queries: [{ name: "activeTab", value: active.toString() }] });
 
   // Navigate to the next form if not on the last form. Next page, if otherwise
-  const handeNext = (i: number, subTabRef: RefObject<TabsRef>) => {
-    if (isOnLastForm) {
+  const isOnLastForm = forms.length - 1 === activeTab;
+  const handeNext = (i?: number) => {
+    if (i === undefined || isOnLastForm) {
       setQueriesWithPath({
         path: `/requests/${serviceId}/review`,
         queries: [{ name: "progress", value: "4" }],
       });
       return;
     }
-    tabsRef.current?.setActiveTab(i + 1); // Navigate to the next tab
-    subTabRef.current?.setActiveTab(0); // Reset subTab
-    setQueriesWithPath({
-      queries: [
-        { name: "activeTab", value: (i + 1)?.toString() },
-        { name: "activeSubTab", value: "0" }, // Reset activeSubTab
-      ],
-    });
+    tabsRef.current?.setActiveTab(i + 1);
   };
 
   const openDocument = searchParams.get("openDocument") === "true";
@@ -61,12 +42,16 @@ const RequestForm = ({
     deleteQueryString("openDocument");
   };
 
+  const resetDialog = () => {
+    setOpenDocument(false);
+  };
+
   return (
     <DialogWrapper
       open={openDocument}
       setOpen={setOpenDocument}
       title="Required Documents"
-      size="5xl"
+      size="3xl"
       dismissible={false}
     >
       <div className="flex-1 flex flex-col gap-2 w-full">
@@ -83,7 +68,7 @@ const RequestForm = ({
                   <EachForm
                     info={el}
                     isLoading={false}
-                    handeNext={(subTabRef) => handeNext(i, subTabRef)}
+                    onSubmit={() => handeNext(i)}
                     isOnLastForm={isOnLastForm}
                     isServiceForm
                   />
@@ -96,7 +81,7 @@ const RequestForm = ({
             <EachForm
               info={forms[0]}
               isLoading={false}
-              handeNext={(subTabRef) => handeNext(0, subTabRef)}
+              onSubmit={handeNext}
               isOnLastForm={isOnLastForm}
               isServiceForm
             />
@@ -107,4 +92,4 @@ const RequestForm = ({
   );
 };
 
-export default RequestForm;
+export default RequestDocForm;
