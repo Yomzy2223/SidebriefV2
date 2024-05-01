@@ -12,7 +12,7 @@ const BusinessMembersSection = ({ selectedBusiness }: { selectedBusiness: string
       </SectionWrapper>
 
       <SectionWrapper title="Documents" morelink="/">
-        <DocumentComponent files={files} />
+        <DocumentComponent files={files} businessId={selectedBusiness} />
       </SectionWrapper>
 
       <SectionWrapper title="My Activities">

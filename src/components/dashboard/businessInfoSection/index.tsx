@@ -72,7 +72,7 @@ const BusinessInfoSecion = ({
         productQAQueries[index]
           ?.find((qa) => qa.subForm.some((subform) => subform.type === "business name"))
           ?.subForm.find((subform) => subform.type === "business name")?.answer[0] ||
-        `No added name ${index}`,
+        `No added name ${index + 1}`,
     };
   });
 

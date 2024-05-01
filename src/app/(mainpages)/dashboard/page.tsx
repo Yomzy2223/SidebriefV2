@@ -75,7 +75,7 @@ export default function Dashboard() {
       <Card>
         <GeneralTable
           tableHeaders={tableHeaders}
-          tableBody={tableBody}
+          tableBody={tableBody || []}
           serviceTableNav={serviceTableNav}
           title="All Services"
         />
