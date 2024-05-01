@@ -60,9 +60,9 @@ const DynamicForm = ({
 
   useEffect(() => {
     (formInfo || []).forEach((form) => {
-      // if (form.value) {
-      setValue(form.name, form.value);
-      // }
+      if (form.value) {
+        setValue(form.name, form.value);
+      }
     });
   }, [setValue, formInfo]);
 

@@ -1,4 +1,3 @@
-import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { sluggify } from "@/lib/utils";
 import {
   useDeleteRequestQA,
@@ -7,28 +6,57 @@ import {
   useSaveRequestQA,
   useUpdateRequestQA,
 } from "@/services/productQA";
-import { TFormQACreate, TFormQAGet } from "@/services/productQA/types";
+import { TFormQACreate } from "@/services/productQA/types";
 import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
 import { TabsRef } from "flowbite-react";
 import { useSearchParams } from "next/navigation";
 import { Dispatch, RefObject, SetStateAction } from "react";
 import { UseFormReset } from "react-hook-form";
-import { IFormInput } from "../constants";
 
 export const useActions = ({
   info,
+  isServiceForm,
+  setOnlyCreate,
+  onSubmit,
   activeSubTab,
+  setActiveSubTab,
+  tabsRef,
+  newForm,
+  newFormInfo,
+  setNewForm,
+  setOpenDelete,
 }: {
   info?: TServiceForm | TProductForm;
+  isServiceForm: boolean;
+  setOnlyCreate: Dispatch<SetStateAction<boolean>>;
+  onSubmit: () => void;
   activeSubTab: number;
+  setActiveSubTab: (active: number) => void;
+  tabsRef: RefObject<TabsRef>;
+  newForm: boolean;
+  newFormInfo: Record<any, any>;
+  setNewForm: Dispatch<SetStateAction<boolean>>;
+  setOpenDelete: Dispatch<SetStateAction<boolean>>;
 }) => {
   const searchParams = useSearchParams();
 
   const requestId = searchParams.get("requestId") || "";
 
+  const saveRequestQA = useSaveRequestQA();
+  const updateRequestQA = useUpdateRequestQA();
+  const deleteRequestQA = useDeleteRequestQA();
+
   const requestQARes = useGetRequestQA(requestId);
   const requestQA = requestQARes.data?.data?.data;
   const requestFormQA = requestQA?.filter((el) => el.formId === info?.id);
+
+  // const requestFormQARes = useGetRequestFormQA({ formId: info?.id || "", requestId });
+  // const requestFormQ = requestFormQARes.data?.data?.data;
+
+  const isPending = saveRequestQA.isPending || updateRequestQA.isPending;
+  const isSuccess = saveRequestQA.isSuccess || updateRequestQA.isSuccess;
+  // const formInRequesQA = requestQA?.find((el) => el.formId === info?.id);
+  // console.log(requestQA);
 
   // Returns the QAs for a formI
   const getQAForms = (title?: string) => {
@@ -38,40 +66,13 @@ export const useActions = ({
 
   const QAForms = getQAForms(info?.title);
   const formHasTabs = QAForms?.length >= 1;
+  const activeForm = QAForms?.[formHasTabs ? activeSubTab : 0] || {};
   const isOnLastSubTab = activeSubTab === QAForms?.length;
-
-  return {
-    QAForms,
-    formHasTabs,
-    isOnLastSubTab,
-  };
-};
-
-export const useNewFormAction = ({
-  info,
-  QAForm,
-  isServiceForm,
-  setOpenDelete,
-  handelSubmit,
-  isNewForm,
-  setNewForm,
-  onFormDelete,
-}: INewFormActionProps) => {
-  const saveRequestQA = useSaveRequestQA();
-  const updateRequestQA = useUpdateRequestQA();
-  const deleteRequestQA = useDeleteRequestQA();
-
-  const searchParams = useSearchParams();
-  const requestId = searchParams.get("requestId") || "";
-
-  const { setQueriesWithPath } = useGlobalFunctions();
-  const setActiveSubTab = (active: number) =>
-    setQueriesWithPath({ queries: [{ name: "activeSubTab", value: active.toString() }] });
 
   // Returns the QA for a field
   const getQAField = (question: string) => {
     // const QASubForm = requestFormQA?.subForm;
-    const QASubForm = QAForm?.subForm;
+    const QASubForm = activeForm?.subForm;
     const QAField = QASubForm?.find((el) => el.question === question);
     return QAField;
   };
@@ -81,7 +82,7 @@ export const useNewFormAction = ({
       const isDoc = el.type === "document template" || el.type === "document upload";
       return !isDoc;
     }) || [];
-
+  // Returns the information used to render the form
   const formInfo = nonDocSubforms.map((field) => {
     const QAField = getQAField(field.question);
 
@@ -99,6 +100,7 @@ export const useNewFormAction = ({
       field.type === "multiple choice";
 
     let value = isTextInput || isSelect ? QAField?.answer[0] || "" : QAField?.answer || [];
+    if (formHasTabs && isOnLastSubTab) value = newFormInfo[sluggify(field.question)];
 
     // Each field
     return {
@@ -114,9 +116,9 @@ export const useNewFormAction = ({
 
   // Used to create and update QA form
   const submitFormHandler = (
-    values: Record<any, any>
-    // reset: UseFormReset<any>,
-    // onlyCreate: boolean
+    values: Record<any, any>,
+    reset: UseFormReset<any>,
+    onlyCreate: boolean
   ) => {
     if (!info) return;
 
@@ -132,7 +134,7 @@ export const useNewFormAction = ({
       type: info.type,
       compulsory: info.compulsory,
       isGeneral: isServiceForm,
-      subForm: info.subForm.map((field) => ({
+      subForm: nonDocSubforms.map((field) => ({
         id: getQAField(field.question)?.id,
         question: field.question,
         answer: getAnswer(field),
@@ -145,13 +147,21 @@ export const useNewFormAction = ({
       })),
     };
 
-    if (QAForm?.id) {
+    if (activeForm?.id && !onlyCreate) {
       updateRequestQA.mutate(
-        { requestFormId: QAForm.id, form: payload },
+        { requestFormId: activeForm.id, form: payload },
         {
           onSuccess: (data) => {
-            handelSubmit();
             console.log("Updated request form");
+            if (!formHasTabs || QAForms?.length - 1 === activeSubTab) {
+              onSubmit && onSubmit();
+              return;
+            }
+            tabsRef.current?.setActiveTab(activeSubTab + 1); //navigate to the next sub tab
+            setActiveSubTab(activeSubTab + 1);
+            // document
+            //   .getElementById("subFormTabs" + activeSubTab)
+            //   ?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
           },
         }
       );
@@ -160,12 +170,13 @@ export const useNewFormAction = ({
     saveRequestQA.mutate(
       { requestId, formId: info.id, form: payload },
       {
-        onSuccess: (data) => {
-          if (isNewForm) {
+        onSuccess: () => {
+          if (onlyCreate) {
+            setOnlyCreate(false);
             setNewForm(false);
-            // reset();
+            reset();
             console.log("Form reset successfully");
-          } else handelSubmit();
+          } else onSubmit && onSubmit();
           console.log("Created request form");
         },
       }
@@ -174,29 +185,23 @@ export const useNewFormAction = ({
 
   const deleteQAForm = () => {
     deleteRequestQA.mutate(
-      { requestFormId: QAForm?.id || "" },
+      { requestFormId: activeForm.id },
       {
-        onSuccess: () => {
-          setOpenDelete(false);
-          onFormDelete && onFormDelete();
-        },
+        onSuccess: () => setOpenDelete(false),
       }
     );
   };
-
   const deletePending = deleteRequestQA.isPending;
-  const isPending = saveRequestQA.isPending || updateRequestQA.isPending;
 
-  return { submitFormHandler, deleteQAForm, deletePending, isPending, formInfo };
+  return {
+    formInfo,
+    submitFormHandler,
+    isPending,
+    isSuccess,
+    QAForms,
+    deleteQAForm,
+    deletePending,
+    formHasTabs,
+    isOnLastSubTab,
+  };
 };
-
-interface INewFormActionProps {
-  info: TServiceForm | TProductForm;
-  QAForm?: TFormQAGet;
-  isServiceForm: boolean;
-  setOpenDelete: Dispatch<SetStateAction<boolean>>;
-  handelSubmit: () => void;
-  isNewForm?: boolean;
-  setNewForm: Dispatch<SetStateAction<boolean>>;
-  onFormDelete?: (isNew?: boolean) => void;
-}

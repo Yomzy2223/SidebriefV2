@@ -38,7 +38,7 @@ export const LaunchStepper = () => {
         ))}
       </ol>
       {/* Desktop stepper */}
-      <Timeline>
+      <Timeline className="hidden md:block">
         {requestSteps.map((el, i) => (
           <Timeline.Item key={el.name}>
             <Timeline.Point icon={el.Icon} />

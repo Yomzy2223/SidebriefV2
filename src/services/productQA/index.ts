@@ -66,9 +66,9 @@ export const useGetRequestQA = (requestId: string) =>
     enabled: !!requestId,
   });
 
-export const useGetRequestFormQA = (formId: string) =>
+export const useGetRequestFormQA = ({ formId, requestId }: { formId: string; requestId: string }) =>
   useQuery({
-    queryKey: ["get product QA", formId],
-    queryFn: () => getRequestFormQA({ formId }),
+    queryKey: ["get product QA", formId, requestId],
+    queryFn: ({ queryKey }) => getRequestFormQA({ formId: queryKey[1], requestId: queryKey[2] }),
     enabled: !!formId,
   });

@@ -147,13 +147,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
         { businessId, productIds: [productId] },
         {
           onSuccess: (data) => {
-            const requestData = data.data.data;
-            // console.log(data);
-            // console.log(requestData);
-            // console.log({
-            //   addPath,
-            //   queries: getQueries(requestData, "createReq"),
-            // });
+            const requestData = data.data.data?.[0];
             setQueriesWithPath({
               addPath,
               queries: getQueries(requestData, "createReq"),
