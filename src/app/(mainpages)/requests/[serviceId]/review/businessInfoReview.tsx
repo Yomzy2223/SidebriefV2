@@ -8,10 +8,12 @@ import { useGetRequestQA } from "@/services/productQA";
 import { TProductRequest } from "@/services/business/types";
 import { TFormQAGet } from "@/services/productQA/types";
 
-export const BusinessInfoReview = ({ productId }: { productId: string }) => {
-  const productQA = useGetRequestQA(productId);
+export const BusinessInfoReview = ({ requestId }: { requestId: string }) => {
+  const productQA = useGetRequestQA(requestId);
 
   const allQA = productQA.data?.data.data;
+
+  console.log(allQA);
 
   const onlyForms = allQA?.filter((el) => el.type !== "person");
 
