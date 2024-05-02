@@ -4,15 +4,19 @@ import { BusinessInfoReview } from "./businessInfoReview";
 import { Button } from "@/components/flowbite";
 import { ArrowRight } from "@/assets/icons";
 import { ProprietorInfoReview } from "./proprietorInfoReview";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useGetBusinessRequest, useSubmitProductRequest } from "@/services/business";
 import { useRouter } from "next/navigation";
 import RequestWrapper from "../wrapper";
 
 export default function Review() {
+  const searchParams = useSearchParams();
+
   const { mutateAsync: submitRequest, isPending: submittingRequest } = useSubmitProductRequest();
   const { processId, service }: { service: string; processId: string } = useParams();
-  const process = useGetBusinessRequest({ id: processId });
+
+  const businesssId = searchParams.get("businessId");
+  const process = useGetBusinessRequest({ id: businesssId || "" });
   const router = useRouter();
 
   const processData = process.data?.data.data;
@@ -22,7 +26,7 @@ export default function Review() {
   return (
     <RequestWrapper>
       <div className="space-y-14">
-        <BusinessInfoReview productId={productRequestId || ""} />
+        <BusinessInfoReview requestId={productRequestId || ""} />
         <ProprietorInfoReview productId={productRequestId || ""} />
       </div>
       <Button

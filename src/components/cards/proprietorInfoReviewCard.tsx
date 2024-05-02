@@ -70,7 +70,7 @@ export const MemberInfoReviewCards = ({
     value: title.toLowerCase() + " " + (i + 1),
   }));
 
-  const details = collapseAll ? [info[position][0]] : info[position];
+  const details = collapseAll ? [info?.[position]?.[0]] : info?.[position];
 
   const showDetails = (i: number) => {
     setQuery(title.toLowerCase(), title.toLowerCase() + " " + (i + 1));

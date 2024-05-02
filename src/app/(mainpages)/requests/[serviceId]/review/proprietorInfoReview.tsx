@@ -1,7 +1,7 @@
 import { Button, Card, Badge } from "@/components/flowbite";
 import { PencilLine } from "lucide-react";
 import { SwatchBook } from "@/assets/icons";
-import { MemberInfoReviewCard } from "@/components/cards/proprietorInfoReviewCard";
+import { MemberInfoReviewCards } from "@/components/cards/proprietorInfoReviewCard";
 import { useGetRequestQA } from "@/services/productQA";
 import { TProductRequest } from "@/services/business/types";
 import { TFormQAGet } from "@/services/productQA/types";
@@ -45,17 +45,17 @@ export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
         </Button>
       </div>
       <div className="flex flex-wrap gap-6">
-        {consolidated.map((person, i) => (
-          <MemberInfoReviewCard
-            key={i}
-            type={person.title}
-            name={person.subForm[0].answer[0]}
-            email={person.subForm[2].answer[0]}
-          />
-        ))}
-
-        {/* <MemberInfoReviewCard />
-        <MemberInfoReviewCard /> */}
+        <MemberInfoReviewCards
+          title={"Proprietor"}
+          info={consolidated.map((each) => {
+            return each.subForm.map((el) => {
+              return {
+                field: el.question,
+                value: el.answer[0],
+              };
+            });
+          })}
+        />
       </div>
     </div>
   );
