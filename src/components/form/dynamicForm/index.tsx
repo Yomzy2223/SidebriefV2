@@ -12,6 +12,7 @@ import InputWithTags from "@/components/input/inputWithTags";
 import { countries } from "countries-list";
 import { FileInput } from "@/components/file/fileInput";
 import { useGetCountries } from "@/services/service";
+import { getDynamicSchema } from "./actions";
 
 const DynamicForm = ({
   children,
@@ -25,10 +26,10 @@ const DynamicForm = ({
   className,
   setFormState,
 }: DynamicFormProps) => {
-  const dynamic = useDynamic({ subForms: formInfo });
+  const dynamic = getDynamicSchema({ subForms: formInfo });
 
   const schema = formSchema || dynamic.schema;
-  const dValues = defaultValues || dynamic.defaultValues;
+  const dValues = defaultValues;
 
   type formType = z.infer<typeof schema>;
 
@@ -63,6 +64,14 @@ const DynamicForm = ({
       if (form.value) {
         setValue(form.name, form.value);
       }
+      if (form.fileName && form.fileLink && form.fileType && form.fileSize) {
+        setValue(form.name, {
+          fileName: form.fileName,
+          fileLink: form.fileLink,
+          fileType: form.fileType,
+          fileSize: form.fileSize,
+        });
+      }
     });
   }, [setValue, formInfo]);
 
@@ -83,7 +92,6 @@ const DynamicForm = ({
             el.type === "email" ||
             el.type === "phone number" ||
             el.type === "paragraph" ||
-            el.type === "address" ||
             el.type === "promocode" ||
             el.type === "password" ||
             el.type === "short answer";
@@ -93,6 +101,8 @@ const DynamicForm = ({
             el.type === "countries-operation" ||
             el.type === "multiple choice";
           const errorMsg = errors[el.name]?.message;
+          let type = el.type === "phone number" ? "number" : "text";
+          if (el.type === "password") type = "password";
 
           let selectOptions;
           switch (el.type) {
@@ -113,7 +123,7 @@ const DynamicForm = ({
               {isTextInput && (
                 <TextInput
                   id={el.name}
-                  type={el.type}
+                  type={type}
                   sizing="md"
                   helperText={<>{errorMsg}</>}
                   color={errorMsg && "failure"}

@@ -15,6 +15,7 @@ export interface IFormInput {
   value?: string | string[];
   leftContent?: string | ReactNode;
   handleSelect?: (selected?: string) => void;
+  compulsory?: boolean;
   fieldName?: string;
   optionsLoading?: boolean;
   optionsErrorMsg?: string;

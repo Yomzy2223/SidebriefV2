@@ -53,3 +53,10 @@ export type updateRequestQAPayload = {
   requestFormId: string;
   form: TFormQACreate;
 };
+
+export type multipleQASubFormsPayload = {
+  formId: string;
+  form: {
+    subForm: TSubformQACreate[];
+  };
+};

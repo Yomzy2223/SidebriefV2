@@ -88,7 +88,6 @@ export const useNewFormAction = ({
       field.type === "email" ||
       field.type === "phone number" ||
       field.type === "paragraph" ||
-      field.type === "address" ||
       field.type === "promocode" ||
       field.type === "short answer";
     const isSelect =

@@ -5,6 +5,7 @@ import {
   getRequestQA,
   deleteRequestQA,
   getRequestFormQA,
+  saveMultipleQASubForms,
 } from "./operations";
 import { saveRequestQAPayload, updateRequestQAPayload, deleteRequestQAPayload } from "./types";
 import { useToast } from "@/components/ui/use-toast";
@@ -72,3 +73,19 @@ export const useGetRequestFormQA = ({ formId, requestId }: { formId: string; req
     queryFn: ({ queryKey }) => getRequestFormQA({ formId: queryKey[1], requestId: queryKey[2] }),
     enabled: !!formId,
   });
+
+export const useSaveMultipleQASubForms = () => {
+  const queryClient = useQueryClient();
+  const { handleError } = useResponse();
+
+  return useMutation({
+    mutationKey: ["save multiple product QA"],
+    mutationFn: saveMultipleQASubForms,
+    onError(error, variables, context) {
+      handleError({ title: "Failed", error });
+    },
+    onSuccess(data, variables, context) {
+      queryClient.invalidateQueries({ queryKey: ["get product QA"] });
+    },
+  });
+};
