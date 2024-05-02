@@ -23,6 +23,10 @@ export interface IFormInput {
   fileType?: string;
   fileLink?: string;
   fileSize?: string;
+  dependsOn?: {
+    field: string;
+    options: string[];
+  };
 }
 
 export interface DynamicFormProps {

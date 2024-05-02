@@ -6,7 +6,7 @@ import * as z from "zod";
 import { DynamicFormProps } from "../constants";
 import { useDynamic } from "@/hooks/useDynamic";
 import ComboBox from "./comboBox";
-import { cn } from "@/lib/utils";
+import { cn, sluggify } from "@/lib/utils";
 import MultiSelectCombo from "./multiSelectCombo";
 import InputWithTags from "@/components/input/inputWithTags";
 import { countries } from "countries-list";
@@ -78,6 +78,7 @@ const DynamicForm = ({
   const countriesRes = useGetCountries();
   const sidebriefCountries = countriesRes.data?.data?.data?.map((el) => el.name);
 
+  console.log(getValues());
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -112,6 +113,21 @@ const DynamicForm = ({
             case "countries-operation":
               selectOptions = sidebriefCountries;
           }
+
+          // console.log(el.dependsOn);
+          // const dependedOn = el.dependsOn;
+          // console.log(dependedOn);
+          let showField = true;
+          if (el.dependsOn?.field) {
+            const currValue = getValues(sluggify(el.dependsOn?.field || ""))?.toLowerCase();
+            if (el.dependsOn?.options) {
+              showField = !!el.dependsOn?.options?.find((el) => el?.toLowerCase() === currValue);
+            } else {
+              showField = !!currValue;
+            }
+          }
+
+          if (!showField) return;
 
           return (
             <div key={i}>

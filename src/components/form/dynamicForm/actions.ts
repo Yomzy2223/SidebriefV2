@@ -273,6 +273,8 @@ export const getDynamicSchema = ({
                   return [field.name, z.string().min(1, "Select a country")];
                 case "countries-all":
                   return [field.name, z.string().min(1, "Select a country")];
+                case "select":
+                  return [field.name, z.string().min(1, "Select an option")];
                 case "document upload":
                   return [
                     field.name,
