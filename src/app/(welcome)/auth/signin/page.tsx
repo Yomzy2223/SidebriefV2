@@ -17,7 +17,7 @@ const SignIn = () => {
   const { push } = useRouter();
   const { handleError, handleSuccess } = useResponse();
 
-  const handleSignIn = async ({ values }: { values: signInType }) => {
+  const handleSignIn = async ({ values, reset }: { values: any; reset: () => void }) => {
     setIsPending(true);
     const response = await signIn("signIn", {
       redirect: false,

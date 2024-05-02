@@ -4,15 +4,15 @@ import { Member } from "./members";
 import { SectionWrapper } from "./sectionWrapper";
 import Activity from "@/components/dashboard/businessMembersSection/activiity";
 
-const BusinessMembersSection = () => {
+const BusinessMembersSection = ({ selectedBusiness }: { selectedBusiness: string }) => {
   return (
     <div className="grid mt-4 w-full gap-3 md:grid-cols-[repeat(auto-fit,minmax(450px,1fr))]">
       <SectionWrapper title="Members" morelink="/">
-        <Member />
+        <Member businessId={selectedBusiness} />
       </SectionWrapper>
 
       <SectionWrapper title="Documents" morelink="/">
-        <DocumentComponent files={files} />
+        <DocumentComponent files={files} businessId={selectedBusiness} />
       </SectionWrapper>
 
       <SectionWrapper title="My Activities">

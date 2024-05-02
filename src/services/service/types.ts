@@ -4,6 +4,8 @@ export type serviceType = {
   description: string;
   createdAt: string;
   updatedAt: string;
+  label: string;
+  priority: number;
 };
 
 export type countryType = {
@@ -24,6 +26,7 @@ export type TProduct = {
   amount: number;
   timeline: string;
   feature: string[];
+  serviceId: string;
   // hasShares: boolean;
   // hasAgent: boolean;
   // hasOwner: boolean;

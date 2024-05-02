@@ -30,6 +30,10 @@ export type TSubformQACreate = {
 
 export type TSubformQAGet = TSubformQACreate & {
   id: string;
+  fileLink: string;
+  fileName: string;
+  fileSize: string;
+  fileType: string;
 };
 
 export type FileType = {

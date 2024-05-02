@@ -56,7 +56,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
       setCountry(country);
       setSelectedProduct(product.name);
     }
-  }, [product]);
+  }, [product, worldCountries]);
 
   const productInfo = products?.find((el) => el.name === selectedProduct);
 

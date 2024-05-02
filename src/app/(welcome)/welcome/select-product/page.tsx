@@ -1,5 +1,6 @@
 "use client";
 
+
 import React, { useState } from "react";
 import { IProductFull } from "@/hooks/api/types";
 import useProductApi from "@/hooks/useProductApi";
