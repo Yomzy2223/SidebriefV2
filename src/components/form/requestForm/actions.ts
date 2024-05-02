@@ -88,7 +88,6 @@ export const useNewFormAction = ({
       field.type === "email" ||
       field.type === "phone number" ||
       field.type === "paragraph" ||
-      field.type === "address" ||
       field.type === "promocode" ||
       field.type === "short answer";
     const isSelect =
@@ -99,6 +98,13 @@ export const useNewFormAction = ({
 
     let value = isTextInput || isSelect ? QAField?.answer[0] || "" : QAField?.answer || [];
 
+    const dependsField = field?.dependsOn?.field;
+    let dependsOnQuestion;
+    if (dependsField) {
+      const dependsIndex = parseInt(dependsField.split(" ").pop() || "") - 1;
+      if (dependsIndex) dependsOnQuestion = info.subForm[dependsIndex]?.question;
+    }
+
     // Each field
     return {
       id: field.id,
@@ -107,6 +113,10 @@ export const useNewFormAction = ({
       type: field.type,
       selectOptions: field.options,
       compulsory: field.compulsory,
+      dependsOn: {
+        field: dependsOnQuestion,
+        options: field.dependsOn?.options,
+      },
       value,
     };
   });

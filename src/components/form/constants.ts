@@ -15,6 +15,7 @@ export interface IFormInput {
   value?: string | string[];
   leftContent?: string | ReactNode;
   handleSelect?: (selected?: string) => void;
+  compulsory?: boolean;
   fieldName?: string;
   optionsLoading?: boolean;
   optionsErrorMsg?: string;
@@ -22,6 +23,10 @@ export interface IFormInput {
   fileType?: string;
   fileLink?: string;
   fileSize?: string;
+  dependsOn?: {
+    field: string;
+    options: string[];
+  };
 }
 
 export interface DynamicFormProps {

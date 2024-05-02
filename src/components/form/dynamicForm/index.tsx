@@ -6,12 +6,13 @@ import * as z from "zod";
 import { DynamicFormProps } from "../constants";
 import { useDynamic } from "@/hooks/useDynamic";
 import ComboBox from "./comboBox";
-import { cn } from "@/lib/utils";
+import { cn, sluggify } from "@/lib/utils";
 import MultiSelectCombo from "./multiSelectCombo";
 import InputWithTags from "@/components/input/inputWithTags";
 import { countries } from "countries-list";
 import { FileInput } from "@/components/file/fileInput";
 import { useGetCountries } from "@/services/service";
+import { getDynamicSchema } from "./actions";
 
 const DynamicForm = ({
   children,
@@ -25,10 +26,10 @@ const DynamicForm = ({
   className,
   setFormState,
 }: DynamicFormProps) => {
-  const dynamic = useDynamic({ subForms: formInfo });
+  const dynamic = getDynamicSchema({ subForms: formInfo });
 
   const schema = formSchema || dynamic.schema;
-  const dValues = defaultValues || dynamic.defaultValues;
+  const dValues = defaultValues;
 
   type formType = z.infer<typeof schema>;
 
@@ -63,12 +64,21 @@ const DynamicForm = ({
       if (form.value) {
         setValue(form.name, form.value);
       }
+      if (form.fileName && form.fileLink && form.fileType && form.fileSize) {
+        setValue(form.name, {
+          fileName: form.fileName,
+          fileLink: form.fileLink,
+          fileType: form.fileType,
+          fileSize: form.fileSize,
+        });
+      }
     });
   }, [setValue, formInfo]);
 
   const countriesRes = useGetCountries();
   const sidebriefCountries = countriesRes.data?.data?.data?.map((el) => el.name);
 
+  console.log(getValues());
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -83,7 +93,6 @@ const DynamicForm = ({
             el.type === "email" ||
             el.type === "phone number" ||
             el.type === "paragraph" ||
-            el.type === "address" ||
             el.type === "promocode" ||
             el.type === "password" ||
             el.type === "short answer";
@@ -93,6 +102,8 @@ const DynamicForm = ({
             el.type === "countries-operation" ||
             el.type === "multiple choice";
           const errorMsg = errors[el.name]?.message;
+          let type = el.type === "phone number" ? "number" : "text";
+          if (el.type === "password") type = "password";
 
           let selectOptions;
           switch (el.type) {
@@ -102,6 +113,21 @@ const DynamicForm = ({
             case "countries-operation":
               selectOptions = sidebriefCountries;
           }
+
+          // console.log(el.dependsOn);
+          // const dependedOn = el.dependsOn;
+          // console.log(dependedOn);
+          let showField = true;
+          if (el.dependsOn?.field) {
+            const currValue = getValues(sluggify(el.dependsOn?.field || ""))?.toLowerCase();
+            if (el.dependsOn?.options) {
+              showField = !!el.dependsOn?.options?.find((el) => el?.toLowerCase() === currValue);
+            } else {
+              showField = !!currValue;
+            }
+          }
+
+          if (!showField) return;
 
           return (
             <div key={i}>
@@ -113,7 +139,7 @@ const DynamicForm = ({
               {isTextInput && (
                 <TextInput
                   id={el.name}
-                  type={el.type}
+                  type={type}
                   sizing="md"
                   helperText={<>{errorMsg}</>}
                   color={errorMsg && "failure"}

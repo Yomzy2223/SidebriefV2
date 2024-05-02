@@ -32,7 +32,7 @@ const RequestForm = ({
   const isOnLastForm = forms.length - 1 === activeTab;
 
   // Navigate to the next form if not on the last form. Next page, if otherwise
-  const handeNext = (i: number, subTabRef: RefObject<TabsRef>) => {
+  const handleNext = (i: number, subTabRef: RefObject<TabsRef>) => {
     if (isOnLastForm) {
       setQueriesWithPath({
         path: `/requests/${serviceId}/review`,
@@ -83,7 +83,7 @@ const RequestForm = ({
                   <EachForm
                     info={el}
                     isLoading={false}
-                    handeNext={(subTabRef) => handeNext(i, subTabRef)}
+                    handleNext={(subTabRef) => handleNext(i, subTabRef)}
                     isOnLastForm={isOnLastForm}
                     isServiceForm
                   />
@@ -96,7 +96,7 @@ const RequestForm = ({
             <EachForm
               info={forms[0]}
               isLoading={false}
-              handeNext={(subTabRef) => handeNext(0, subTabRef)}
+              handleNext={(subTabRef) => handleNext(0, subTabRef)}
               isOnLastForm={isOnLastForm}
               isServiceForm
             />

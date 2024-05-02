@@ -3,10 +3,11 @@ import { sluggify } from "@/lib/utils";
 import {
   useDeleteRequestQA,
   useGetRequestFormQA,
+  useSaveMultipleQASubForms,
   useSaveRequestQA,
   useUpdateRequestQA,
 } from "@/services/productQA";
-import { TFormQACreate, TFormQAGet } from "@/services/productQA/types";
+import { TFormQACreate, TFormQAGet, TSubformQACreate } from "@/services/productQA/types";
 import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
 import { useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
@@ -14,11 +15,9 @@ import { Dispatch, SetStateAction } from "react";
 export const useActions = ({
   info,
   activeSubTab,
-  newForm,
 }: {
   info?: TServiceForm | TProductForm;
   activeSubTab: number;
-  newForm: boolean;
 }) => {
   const searchParams = useSearchParams();
 
@@ -35,7 +34,7 @@ export const useActions = ({
 
   const QAForms = getQAForms(info?.title);
   const formHasTabs = QAForms?.length >= 1 && info?.type?.toLowerCase() === "person";
-  const isOnLastSubTab = activeSubTab === QAForms?.length - (newForm ? 0 : 1);
+  const isOnLastSubTab = activeSubTab === QAForms?.length - 1;
 
   return {
     QAForms,
@@ -55,13 +54,13 @@ export const useNewFormAction = ({
   QAForm,
   handeleSubmit,
   setIsUploading,
+  isOnLastSubTab,
 }: INewFormActionProps) => {
   const updateRequestQA = useUpdateRequestQA();
   const { userCloudFolder } = useGlobalFunctions();
 
   // Returns the QA for a field
   const getQAField = (question: string) => {
-    // const QASubForm = requestFormQA?.subForm;
     const QASubForm = QAForm?.subForm;
     const QAField = QASubForm?.find((el) => el.question === question);
     return QAField;
@@ -73,6 +72,14 @@ export const useNewFormAction = ({
       return isDoc;
     }) || [];
 
+  const nonDocSubformsQA =
+    QAForm?.subForm?.filter((el) => {
+      const isDoc = el.type === "document template" || el.type === "document upload";
+      return !isDoc;
+    }) || [];
+  // if (QAForm?.title === "Member") console.log(nonDocSubformsQA);
+
+  // Form info used to construct the form
   const formInfo = docSubforms.map((field) => {
     const QAField = getQAField(field.question);
 
@@ -90,6 +97,7 @@ export const useNewFormAction = ({
       fileSize: QAField?.fileSize,
     };
   });
+  // if (QAForm?.title === "Member") console.log(formInfo);
 
   // Used to create and update QA form
   const submitFormHandler = async (
@@ -97,60 +105,75 @@ export const useNewFormAction = ({
     // reset: UseFormReset<any>
   ) => {
     if (!info) return;
-    console.log(values, docSubforms);
 
-    setIsUploading(true);
-    const resArray = await Promise.all(
-      docSubforms.map(async (el, i: number) => {
-        const uploadRes = await uploadFileToCloudinary({
-          file: values[sluggify(el.question)],
-          folderName: userCloudFolder,
-        });
-        return uploadRes;
-      })
-    );
-    setIsUploading(false);
-    if (!resArray) return;
+    let resArray: any[] = [];
 
-    const getAnswer = (field: TSubForm) => {
-      let answer = values[sluggify(field.question)];
-      if (typeof answer === "number") answer = answer.toString();
-      return answer;
-    };
-    console.log(values);
+    try {
+      setIsUploading(true);
+      resArray = await Promise.all(
+        docSubforms.map(async (el, i: number) => {
+          let file: any = values[sluggify(el.question)];
+          let isANewFile: boolean = file instanceof File;
 
-    const payload: TFormQACreate = {
+          let response = {
+            id: getQAField(el.question)?.id,
+            question: el.question,
+            answer: [],
+            type: el.type,
+            compulsory: el.compulsory,
+            fileName: "",
+            fileLink: "",
+            fileType: "",
+            fileSize: "",
+          };
+          if (isANewFile) {
+            // If it's a new files, then upload them to cloudinary
+            const uploadRes = await uploadFileToCloudinary({
+              file: values[sluggify(el.question)],
+              folderName: userCloudFolder,
+            });
+            response.fileName = uploadRes.data?.original_filename;
+            response.fileLink = uploadRes.data?.secure_url;
+            response.fileType = uploadRes.data?.secure_url.split(".").pop();
+            response.fileSize = uploadRes.data?.bytes?.toString();
+          } else {
+            // If it's not a new file, then set back the old file
+            response.fileName = file?.fileName;
+            response.fileLink = file?.fileLink;
+            response.fileType = file?.fileType;
+            response.fileSize = file?.fileSize;
+          }
+
+          return response;
+        })
+      );
+      setIsUploading(false);
+    } catch (err) {
+      console.log(err);
+      setIsUploading(false);
+    }
+
+    const docsAreComplete = resArray?.length === docSubforms?.length;
+    const docSubformQA = docsAreComplete ? resArray : docSubforms;
+
+    const payload = {
       title: info.title,
       description: info.description,
       type: info.type,
       compulsory: info.compulsory,
       isGeneral: false,
-      subForm: info.subForm.map((field, i) => ({
-        id: getQAField(field.question)?.id,
-        question: field.question,
-        answer: getAnswer(field),
-        type: field.type,
-        compulsory: field.compulsory,
-        fileName: resArray[i]?.data?.original_filename || "",
-        fileLink: resArray[i]?.data?.secure_url || "",
-        fileType: resArray[i]?.data?.secure_url.split(".").pop() || "",
-        fileSize: resArray[i]?.data?.bytes || "",
-      })),
-    } as TFormQACreate;
+      subForm: [...nonDocSubformsQA, ...docSubformQA],
+    };
 
-    console.log(payload);
-    if (QAForm?.id) {
-      updateRequestQA.mutate(
-        { requestFormId: QAForm.id, form: payload },
-        {
-          onSuccess: (data) => {
-            handeleSubmit();
-            console.log("Updated request form");
-          },
-        }
-      );
-      return;
-    }
+    updateRequestQA.mutate(
+      { requestFormId: QAForm?.id || "", form: payload },
+      {
+        onSuccess: (data) => {
+          handeleSubmit();
+          console.log("Updated request document");
+        },
+      }
+    );
   };
   const isPending = updateRequestQA.isPending;
 
@@ -162,4 +185,5 @@ interface INewFormActionProps {
   QAForm?: TFormQAGet;
   handeleSubmit: () => void;
   setIsUploading: Dispatch<SetStateAction<boolean>>;
+  isOnLastSubTab: boolean;
 }
