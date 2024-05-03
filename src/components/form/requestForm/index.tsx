@@ -30,16 +30,26 @@ const RequestForm = ({
 
   // Navigate to the next form if not on the last form. Next page, if otherwise
   const isOnLastForm = forms.length - 1 === activeTab;
+  const requiresFiles = forms?.some((el) =>
+    el.subForm?.some((el) => el.type === "document template" || el.type === "document upload")
+  );
 
   const handeNext = (i: number, subTabRef: RefObject<TabsRef>) => {
     if (isOnLastForm) {
-      isServiceForm
+      if (isServiceForm) {
+        setQueriesWithPath({
+          path: `/requests/${serviceId}/payment`,
+          queries: [{ name: "progress", value: "2" }],
+        });
+        return;
+      }
+      requiresFiles
         ? setQueriesWithPath({
-            path: `/requests/${serviceId}/payment`,
-            queries: [{ name: "progress", value: "2" }],
+            queries: [{ name: "openDocument", value: "true" }],
           })
         : setQueriesWithPath({
-            queries: [{ name: "openDocument", value: "true" }],
+            path: `/requests/${serviceId}/review`,
+            queries: [{ name: "progress", value: "4" }],
           });
       return;
     }
@@ -53,6 +63,7 @@ const RequestForm = ({
     });
   };
 
+  // console.log(forms);
   return (
     <div className="flex flex-col gap-2 max-w-[500px] w-full">
       <h4 className="text-sm leading-normal text-foreground-3 mb-1">STEP 2</h4>

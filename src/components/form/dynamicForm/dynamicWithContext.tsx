@@ -111,21 +111,6 @@ const DynamicFormWithContext = ({
               selectOptions = sidebriefCountries;
           }
 
-          // console.log(el.dependsOn);
-          // const dependedOn = el.dependsOn;
-          // console.log(dependedOn);
-          // let showField = true;
-          // if (el.dependsOn?.field) {
-          //   const currValue = getValues(sluggify(el.dependsOn?.field || ""))?.toLowerCase();
-          //   if (el.dependsOn?.options) {
-          //     showField = !!el.dependsOn?.options?.find((el) => el?.toLowerCase() === currValue);
-          //   } else {
-          //     showField = !!currValue;
-          //   }
-          // }
-
-          // if (!showField) return;
-
           return (
             <div key={i}>
               {el.label && (
@@ -178,6 +163,7 @@ const DynamicFormWithContext = ({
                   setValue={setValue}
                   errorMsg={errorMsg?.toString()}
                   selectProp={el.selectProp}
+                  placeholder={el.placeholder}
                   handleSelect={el.handleSelect}
                   fieldName="options"
                   leftContent={el.leftContent}

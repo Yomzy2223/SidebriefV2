@@ -180,6 +180,7 @@ const DynamicForm = ({
                   setValue={setValue}
                   errorMsg={errorMsg?.toString()}
                   selectProp={el.selectProp}
+                  placeholder={el.placeholder}
                   handleSelect={el.handleSelect}
                   fieldName="options"
                   leftContent={el.leftContent}

@@ -58,15 +58,10 @@ const EachForm = ({
   const handeleSubmit = () => {
     if (isOnLastSubTab) {
       handeNext(tabsRef);
-      // tabsRef.current?.setActiveTab(0); //navigate to the next sub tab
-      // setActiveSubTab(0);
       return;
     }
     tabsRef.current?.setActiveTab(activeSubTab + 1); //navigate to the next sub tab
     setActiveSubTab(activeSubTab + 1);
-    //  document
-    //    .getElementById("subFormTabs" + activeSubTab)
-    //    ?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
   };
 
   const onFormDelete = (isNew?: boolean) => {
@@ -138,7 +133,7 @@ const EachForm = ({
           setNewForm={setNewForm}
           handeleSubmit={handeleSubmit}
           formHasTabs={false}
-          isNewForm
+          // isNewForm
         />
       )}
     </>
@@ -162,17 +157,8 @@ const FormInstance = ({
   const [openDelete, setOpenDelete] = useState(false);
   const [onlyCreate, setOnlyCreate] = useState(false);
 
-  // const { schema } = getDynamicSchema({ subForms: formInfo });
-  const schemaRef = useRef<ZodType<any, any, any>>(z.object({}));
+  // const schemaRef = useRef<ZodType<any, any, any>>(z.object({}));
   // let schema: ZodType<any, any, any> = z.object({});
-
-  type formType = z.infer<typeof schemaRef.current>;
-
-  const form = useForm<formType>({
-    resolver: zodResolver(schemaRef.current),
-    defaultValues: {},
-  });
-  console.log(form.formState.errors);
 
   const { deletePending, deleteQAForm, submitFormHandler, formInfo, isPending, watchValues } =
     useNewFormAction({
@@ -186,86 +172,95 @@ const FormInstance = ({
       onFormDelete,
       onlyCreate,
       setOnlyCreate,
-      form,
     });
 
   // const updatedFormInfo = watchValues(form.getValues());
-  console.log(formInfo);
-  useEffect(() => {
-    const dynamic = getDynamicSchema({ subForms: formInfo });
-    schemaRef.current = dynamic.schema;
-  }, [formInfo]);
+  // useEffect(() => {
+  //   const dynamic = getDynamicSchema({ subForms: formInfo });
+  //   schemaRef.current = dynamic.schema;
+  // }, [formInfo]);
+
+  const { schema } = getDynamicSchema({ subForms: formInfo });
+  // const schemaRef = useRef<ZodType<any, any, any>>(z.object({}));
+  // let schema: ZodType<any, any, any> = z.object({});
+
+  type formType = z.infer<typeof schema>;
+
+  const form = useForm<formType>({
+    resolver: zodResolver(schema),
+    defaultValues: {},
+  });
 
   return (
-    <FormProvider {...form}>
-      <DynamicFormWithContext
-        formInfo={formInfo}
-        onFormSubmit={({ values, reset }) => submitFormHandler(values)}
-        className="gap-6"
-        formClassName="gap-12 justify-between"
-      >
-        <div className="flex justify-between gap-6">
-          <Button
-            color="secondary"
-            size="lg"
-            type="submit"
-            isProcessing={isPending && !isNewForm}
-            disabled={isPending}
-            processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
-          >
-            <div className="space-x-2 flex items-center">
-              <p>Continue</p>
-              {!isPending && <ArrowRightCircle className="ml-1" />}
-            </div>
-          </Button>
-          {info?.type === "person" && (
-            <div className="flex gap-6 items-center">
-              {formHasTabs && (
-                <Button
-                  type="button"
-                  color="transparent"
-                  size="fit"
-                  className="text-destructive-foreground"
-                  disabled={deletePending || isPending}
-                  onClick={() =>
-                    isNewForm ? onFormDelete && onFormDelete(true) : setOpenDelete(true)
-                  }
-                >
-                  Delete
-                </Button>
-              )}
+    // <FormProvider {...form}>
+    <DynamicForm
+      formInfo={formInfo}
+      onFormSubmit={({ values, reset }) => submitFormHandler(values)}
+      className="gap-6"
+      formClassName="gap-12 justify-between"
+    >
+      <div className="flex justify-between gap-6">
+        <Button
+          color="secondary"
+          size="lg"
+          type="submit"
+          isProcessing={isPending && !onlyCreate}
+          disabled={isPending}
+          processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
+        >
+          <div className="space-x-2 flex items-center">
+            <p>Continue</p>
+            {!isPending && <ArrowRightCircle className="ml-1" />}
+          </div>
+        </Button>
+        {info?.type === "person" && (
+          <div className="flex gap-6 items-center">
+            {formHasTabs && (
               <Button
-                type={isNewForm ? "submit" : "button"}
+                type="button"
                 color="transparent"
                 size="fit"
-                className="text-primary lowercase"
-                disabled={isPending}
-                onClick={() => {
-                  !isNewForm && addNewForm && addNewForm();
-                  setOnlyCreate(true);
-                }}
+                className="text-destructive-foreground"
+                disabled={deletePending || isPending}
+                onClick={() =>
+                  isNewForm ? onFormDelete && onFormDelete(true) : setOpenDelete(true)
+                }
               >
-                <span className="lowercase first-letter:uppercase">
-                  {isNewForm ? "Save" : `Add new ${info?.title || ""}`}
-                </span>
+                Delete
               </Button>
-            </div>
-          )}
-        </div>
-        {openDelete && (
-          <ConfirmAction
-            open={openDelete}
-            setOpen={setOpenDelete}
-            confirmAction={deleteQAForm}
-            title={`Delete ${info.title} ${(i || 0) + 1}`}
-            description={`Are you sure you want delete this ${info?.title}'s information? He/She will be notified.`}
-            isLoading={deletePending}
-            dismissible
-            isDelete
-          />
+            )}
+            <Button
+              type={isNewForm || !formHasTabs ? "submit" : "button"}
+              color="transparent"
+              size="fit"
+              className="text-primary lowercase"
+              disabled={isPending}
+              onClick={() => {
+                !isNewForm && addNewForm && addNewForm();
+                setOnlyCreate(true);
+              }}
+            >
+              <span className="lowercase first-letter:uppercase">
+                {isNewForm || !formHasTabs ? "Save" : `Add new ${info?.title || ""}`}
+              </span>
+            </Button>
+          </div>
         )}
-      </DynamicFormWithContext>
-    </FormProvider>
+      </div>
+      {openDelete && (
+        <ConfirmAction
+          open={openDelete}
+          setOpen={setOpenDelete}
+          confirmAction={deleteQAForm}
+          title={`Delete ${info.title} ${(i || 0) + 1}`}
+          description={`Are you sure you want delete this ${info?.title}'s information? He/She will be notified.`}
+          isLoading={deletePending}
+          dismissible
+          isDelete
+        />
+      )}
+    </DynamicForm>
+    // </FormProvider>
   );
 };
 
