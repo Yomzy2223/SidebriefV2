@@ -24,7 +24,7 @@ export default function Review() {
   const productRequestId = processData?.productRequest[0].id;
 
   return (
-    <RequestWrapper>
+    <RequestWrapper hideFAQ>
       <div className="space-y-14">
         <BusinessInfoReview requestId={productRequestId || ""} />
         <ProprietorInfoReview productId={productRequestId || ""} />

@@ -1,6 +1,6 @@
 import { Checkbox, Label, Radio, Select, TextInput } from "flowbite-react";
 import React, { useEffect, useMemo, useRef, useCallback, MutableRefObject } from "react";
-import { useForm, Controller, FormState } from "react-hook-form";
+import { useForm, Controller, FormState, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DynamicFormProps } from "../constants";
@@ -14,7 +14,7 @@ import { FileInput } from "@/components/file/fileInput";
 import { useGetCountries } from "@/services/service";
 import { getDynamicSchema } from "./actions";
 
-const DynamicForm = ({
+const DynamicFormWithContext = ({
   children,
   formInfo,
   defaultValues,
@@ -43,10 +43,7 @@ const DynamicForm = ({
     setValue,
     control,
     reset,
-  } = useForm<formType>({
-    resolver: zodResolver(schema),
-    defaultValues: dValues,
-  });
+  } = useFormContext();
 
   // Submit handler
   function onSubmit(values: formType) {
@@ -55,6 +52,7 @@ const DynamicForm = ({
   }
 
   useEffect(() => {
+    watchValues && watchValues(getValues());
     const subscription = watch((values) => watchValues && watchValues(values));
     return () => subscription.unsubscribe();
   }, [watch, watchValues]);
@@ -254,4 +252,4 @@ const DynamicForm = ({
   );
 };
 
-export default DynamicForm;
+export default DynamicFormWithContext;

@@ -11,6 +11,12 @@ import { useSearchParams } from "next/navigation";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import ConfirmAction from "@/components/confirmAction";
 import { TFormQAGet } from "@/services/productQA/types";
+import { FormProvider, useForm } from "react-hook-form";
+import DynamicFormWithContext from "../dynamicForm/dynamicWithContext";
+import { getDynamicSchema } from "../dynamicForm/actions";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ZodType } from "zod";
 
 const EachForm = ({
   info,
@@ -156,87 +162,110 @@ const FormInstance = ({
   const [openDelete, setOpenDelete] = useState(false);
   const [onlyCreate, setOnlyCreate] = useState(false);
 
-  const { deletePending, deleteQAForm, submitFormHandler, formInfo, isPending } = useNewFormAction({
-    info,
-    setOpenDelete,
-    isServiceForm,
-    QAForm,
-    handeleSubmit,
-    isNewForm,
-    setNewForm,
-    onFormDelete,
-    onlyCreate,
-    setOnlyCreate,
+  // const { schema } = getDynamicSchema({ subForms: formInfo });
+  const schemaRef = useRef<ZodType<any, any, any>>(z.object({}));
+  // let schema: ZodType<any, any, any> = z.object({});
+
+  type formType = z.infer<typeof schemaRef.current>;
+
+  const form = useForm<formType>({
+    resolver: zodResolver(schemaRef.current),
+    defaultValues: {},
   });
+  console.log(form.formState.errors);
+
+  const { deletePending, deleteQAForm, submitFormHandler, formInfo, isPending, watchValues } =
+    useNewFormAction({
+      info,
+      setOpenDelete,
+      isServiceForm,
+      QAForm,
+      handeleSubmit,
+      isNewForm,
+      setNewForm,
+      onFormDelete,
+      onlyCreate,
+      setOnlyCreate,
+      form,
+    });
+
+  // const updatedFormInfo = watchValues(form.getValues());
+  console.log(formInfo);
+  useEffect(() => {
+    const dynamic = getDynamicSchema({ subForms: formInfo });
+    schemaRef.current = dynamic.schema;
+  }, [formInfo]);
 
   return (
-    <DynamicForm
-      formInfo={formInfo}
-      onFormSubmit={({ values, reset }) => submitFormHandler(values)}
-      className="gap-6"
-      formClassName="gap-12 justify-between"
-    >
-      <div className="flex justify-between gap-6">
-        <Button
-          color="secondary"
-          size="lg"
-          type="submit"
-          isProcessing={isPending && !isNewForm}
-          disabled={isPending}
-          processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
-        >
-          <div className="space-x-2 flex items-center">
-            <p>Continue</p>
-            {!isPending && <ArrowRightCircle className="ml-1" />}
-          </div>
-        </Button>
-        {info?.type === "person" && (
-          <div className="flex gap-6 items-center">
-            {formHasTabs && (
+    <FormProvider {...form}>
+      <DynamicFormWithContext
+        formInfo={formInfo}
+        onFormSubmit={({ values, reset }) => submitFormHandler(values)}
+        className="gap-6"
+        formClassName="gap-12 justify-between"
+      >
+        <div className="flex justify-between gap-6">
+          <Button
+            color="secondary"
+            size="lg"
+            type="submit"
+            isProcessing={isPending && !isNewForm}
+            disabled={isPending}
+            processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
+          >
+            <div className="space-x-2 flex items-center">
+              <p>Continue</p>
+              {!isPending && <ArrowRightCircle className="ml-1" />}
+            </div>
+          </Button>
+          {info?.type === "person" && (
+            <div className="flex gap-6 items-center">
+              {formHasTabs && (
+                <Button
+                  type="button"
+                  color="transparent"
+                  size="fit"
+                  className="text-destructive-foreground"
+                  disabled={deletePending || isPending}
+                  onClick={() =>
+                    isNewForm ? onFormDelete && onFormDelete(true) : setOpenDelete(true)
+                  }
+                >
+                  Delete
+                </Button>
+              )}
               <Button
-                type="button"
+                type={isNewForm ? "submit" : "button"}
                 color="transparent"
                 size="fit"
-                className="text-destructive-foreground"
-                disabled={deletePending || isPending}
-                onClick={() =>
-                  isNewForm ? onFormDelete && onFormDelete(true) : setOpenDelete(true)
-                }
+                className="text-primary lowercase"
+                disabled={isPending}
+                onClick={() => {
+                  !isNewForm && addNewForm && addNewForm();
+                  setOnlyCreate(true);
+                }}
               >
-                Delete
+                <span className="lowercase first-letter:uppercase">
+                  {isNewForm ? "Save" : `Add new ${info?.title || ""}`}
+                </span>
               </Button>
-            )}
-            <Button
-              type={isNewForm ? "submit" : "button"}
-              color="transparent"
-              size="fit"
-              className="text-primary lowercase"
-              disabled={isPending}
-              onClick={() => {
-                !isNewForm && addNewForm && addNewForm();
-                setOnlyCreate(true);
-              }}
-            >
-              <span className="lowercase first-letter:uppercase">
-                {isNewForm ? "Save" : `Add new ${info?.title || ""}`}
-              </span>
-            </Button>
-          </div>
+            </div>
+          )}
+        </div>
+        {openDelete && (
+          <ConfirmAction
+            open={openDelete}
+            setOpen={setOpenDelete}
+            confirmAction={deleteQAForm}
+            title={`Delete ${info.title} ${(i || 0) + 1}`}
+            description={`Are you sure you want delete this ${info?.title}'s information? He/She will be notified.`}
+            isLoading={deletePending}
+            dismissible
+            isDelete
+          />
         )}
-      </div>
-      {openDelete && (
-        <ConfirmAction
-          open={openDelete}
-          setOpen={setOpenDelete}
-          confirmAction={deleteQAForm}
-          title={`Delete ${info.title} ${(i || 0) + 1}`}
-          description={`Are you sure you want delete this ${info?.title}'s information? He/She will be notified.`}
-          isLoading={deletePending}
-          dismissible
-          isDelete
-        />
-      )}
-    </DynamicForm>
+      </DynamicFormWithContext>
+    </FormProvider>
   );
 };
 
