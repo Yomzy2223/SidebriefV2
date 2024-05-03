@@ -10,6 +10,7 @@ import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
 import { useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
+import { IFormInput } from "../constants";
 
 export const useActions = ({
   info,
@@ -35,7 +36,9 @@ export const useActions = ({
 
   const QAForms = getQAForms(info?.title);
   const formHasTabs = QAForms?.length >= 1 && info?.type?.toLowerCase() === "person";
-  const isOnLastSubTab = activeSubTab === QAForms?.length - (newForm ? 0 : 1);
+  const isOnLastSubTab = QAForms?.length
+    ? activeSubTab === QAForms?.length - (newForm ? 0 : 1)
+    : true;
 
   return {
     QAForms,
@@ -60,8 +63,8 @@ export const useNewFormAction = ({
   onFormDelete,
   onlyCreate,
   setOnlyCreate,
-  form,
-}: INewFormActionProps) => {
+}: // form,
+INewFormActionProps) => {
   const saveRequestQA = useSaveRequestQA();
   const updateRequestQA = useUpdateRequestQA();
   const deleteRequestQA = useDeleteRequestQA();
@@ -84,7 +87,7 @@ export const useNewFormAction = ({
     }) || [];
 
   // Used to construct the form
-  let formInf = nonDocSubforms.map((field) => {
+  let formInfo: IFormInput[] = nonDocSubforms.map((field) => {
     const QAField = getQAField(field.question);
 
     const isTextInput =
@@ -110,30 +113,35 @@ export const useNewFormAction = ({
       selectOptions: field.options,
       compulsory: field.compulsory,
       dependsOn: field.dependsOn,
+      placeholder: field.question,
+      textInputProp: {
+        placeholder: field.question,
+      },
       value,
     };
   });
 
-  const formInfo = formInf?.filter((field) => {
-    const dependsField = field?.dependsOn.field || "";
-    let dependsOnQuestion = "";
-    let showField = true;
+  // const formInfo = formInf?.filter((field) => {
+  //   const dependsField = field?.dependsOn.field || "";
+  //   let dependsOnQuestion = "";
+  //   let showField = true;
 
-    if (dependsField) {
-      const dependsIndex = parseInt(dependsField.split(" ").pop() || "") - 1;
-      if (dependsIndex) dependsOnQuestion = info.subForm[dependsIndex]?.question;
-    }
-    if (dependsOnQuestion) {
-      const currValue = form.getValues(sluggify(dependsOnQuestion))?.toLowerCase();
-      console.log(currValue);
-      if (field.dependsOn?.options) {
-        // showField = !!field.dependsOn?.options?.find((el) => el?.toLowerCase() === currValue);
-      } else {
-        showField = !!currValue;
-      }
-    }
-    return showField;
-  });
+  //   if (dependsField) {
+  //     const dependsIndex = parseInt(dependsField.split(" ").pop() || "") - 1;
+  //     if (dependsIndex) dependsOnQuestion = info.subForm[dependsIndex]?.question;
+  //     if (dependsOnQuestion) {
+  //       const currValue = form.getValues(sluggify(dependsOnQuestion))?.toLowerCase();
+  //       console.log(currValue);
+  //       console.log(field.dependsOn?.options);
+  //       if (field.dependsOn?.options) {
+  //         showField = !!field.dependsOn?.options?.find((el) => el?.toLowerCase() === currValue);
+  //       } else {
+  //         showField = !!currValue;
+  //       }
+  //     }
+  //   }
+  //   return showField;
+  // });
 
   const watchValues = (values: any) => {
     const dependsOnQuestions = [];
@@ -188,11 +196,9 @@ export const useNewFormAction = ({
       { requestId, formId: info.id, form: payload },
       {
         onSuccess: (data) => {
-          if (isNewForm) {
-            setNewForm(false);
-            setOnlyCreate(false);
-            if (!onlyCreate) handeleSubmit();
-          } else handeleSubmit();
+          if (onlyCreate) setOnlyCreate(false);
+          else handeleSubmit();
+          if (isNewForm) setNewForm(false);
           console.log("Created request form");
         },
       }
@@ -228,5 +234,5 @@ interface INewFormActionProps {
   onFormDelete?: (isNew?: boolean) => void;
   onlyCreate: boolean;
   setOnlyCreate: Dispatch<SetStateAction<boolean>>;
-  form: UseFormReturn<any, any, undefined>;
+  // form: UseFormReturn<any, any, undefined>;
 }

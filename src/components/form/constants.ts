@@ -10,6 +10,7 @@ export interface IFormInput {
   type: TFieldTypes;
   textInputProp?: Record<string, any>;
   selectProp?: Record<string, any>;
+  placeholder?: string;
   fileProp?: Record<string, any>;
   selectOptions?: string[];
   value?: string | string[];

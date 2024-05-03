@@ -25,6 +25,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
   const [country, setCountry] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
 
+  console.log(country);
   const searchParams = useSearchParams();
 
   const { setQueriesWithPath } = useGlobalFunctions();

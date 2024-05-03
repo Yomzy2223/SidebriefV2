@@ -27,6 +27,7 @@ const ComboBox = ({
   const [openSelect, setOpenSelect] = useState(false);
   const [selectValue, setSelectValue] = useState(defaultValue);
 
+  // console.log(defaultValue, selectValue);
   const findOriginalValue = (value: string) =>
     options.find((el) => el.toLowerCase() === value.toLowerCase()) || "";
 

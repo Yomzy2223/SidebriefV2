@@ -14,7 +14,7 @@ const Info = () => {
 
   return (
     <RequestWrapper>
-      <RequestForm forms={serviceForms} isServiceForm />
+      <RequestForm forms={serviceForms} step="STEP 2" isServiceForm />
     </RequestWrapper>
   );
 };
