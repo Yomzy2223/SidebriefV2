@@ -26,7 +26,7 @@ export default function Review() {
   return (
     <RequestWrapper hideFAQ>
       <div className="space-y-14">
-        <BusinessInfoReview requestId={productRequestId || ""} />
+        <BusinessInfoReview />
         <ProprietorInfoReview productId={productRequestId || ""} />
       </div>
       <Button

@@ -6,10 +6,11 @@ import { BellRing, ChevronDown, MenuIcon, Search, Settings } from "lucide-react"
 import { Avatar, Button } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export const Header = () => {
   const { push } = useRouter();
+  const session = useSession();
 
   const handleLogout = async () => {
     await signOut({ redirect: true });
@@ -29,7 +30,9 @@ export const Header = () => {
         <div className="flex items-center justify-between py-4 gap-8 w-full pl-10">
           <div className="flex flex-1 items-center gap-8">
             <h2 className="sb-text-24 font-semibold whitespace-nowrap">
-              Hello, <span className="text-foreground-4">Joshua</span>👋
+              Hello,{" "}
+              <span className="text-foreground-4">{session.data?.user.fullName.split(" ")[0]}</span>
+              👋
             </h2>
           </div>
           <div className="flex items-center gap-4">
