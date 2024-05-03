@@ -8,7 +8,8 @@ import {
 import { TFormQACreate, TFormQAGet } from "@/services/productQA/types";
 import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
 import { useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 
 export const useActions = ({
   info,
@@ -59,6 +60,7 @@ export const useNewFormAction = ({
   onFormDelete,
   onlyCreate,
   setOnlyCreate,
+  form,
 }: INewFormActionProps) => {
   const saveRequestQA = useSaveRequestQA();
   const updateRequestQA = useUpdateRequestQA();
@@ -81,7 +83,8 @@ export const useNewFormAction = ({
       return !isDoc;
     }) || [];
 
-  const formInfo = nonDocSubforms.map((field) => {
+  // Used to construct the form
+  let formInf = nonDocSubforms.map((field) => {
     const QAField = getQAField(field.question);
 
     const isTextInput =
@@ -98,13 +101,6 @@ export const useNewFormAction = ({
 
     let value = isTextInput || isSelect ? QAField?.answer[0] || "" : QAField?.answer || [];
 
-    const dependsField = field?.dependsOn?.field;
-    let dependsOnQuestion;
-    if (dependsField) {
-      const dependsIndex = parseInt(dependsField.split(" ").pop() || "") - 1;
-      if (dependsIndex) dependsOnQuestion = info.subForm[dependsIndex]?.question;
-    }
-
     // Each field
     return {
       id: field.id,
@@ -113,13 +109,36 @@ export const useNewFormAction = ({
       type: field.type,
       selectOptions: field.options,
       compulsory: field.compulsory,
-      dependsOn: {
-        field: dependsOnQuestion,
-        options: field.dependsOn?.options,
-      },
+      dependsOn: field.dependsOn,
       value,
     };
   });
+
+  const formInfo = formInf?.filter((field) => {
+    const dependsField = field?.dependsOn.field || "";
+    let dependsOnQuestion = "";
+    let showField = true;
+
+    if (dependsField) {
+      const dependsIndex = parseInt(dependsField.split(" ").pop() || "") - 1;
+      if (dependsIndex) dependsOnQuestion = info.subForm[dependsIndex]?.question;
+    }
+    if (dependsOnQuestion) {
+      const currValue = form.getValues(sluggify(dependsOnQuestion))?.toLowerCase();
+      console.log(currValue);
+      if (field.dependsOn?.options) {
+        // showField = !!field.dependsOn?.options?.find((el) => el?.toLowerCase() === currValue);
+      } else {
+        showField = !!currValue;
+      }
+    }
+    return showField;
+  });
+
+  const watchValues = (values: any) => {
+    const dependsOnQuestions = [];
+    return formInfo?.filter((field) => !!field.dependsOn?.field);
+  };
 
   // Used to create and update QA form
   const submitFormHandler = (
@@ -195,7 +214,7 @@ export const useNewFormAction = ({
   const deletePending = deleteRequestQA.isPending;
   const isPending = saveRequestQA.isPending || updateRequestQA.isPending;
 
-  return { submitFormHandler, deleteQAForm, deletePending, isPending, formInfo };
+  return { submitFormHandler, deleteQAForm, deletePending, isPending, formInfo, watchValues };
 };
 
 interface INewFormActionProps {
@@ -209,4 +228,5 @@ interface INewFormActionProps {
   onFormDelete?: (isNew?: boolean) => void;
   onlyCreate: boolean;
   setOnlyCreate: Dispatch<SetStateAction<boolean>>;
+  form: UseFormReturn<any, any, undefined>;
 }
