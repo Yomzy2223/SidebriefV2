@@ -1,5 +1,8 @@
 import { IFormInput } from "../constants";
 import { z } from "zod";
+import { UseFormGetValues } from "react-hook-form";
+import { sluggify } from "@/lib/utils";
+import { TSubForm } from "@/services/service/types";
 
 // export const getDynamicSchema = ({
 //   isLoading = false,
@@ -309,4 +312,32 @@ export const getDynamicSchema = ({
         );
 
   return { schema };
+};
+
+export const getVisibilityStatus = ({
+  field,
+  getValues,
+  fullFormInfo,
+}: {
+  field: IFormInput;
+  getValues: UseFormGetValues<any>;
+  fullFormInfo?: TSubForm[];
+}) => {
+  const dependsField = field?.dependsOn ? field?.dependsOn.field : "";
+  let dependsOnQuestion = "";
+  let showField = true;
+
+  if (dependsField) {
+    const dependsIndex = parseInt(dependsField.split(" ").pop() || "") - 1;
+    if (dependsIndex && fullFormInfo) dependsOnQuestion = fullFormInfo[dependsIndex]?.question;
+    if (dependsOnQuestion) {
+      const currValue = getValues(sluggify(dependsOnQuestion))?.toLowerCase();
+      if (field.dependsOn?.options) {
+        showField = !!field.dependsOn?.options?.find((el) => el?.toLowerCase() === currValue);
+      } else {
+        showField = !!currValue;
+      }
+    }
+  }
+  return showField;
 };

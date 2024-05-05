@@ -121,28 +121,6 @@ INewFormActionProps) => {
     };
   });
 
-  // const formInfo = formInf?.filter((field) => {
-  //   const dependsField = field?.dependsOn.field || "";
-  //   let dependsOnQuestion = "";
-  //   let showField = true;
-
-  //   if (dependsField) {
-  //     const dependsIndex = parseInt(dependsField.split(" ").pop() || "") - 1;
-  //     if (dependsIndex) dependsOnQuestion = info.subForm[dependsIndex]?.question;
-  //     if (dependsOnQuestion) {
-  //       const currValue = form.getValues(sluggify(dependsOnQuestion))?.toLowerCase();
-  //       console.log(currValue);
-  //       console.log(field.dependsOn?.options);
-  //       if (field.dependsOn?.options) {
-  //         showField = !!field.dependsOn?.options?.find((el) => el?.toLowerCase() === currValue);
-  //       } else {
-  //         showField = !!currValue;
-  //       }
-  //     }
-  //   }
-  //   return showField;
-  // });
-
   const watchValues = (values: any) => {
     const dependsOnQuestions = [];
     return formInfo?.filter((field) => !!field.dependsOn?.field);
@@ -153,6 +131,7 @@ INewFormActionProps) => {
     values: Record<any, any>
     // reset: UseFormReset<any>
   ) => {
+    console.log(values);
     if (!info) return;
 
     const getAnswer = (field: TSubForm) => {
@@ -170,7 +149,7 @@ INewFormActionProps) => {
       subForm: info.subForm.map((field) => ({
         id: getQAField(field.question)?.id,
         question: field.question,
-        answer: getAnswer(field),
+        answer: getAnswer(field) || "",
         type: field.type,
         compulsory: field.compulsory,
         fileName: "",

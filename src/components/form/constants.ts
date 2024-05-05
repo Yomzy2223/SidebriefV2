@@ -1,4 +1,4 @@
-import { TFieldTypes } from "@/services/service/types";
+import { TFieldTypes, TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { FormState, UseFormReset } from "react-hook-form";
 import { ZodType } from "zod";
@@ -36,10 +36,9 @@ export interface DynamicFormProps {
   onFormSubmit: ({ values, reset }: { values: any; reset: UseFormReset<any> }) => void;
   defaultValues?: Record<string, any>;
   formSchema?: ZodType<any, any, any>;
-  watchValues?: (values: { [key: string]: string | string[] }) => void;
   // selectedPerson?: number | null;
   disableAll?: boolean;
   formClassName?: string;
   className?: string;
-  setFormState?: Dispatch<SetStateAction<FormState<any>>>;
+  fullFormInfo?: TSubForm[];
 }

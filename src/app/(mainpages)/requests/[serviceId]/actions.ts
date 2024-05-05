@@ -33,7 +33,6 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
   const [country, setCountry] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
 
-  console.log(country);
   const searchParams = useSearchParams();
 
   const { setQueriesWithPath } = useGlobalFunctions();
@@ -65,7 +64,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
       setCountry(country);
       setSelectedProduct(product.name);
     }
-  }, [product, worldCountries]);
+  }, [product]);
 
   const productInfo = products?.find((el) => el.name === selectedProduct);
 

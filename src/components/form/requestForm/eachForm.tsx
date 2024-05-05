@@ -198,6 +198,7 @@ const FormInstance = ({
       onFormSubmit={({ values, reset }) => submitFormHandler(values)}
       className="gap-6"
       formClassName="gap-12 justify-between"
+      fullFormInfo={info?.subForm}
     >
       <div className="flex justify-between gap-6">
         <Button
