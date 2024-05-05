@@ -47,7 +47,11 @@ const RequestForm = ({
       }
       requiresFiles
         ? setQueriesWithPath({
-            queries: [{ name: "openDocument", value: "true" }],
+            queries: [
+              { name: "openDocument", value: "true" },
+              { name: "activeTab", value: "0" },
+              { name: "activeSubTab", value: "0" },
+            ],
           })
         : setQueriesWithPath({
             path: `/requests/${serviceId}/review`,
