@@ -121,17 +121,11 @@ INewFormActionProps) => {
     };
   });
 
-  const watchValues = (values: any) => {
-    const dependsOnQuestions = [];
-    return formInfo?.filter((field) => !!field.dependsOn?.field);
-  };
-
   // Used to create and update QA form
   const submitFormHandler = (
     values: Record<any, any>
     // reset: UseFormReset<any>
   ) => {
-    console.log(values);
     if (!info) return;
 
     const getAnswer = (field: TSubForm) => {
@@ -199,7 +193,7 @@ INewFormActionProps) => {
   const deletePending = deleteRequestQA.isPending;
   const isPending = saveRequestQA.isPending || updateRequestQA.isPending;
 
-  return { submitFormHandler, deleteQAForm, deletePending, isPending, formInfo, watchValues };
+  return { submitFormHandler, deleteQAForm, deletePending, isPending, formInfo };
 };
 
 interface INewFormActionProps {

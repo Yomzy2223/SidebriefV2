@@ -65,7 +65,6 @@ const RequestForm = ({
     });
   };
 
-  // console.log(forms);
   return (
     <div className="flex flex-col gap-2 max-w-[500px] w-full">
       <h4 className="text-sm leading-normal text-foreground-3 mb-1">{step}</h4>

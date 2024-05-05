@@ -12,7 +12,6 @@ import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import ConfirmAction from "@/components/confirmAction";
 import { TFormQAGet } from "@/services/productQA/types";
 import { FormProvider, useForm } from "react-hook-form";
-import DynamicFormWithContext from "../dynamicForm/dynamicWithContext";
 import { getDynamicSchema } from "../dynamicForm/actions";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -157,42 +156,21 @@ const FormInstance = ({
   const [openDelete, setOpenDelete] = useState(false);
   const [onlyCreate, setOnlyCreate] = useState(false);
 
-  // const schemaRef = useRef<ZodType<any, any, any>>(z.object({}));
-  // let schema: ZodType<any, any, any> = z.object({});
-
-  const { deletePending, deleteQAForm, submitFormHandler, formInfo, isPending, watchValues } =
-    useNewFormAction({
-      info,
-      setOpenDelete,
-      isServiceForm,
-      QAForm,
-      handeleSubmit,
-      isNewForm,
-      setNewForm,
-      onFormDelete,
-      onlyCreate,
-      setOnlyCreate,
-    });
-
-  // const updatedFormInfo = watchValues(form.getValues());
-  // useEffect(() => {
-  //   const dynamic = getDynamicSchema({ subForms: formInfo });
-  //   schemaRef.current = dynamic.schema;
-  // }, [formInfo]);
-
-  const { schema } = getDynamicSchema({ subForms: formInfo });
-  // const schemaRef = useRef<ZodType<any, any, any>>(z.object({}));
-  // let schema: ZodType<any, any, any> = z.object({});
-
-  type formType = z.infer<typeof schema>;
-
-  const form = useForm<formType>({
-    resolver: zodResolver(schema),
-    defaultValues: {},
+  const { deletePending, deleteQAForm, submitFormHandler, formInfo, isPending } = useNewFormAction({
+    info,
+    setOpenDelete,
+    isServiceForm,
+    QAForm,
+    handeleSubmit,
+    isNewForm,
+    setNewForm,
+    onFormDelete,
+    onlyCreate,
+    setOnlyCreate,
   });
 
+  // console.log(formInfo);
   return (
-    // <FormProvider {...form}>
     <DynamicForm
       formInfo={formInfo}
       onFormSubmit={({ values, reset }) => submitFormHandler(values)}
@@ -261,7 +239,6 @@ const FormInstance = ({
         />
       )}
     </DynamicForm>
-    // </FormProvider>
   );
 };
 

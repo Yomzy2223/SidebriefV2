@@ -1,6 +1,11 @@
 import { IFormInput } from "../constants";
 import { z } from "zod";
-import { UseFormGetValues, UseFormReset, UseFormResetField } from "react-hook-form";
+import {
+  UseFormGetValues,
+  UseFormReset,
+  UseFormResetField,
+  UseFormSetValue,
+} from "react-hook-form";
 import { sluggify } from "@/lib/utils";
 import { TSubForm } from "@/services/service/types";
 
@@ -345,11 +350,11 @@ export const getVisibilityStatus = ({
 export const resetDependees = ({
   question,
   fullFormInfo,
-  resetField,
+  setValue,
 }: {
   question: string;
   fullFormInfo?: TSubForm[];
-  resetField: UseFormResetField<any>;
+  setValue: UseFormSetValue<any>;
 }) => {
   let fieldIndex: number;
 
@@ -361,7 +366,8 @@ export const resetDependees = ({
   fullFormInfo?.map((el) => {
     if (el.dependsOn.field) {
       const dependsIndex = parseInt(el.dependsOn.field.split(" ").pop() || "") - 1;
-      if (dependsIndex === fieldIndex) resetField(sluggify(el.question));
+      const isCurrent = fullFormInfo[dependsIndex].question === question;
+      if (isCurrent) setValue(sluggify(el.question), "");
     }
   });
 };

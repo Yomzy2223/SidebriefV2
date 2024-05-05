@@ -1,12 +1,11 @@
-import { Checkbox, Label, Radio, Select, TextInput } from "flowbite-react";
+import { Checkbox, Label, Radio, TextInput } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
-import { useForm, UseFormGetValues } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { DynamicFormProps, IFormInput } from "../constants";
-import { useDynamic } from "@/hooks/useDynamic";
+import { DynamicFormProps } from "../constants";
 import ComboBox from "./comboBox";
-import { cn, sluggify } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import MultiSelectCombo from "./multiSelectCombo";
 import InputWithTags from "@/components/input/inputWithTags";
 import { countries } from "countries-list";
@@ -31,7 +30,6 @@ const DynamicForm = ({
   const dynamic = getDynamicSchema({ subForms: subFormsRef.current });
 
   const schema = formSchema || dynamic.schema;
-  const dValues = defaultValues;
 
   type formType = z.infer<typeof schema>;
 
@@ -48,12 +46,11 @@ const DynamicForm = ({
     resetField,
   } = useForm<formType>({
     resolver: zodResolver(schema),
-    defaultValues: dValues,
+    defaultValues,
   });
 
   // Submit handler
   function onSubmit(values: formType) {
-    // console.log(values);
     onFormSubmit && onFormSubmit({ values, reset });
   }
 
@@ -83,7 +80,6 @@ const DynamicForm = ({
   const countriesRes = useGetCountries();
   const sidebriefCountries = countriesRes.data?.data?.data?.map((el) => el.name);
 
-  // console.log(getValues());
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -141,12 +137,6 @@ const DynamicForm = ({
                   {...register(el.name)}
                 />
               )}
-              {/* {el.type === "countries-all" && (
-                <AllCOuntries
-                  value={watch(el.name) || ""}
-                  setValue={(value: string) => setValue(el.name, value)}
-                />
-              )} */}
               {el.type === "checkbox" && (
                 <Checkbox id={el.name} defaultChecked {...register(el.name)} />
               )}
@@ -161,11 +151,6 @@ const DynamicForm = ({
                   fileSize={el.fileSize || ""}
                   errorMsg={errorMsg as string}
                 />
-                // <FileInput
-                //   id={el.name}
-                //   helperText="A profile picture is useful to confirm your are logged into your account"
-                //   {...register(el.name)}
-                // />
               )}
               {isSelect && (
                 <ComboBox
@@ -177,7 +162,7 @@ const DynamicForm = ({
                   placeholder={el.placeholder}
                   handleSelect={(value) => {
                     setRerender(!rerender);
-                    resetDependees({ question: el.name, resetField, fullFormInfo });
+                    resetDependees({ question: el.label || "", fullFormInfo, setValue });
                     el.handleSelect && el.handleSelect(value);
                   }}
                   fieldName="options"
@@ -217,15 +202,6 @@ const DynamicForm = ({
                   }}
                 />
               )}
-              {/* {el.type === "business name" && (
-                <BusinessNameInput
-                  id={el.id!}
-                  // question={el.}
-                  value={watch(el.name) || []}
-                  setValue={(value: string[]) => setValue(el.name, value)}
-                  error={errorMsg as string | undefined}
-                />
-              )} */}
               {/* {el.type === "objectives" && (
                 <BusinessObjectiveInput
                   id={el.id!}
