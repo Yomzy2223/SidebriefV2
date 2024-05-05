@@ -1,5 +1,13 @@
 import { IFormInput } from "../constants";
 import { z } from "zod";
+import {
+  UseFormGetValues,
+  UseFormReset,
+  UseFormResetField,
+  UseFormSetValue,
+} from "react-hook-form";
+import { sluggify } from "@/lib/utils";
+import { TSubForm } from "@/services/service/types";
 
 // export const getDynamicSchema = ({
 //   isLoading = false,
@@ -309,4 +317,57 @@ export const getDynamicSchema = ({
         );
 
   return { schema };
+};
+
+export const getVisibilityStatus = ({
+  field,
+  getValues,
+  fullFormInfo,
+}: {
+  field: IFormInput;
+  getValues: UseFormGetValues<any>;
+  fullFormInfo?: TSubForm[];
+}) => {
+  const dependsField = field?.dependsOn ? field?.dependsOn.field : "";
+  let dependsOnQuestion = "";
+  let showField = true;
+
+  if (dependsField) {
+    const dependsIndex = parseInt(dependsField.split(" ").pop() || "") - 1;
+    if (dependsIndex && fullFormInfo) dependsOnQuestion = fullFormInfo[dependsIndex]?.question;
+    if (dependsOnQuestion) {
+      const currValue = getValues(sluggify(dependsOnQuestion))?.toLowerCase();
+      if (field.dependsOn?.options) {
+        showField = !!field.dependsOn?.options?.find((el) => el?.toLowerCase() === currValue);
+      } else {
+        showField = !!currValue;
+      }
+    }
+  }
+  return showField;
+};
+
+export const resetDependees = ({
+  question,
+  fullFormInfo,
+  setValue,
+}: {
+  question: string;
+  fullFormInfo?: TSubForm[];
+  setValue: UseFormSetValue<any>;
+}) => {
+  let fieldIndex: number;
+
+  fullFormInfo?.map((el, i) => {
+    const field = sluggify(question);
+    if (el.question === question) fieldIndex = i + 1;
+  });
+
+  fullFormInfo?.map((el) => {
+    if (el.dependsOn.field) {
+      const dependsIndex = parseInt(el.dependsOn.field.split(" ").pop() || "") - 1;
+      const isCurrent = fullFormInfo[dependsIndex].question === question;
+      if (isCurrent) setValue(sluggify(el.question), "");
+    }
+  });
 };

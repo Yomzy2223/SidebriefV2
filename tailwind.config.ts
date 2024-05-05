@@ -26,6 +26,14 @@ const config: Config = {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        tertiary: {
+          DEFAULT: "hsl(var(--tertiary))",
+          foreground: "hsl(var(--tertiary-foreground",
+        },
         yellow: {
           DEFAULT: "hsl(var(--yellow))",
           dark: "hsl(var(--sb-yellow-dark))",
@@ -40,10 +48,7 @@ const config: Config = {
         input: {
           DEFAULT: "hsl(var(--input))",
         },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
+
         label: {
           DEFAULT: "hsl(var(--label))",
         },

@@ -1,4 +1,4 @@
-import { RequestInfoPanel } from "@/components/cards/launchStepper/requestInfoPanel";
+import { RequestInfoPanel } from "@/components/cards/requestStepper/requestInfoPanel";
 import { TProduct } from "@/services/service/types";
 import React, { ReactNode } from "react";
 

@@ -1,18 +1,17 @@
-import { Checkbox, Label, Radio, Select, TextInput } from "flowbite-react";
-import React, { useEffect, useMemo, useRef, useCallback, MutableRefObject } from "react";
-import { useForm, Controller, FormState } from "react-hook-form";
+import { Checkbox, Label, Radio, TextInput } from "flowbite-react";
+import React, { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DynamicFormProps } from "../constants";
-import { useDynamic } from "@/hooks/useDynamic";
 import ComboBox from "./comboBox";
-import { cn, sluggify } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import MultiSelectCombo from "./multiSelectCombo";
 import InputWithTags from "@/components/input/inputWithTags";
 import { countries } from "countries-list";
 import { FileInput } from "@/components/file/fileInput";
 import { useGetCountries } from "@/services/service";
-import { getDynamicSchema } from "./actions";
+import { getDynamicSchema, getVisibilityStatus, resetDependees } from "./actions";
 
 const DynamicForm = ({
   children,
@@ -20,16 +19,17 @@ const DynamicForm = ({
   defaultValues,
   formSchema,
   onFormSubmit,
-  watchValues,
   disableAll,
   formClassName,
   className,
-  setFormState,
+  fullFormInfo,
 }: DynamicFormProps) => {
-  const dynamic = getDynamicSchema({ subForms: formInfo });
+  const [rerender, setRerender] = useState(false);
+
+  let subFormsRef = useRef<any>([]);
+  const dynamic = getDynamicSchema({ subForms: subFormsRef.current });
 
   const schema = formSchema || dynamic.schema;
-  const dValues = defaultValues;
 
   type formType = z.infer<typeof schema>;
 
@@ -43,21 +43,23 @@ const DynamicForm = ({
     setValue,
     control,
     reset,
+    resetField,
   } = useForm<formType>({
     resolver: zodResolver(schema),
-    defaultValues: dValues,
+    defaultValues,
   });
 
   // Submit handler
   function onSubmit(values: formType) {
-    // console.log(values);
     onFormSubmit && onFormSubmit({ values, reset });
   }
 
   useEffect(() => {
-    const subscription = watch((values) => watchValues && watchValues(values));
-    return () => subscription.unsubscribe();
-  }, [watch, watchValues]);
+    const newFormInfo = formInfo?.filter((field) =>
+      getVisibilityStatus({ field, getValues, fullFormInfo })
+    );
+    subFormsRef.current = newFormInfo;
+  }, [getValues()]);
 
   useEffect(() => {
     (formInfo || []).forEach((form) => {
@@ -104,7 +106,7 @@ const DynamicForm = ({
           let type = el.type === "phone number" ? "number" : "text";
           if (el.type === "password") type = "password";
 
-          let selectOptions;
+          let selectOptions = el.selectOptions;
           switch (el.type) {
             case "countries-all":
               selectOptions = Object.values(countries).map((country) => country.name);
@@ -113,20 +115,8 @@ const DynamicForm = ({
               selectOptions = sidebriefCountries;
           }
 
-          // console.log(el.dependsOn);
-          // const dependedOn = el.dependsOn;
-          // console.log(dependedOn);
-          // let showField = true;
-          // if (el.dependsOn?.field) {
-          //   const currValue = getValues(sluggify(el.dependsOn?.field || ""))?.toLowerCase();
-          //   if (el.dependsOn?.options) {
-          //     showField = !!el.dependsOn?.options?.find((el) => el?.toLowerCase() === currValue);
-          //   } else {
-          //     showField = !!currValue;
-          //   }
-          // }
-
-          // if (!showField) return;
+          let showField = getVisibilityStatus({ field: el, getValues, fullFormInfo });
+          if (!showField) return;
 
           return (
             <div key={i}>
@@ -147,12 +137,6 @@ const DynamicForm = ({
                   {...register(el.name)}
                 />
               )}
-              {/* {el.type === "countries-all" && (
-                <AllCOuntries
-                  value={watch(el.name) || ""}
-                  setValue={(value: string) => setValue(el.name, value)}
-                />
-              )} */}
               {el.type === "checkbox" && (
                 <Checkbox id={el.name} defaultChecked {...register(el.name)} />
               )}
@@ -167,21 +151,20 @@ const DynamicForm = ({
                   fileSize={el.fileSize || ""}
                   errorMsg={errorMsg as string}
                 />
-                // <FileInput
-                //   id={el.name}
-                //   helperText="A profile picture is useful to confirm your are logged into your account"
-                //   {...register(el.name)}
-                // />
               )}
               {isSelect && (
                 <ComboBox
                   name={el.name}
-                  options={selectOptions || el.selectOptions || []}
+                  options={selectOptions || []}
                   setValue={setValue}
                   errorMsg={errorMsg?.toString()}
                   selectProp={el.selectProp}
                   placeholder={el.placeholder}
-                  handleSelect={el.handleSelect}
+                  handleSelect={(value) => {
+                    setRerender(!rerender);
+                    resetDependees({ question: el.label || "", fullFormInfo, setValue });
+                    el.handleSelect && el.handleSelect(value);
+                  }}
                   fieldName="options"
                   leftContent={el.leftContent}
                   defaultValue={el.value as string}
@@ -219,15 +202,6 @@ const DynamicForm = ({
                   }}
                 />
               )}
-              {/* {el.type === "business name" && (
-                <BusinessNameInput
-                  id={el.id!}
-                  // question={el.}
-                  value={watch(el.name) || []}
-                  setValue={(value: string[]) => setValue(el.name, value)}
-                  error={errorMsg as string | undefined}
-                />
-              )} */}
               {/* {el.type === "objectives" && (
                 <BusinessObjectiveInput
                   id={el.id!}

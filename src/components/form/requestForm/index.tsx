@@ -47,7 +47,11 @@ const RequestForm = ({
       }
       requiresFiles
         ? setQueriesWithPath({
-            queries: [{ name: "openDocument", value: "true" }],
+            queries: [
+              { name: "openDocument", value: "true" },
+              { name: "activeTab", value: "0" },
+              { name: "activeSubTab", value: "0" },
+            ],
           })
         : setQueriesWithPath({
             path: `/requests/${serviceId}/review`,
@@ -65,7 +69,6 @@ const RequestForm = ({
     });
   };
 
-  // console.log(forms);
   return (
     <div className="flex flex-col gap-2 max-w-[500px] w-full">
       <h4 className="text-sm leading-normal text-foreground-3 mb-1">{step}</h4>

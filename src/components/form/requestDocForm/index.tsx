@@ -33,6 +33,7 @@ const RequestForm = ({
 
   // Navigate to the next form if not on the last form. Next page, if otherwise
   const handleNext = (i: number, subTabRef: RefObject<TabsRef>) => {
+    console.log(forms, activeTab);
     if (isOnLastForm) {
       setQueriesWithPath({
         path: `/requests/${serviceId}/review`,

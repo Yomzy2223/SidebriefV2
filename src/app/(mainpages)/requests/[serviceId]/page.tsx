@@ -3,7 +3,7 @@
 import DynamicForm from "@/components/form/dynamicForm";
 import { Button } from "flowbite-react";
 import React from "react";
-import { useActions } from "./actions";
+import { formSchema, useActions } from "./actions";
 import * as z from "zod";
 import { ArrowRightCircle } from "lucide-react";
 import { Oval } from "react-loading-icons";
@@ -54,11 +54,4 @@ const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
 
 export default ProductSelect;
 
-export const formSchema = z.object({
-  country: z
-    .string({ required_error: "You need to select a country" })
-    .min(1, { message: "You need to select a country" }),
-  product: z
-    .string({ required_error: "You need to select a product" })
-    .min(1, { message: "You need to select a product" }),
-});
+// sd

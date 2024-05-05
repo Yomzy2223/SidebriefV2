@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { useActions } from "./actions";
@@ -5,6 +7,7 @@ import { X } from "lucide-react";
 import { IProps } from "./constants";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import TagIcon from "@/assets/icons/tagIcon";
+import { customTheme } from "@/app/baseCustomTheme";
 
 const InputWithTags = ({
   size,

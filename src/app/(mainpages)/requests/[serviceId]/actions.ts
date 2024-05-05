@@ -18,14 +18,21 @@ import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import * as z from "zod";
-import { formSchema } from "./page";
+
+export const formSchema = z.object({
+  country: z
+    .string({ required_error: "You need to select a country" })
+    .min(1, { message: "You need to select a country" }),
+  product: z
+    .string({ required_error: "You need to select a product" })
+    .min(1, { message: "You need to select a product" }),
+});
 
 // ACTIONS
 export const useActions = ({ serviceId }: { serviceId: string }) => {
   const [country, setCountry] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
 
-  console.log(country);
   const searchParams = useSearchParams();
 
   const { setQueriesWithPath } = useGlobalFunctions();
@@ -57,7 +64,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
       setCountry(country);
       setSelectedProduct(product.name);
     }
-  }, [product, worldCountries]);
+  }, [product]);
 
   const productInfo = products?.find((el) => el.name === selectedProduct);
 
