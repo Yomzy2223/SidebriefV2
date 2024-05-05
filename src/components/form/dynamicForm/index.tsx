@@ -12,7 +12,7 @@ import InputWithTags from "@/components/input/inputWithTags";
 import { countries } from "countries-list";
 import { FileInput } from "@/components/file/fileInput";
 import { useGetCountries } from "@/services/service";
-import { getDynamicSchema, getVisibilityStatus } from "./actions";
+import { getDynamicSchema, getVisibilityStatus, resetDependees } from "./actions";
 
 const DynamicForm = ({
   children,
@@ -25,6 +25,8 @@ const DynamicForm = ({
   className,
   fullFormInfo,
 }: DynamicFormProps) => {
+  const [rerender, setRerender] = useState(false);
+
   let subFormsRef = useRef<any>([]);
   const dynamic = getDynamicSchema({ subForms: subFormsRef.current });
 
@@ -43,6 +45,7 @@ const DynamicForm = ({
     setValue,
     control,
     reset,
+    resetField,
   } = useForm<formType>({
     resolver: zodResolver(schema),
     defaultValues: dValues,
@@ -80,6 +83,7 @@ const DynamicForm = ({
   const countriesRes = useGetCountries();
   const sidebriefCountries = countriesRes.data?.data?.data?.map((el) => el.name);
 
+  // console.log(getValues());
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -171,7 +175,11 @@ const DynamicForm = ({
                   errorMsg={errorMsg?.toString()}
                   selectProp={el.selectProp}
                   placeholder={el.placeholder}
-                  handleSelect={el.handleSelect}
+                  handleSelect={(value) => {
+                    setRerender(!rerender);
+                    resetDependees({ question: el.name, resetField, fullFormInfo });
+                    el.handleSelect && el.handleSelect(value);
+                  }}
                   fieldName="options"
                   leftContent={el.leftContent}
                   defaultValue={el.value as string}
