@@ -1,7 +1,9 @@
 import React from "react";
 import SuggestionCard from "./suggestionCard";
 
-const SuggestionSection = () => {
+const SuggestionSection = ({ selectedBusiness }: { selectedBusiness: string }) => {
+  // console.log(selectedBusiness);
+
   return (
     <div className="flex gap-4 max-w-full overflow-auto">
       {suggestions.map((el) => (

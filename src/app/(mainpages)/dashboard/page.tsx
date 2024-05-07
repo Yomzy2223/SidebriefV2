@@ -65,7 +65,7 @@ export default function Dashboard() {
     <div className="p-5 space-y-14 md:p-8">
       <WelcomeSection />
       <HandpickedSection />
-      <SuggestionSection />
+      <SuggestionSection selectedBusiness={selectedBusiness} />
       <BusinessInfoSecion
         selectedBusiness={selectedBusiness}
         setSelectedBusiness={(id: string) => setSelectedBusiness(id)}

@@ -12,6 +12,8 @@ const HandpickedSection = () => {
 
   const services = getServices.data?.data.data;
 
+  // check if 1 or more business request has being created
+
   return (
     <div className="flex flex-col gap-5">
       <div>
@@ -21,7 +23,7 @@ const HandpickedSection = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-0.5 gap-y-6 p-1 rounded-2xl md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-3 gap-y-6 p-1 rounded-2xl md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
         {getServices.isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
               <Skeleton
