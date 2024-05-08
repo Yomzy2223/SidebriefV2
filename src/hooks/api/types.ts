@@ -1,6 +1,21 @@
 export interface IRequest {
-  userId: string;
+  id: string;
+  paid: boolean;
+  businessName: string;
+  status: "PENDING" | "SUBMITTED" | "ASSIGNED" | "REJECTED" | "COMPLETED";
+  completedAt: string;
+  createdAt: string;
+  submittedAt: string;
+  createdBy: string;
+  productCountry: string;
+  processId: string;
+  productName: string;
+  serviceName: string;
+  updatedAt: string;
+  assignedAt: string;
   productId: string;
+  currentState: string;
+  partnerInCharge: string;
 }
 
 export interface IService {

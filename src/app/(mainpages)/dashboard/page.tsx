@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { serviceTableNav } from "./constants";
 import { useState } from "react";
 import { useGetUserBusinessRequests } from "@/services/business";
+import TableSection from "./tableSection";
 
 // interface BadgeProps {
 //   size?: "sm" | "lg";
@@ -81,15 +82,9 @@ export default function Dashboard() {
       )}
       {moreThanOneRequest && <SuggestionSection selectedBusiness={selectedBusiness} />}
       {moreThanOneRequest && <BusinessMembersSection selectedBusiness={selectedBusiness} />}
-      <OngoingRegSection />
-      <Card>
-        <GeneralTable
-          tableHeaders={tableHeaders}
-          tableBody={tableBody || []}
-          serviceTableNav={serviceTableNav}
-          title="All Services"
-        />
-      </Card>
+      {moreThanOneRequest && <OngoingRegSection />}
+
+      <TableSection />
     </div>
   );
 }
