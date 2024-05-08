@@ -127,7 +127,6 @@ INewFormActionProps) => {
     values: Record<any, any>
     // reset: UseFormReset<any>
   ) => {
-    console.log(values);
     if (!info) return;
 
     const getAnswer = (field: TSubForm) => {
