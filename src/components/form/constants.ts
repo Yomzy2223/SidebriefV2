@@ -12,7 +12,7 @@ export interface IFormInput {
   selectProp?: Record<string, any>;
   placeholder?: string;
   fileProp?: Record<string, any>;
-  selectOptions?: string[];
+  options?: string[];
   value?: string | string[];
   leftContent?: string | ReactNode;
   handleSelect?: (selected?: string) => void;
@@ -28,6 +28,7 @@ export interface IFormInput {
     field: string;
     options: string[];
   };
+  allowOther?: boolean;
 }
 
 export interface DynamicFormProps {

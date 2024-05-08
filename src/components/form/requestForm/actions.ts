@@ -110,9 +110,10 @@ INewFormActionProps) => {
       name: sluggify(field.question),
       label: field.question,
       type: field.type,
-      selectOptions: field.options,
+      options: field.options,
       compulsory: field.compulsory,
       dependsOn: field.dependsOn,
+      allowOther: field.allowOther,
       placeholder: field.question,
       textInputProp: {
         placeholder: field.question,
@@ -126,6 +127,7 @@ INewFormActionProps) => {
     values: Record<any, any>
     // reset: UseFormReset<any>
   ) => {
+    console.log(values);
     if (!info) return;
 
     const getAnswer = (field: TSubForm) => {

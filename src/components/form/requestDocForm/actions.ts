@@ -89,7 +89,7 @@ export const useNewFormAction = ({
       name: sluggify(field.question),
       label: field.question,
       type: field.type,
-      selectOptions: field.options,
+      options: field.options,
       compulsory: field.compulsory,
       fileName: QAField?.fileName,
       fileLink: QAField?.fileLink,

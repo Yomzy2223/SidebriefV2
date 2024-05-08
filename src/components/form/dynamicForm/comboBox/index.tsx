@@ -66,6 +66,7 @@ const ComboBox = ({
             {
               "border-primary ring-primary ring-1": openSelect && !isMultiCombo,
               "[&_span]:rounded-none rounded-none border-none bg-transparent": isMultiCombo,
+              "border-destructive-foreground !bg-destructive-foreground": errorMsg,
             },
             className
           )}

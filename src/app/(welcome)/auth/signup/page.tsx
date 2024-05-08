@@ -131,7 +131,7 @@ const formInfo: IFormInput[] = [
     selectProp: {
       placeholder: "Select a referral",
     },
-    selectOptions: ["Facebook", "Twitter", "Google", "Instagram", "WhatsApp", "Recommendation"],
+    options: ["Facebook", "Twitter", "Google", "Instagram", "WhatsApp", "Recommendation"],
   },
 ];
 
