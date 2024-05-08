@@ -13,6 +13,7 @@ import useRequestApi from "@/hooks/useRequestApi";
 import { useSession } from "next-auth/react";
 import { serviceTableNav } from "./constants";
 import { useState } from "react";
+import { useGetUserBusinessRequests } from "@/services/business";
 
 // interface BadgeProps {
 //   size?: "sm" | "lg";
@@ -57,20 +58,29 @@ export default function Dashboard() {
 
   const [selectedBusiness, setSelectedBusiness] = useState("");
 
-  const { useGetUserRequestsQuery } = useRequestApi();
-  const { data } = useGetUserRequestsQuery(userId);
-  const userRequests = data?.data?.data;
+  // const { useGetUserRequestsQuery } = useRequestApi();
+  // const { data } = useGetUserRequestsQuery(userId);
+  // const userRequests = data?.data?.data;
+
+  // check if 1 or more business request has being created
+  const getBusinessRequests = useGetUserBusinessRequests({ userId: userId });
+
+  const businessRequests = getBusinessRequests.data?.data.data;
+
+  const moreThanOneRequest = (businessRequests || []).length > 1;
 
   return (
     <div className="p-5 space-y-14 md:p-8">
       <WelcomeSection />
       <HandpickedSection />
-      <SuggestionSection selectedBusiness={selectedBusiness} />
-      <BusinessInfoSecion
-        selectedBusiness={selectedBusiness}
-        setSelectedBusiness={(id: string) => setSelectedBusiness(id)}
-      />
-      <BusinessMembersSection selectedBusiness={selectedBusiness} />
+      {moreThanOneRequest && (
+        <BusinessInfoSecion
+          selectedBusiness={selectedBusiness}
+          setSelectedBusiness={(id: string) => setSelectedBusiness(id)}
+        />
+      )}
+      {moreThanOneRequest && <SuggestionSection selectedBusiness={selectedBusiness} />}
+      {moreThanOneRequest && <BusinessMembersSection selectedBusiness={selectedBusiness} />}
       <OngoingRegSection />
       <Card>
         <GeneralTable

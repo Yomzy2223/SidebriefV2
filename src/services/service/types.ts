@@ -27,6 +27,7 @@ export type TProduct = {
   timeline: string;
   feature: string[];
   serviceId: string;
+  otherExpectedRequest: string[];
   // hasShares: boolean;
   // hasAgent: boolean;
   // hasOwner: boolean;

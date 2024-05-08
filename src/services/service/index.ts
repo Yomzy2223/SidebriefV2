@@ -9,6 +9,7 @@ import {
   getCountryServiceProducts,
   getProductById,
   getProductForm,
+  getProductSuggestion,
 } from "./operations";
 
 export const useGetServices = () => {
@@ -76,3 +77,11 @@ export const useGetProductForms = (productId: string) =>
     queryFn: () => getProductForm({ productId: productId }),
     enabled: !!productId,
   });
+
+export const useGetProductSuggestions = ({ objectives }: { objectives: string[] }) => {
+  return useQuery({
+    queryKey: ["product suggestions", ...objectives],
+    queryFn: () => getProductSuggestion({ objectives }),
+    enabled: objectives.length > 0,
+  });
+};

@@ -1,8 +1,29 @@
 import React from "react";
 import SuggestionCard from "./suggestionCard";
+import { useGetProductSuggestions } from "@/services/service";
+import { useGetBusinessRequest, useGetProductRequest } from "@/services/business";
 
 const SuggestionSection = ({ selectedBusiness }: { selectedBusiness: string }) => {
   // console.log(selectedBusiness);
+  const getBusinessRequest = useGetBusinessRequest({ id: selectedBusiness });
+
+  const businessRequest = getBusinessRequest.data?.data.data;
+
+  const productRequestId = businessRequest?.productRequest[0].id;
+
+  const getProductRequest = useGetProductRequest(productRequestId || "");
+
+  const productRequest = getProductRequest.data?.data.data;
+
+  const objectives = productRequest?.product.otherExpectedRequest || [];
+
+  const getProductSuggestions = useGetProductSuggestions({ objectives });
+
+  const productSuggestions = getProductSuggestions.data?.data.data;
+
+  // if (productSuggestions) console.log(productSuggestions);
+
+  // console.log(getProductSuggestions.isLoading, getProductSuggestions.error);
 
   return (
     <div className="flex gap-4 max-w-full overflow-auto">

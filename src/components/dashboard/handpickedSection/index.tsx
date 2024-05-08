@@ -4,15 +4,14 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import slugify from "slugify";
 import { useGetServices } from "@/services/service";
+import { useGetUserBusinessRequests } from "@/services/business";
+import { useSession } from "next-auth/react";
 
 const HandpickedSection = () => {
   const getServices = useGetServices();
 
   const services = getServices.data?.data.data;
-
-  // check if 1 or more business request has being created
 
   return (
     <div className="flex flex-col gap-5">
