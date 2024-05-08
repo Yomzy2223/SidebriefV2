@@ -2,7 +2,7 @@
 
 import RequestDocForm from "@/components/form/requestDocForm";
 import RequestForm from "@/components/form/requestForm";
-import { useGetProductForms } from "@/services/service";
+import { useGetProductForms } from "@/services/product";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import RequestWrapper from "../wrapper";

@@ -4,7 +4,7 @@ import GeneralTable from "@/components/tables/generalTable";
 import React, { useState } from "react";
 import { useTableActions } from "./tableActions";
 
-const TableSection = () => {
+const TableSection = ({ selectedBusiness }: { selectedBusiness: string }) => {
   const [openAssign, setOpenAssign] = useState(false);
   const [openUnAssign, setOpenUnAssign] = useState(false);
   const [openInfo, setOpenInfo] = useState(false);
@@ -28,6 +28,7 @@ const TableSection = () => {
     setOpenUnAssign,
     itemsPerPage,
     setPartnerId,
+    selectedBusiness,
   });
 
   return (

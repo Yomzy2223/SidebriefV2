@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { Dispatch, MouseEvent, SetStateAction, useState } from "react";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { IRequest, IServiceFull } from "@/hooks/api/types";
+import { useGetBusinessRequest } from "@/services/business";
 
 // Table information
 export const useTableActions = ({
@@ -18,6 +19,7 @@ export const useTableActions = ({
   setPartnerId,
   itemsPerPage,
   serviceId,
+  selectedBusiness,
 }: {
   setOpenAssign: Dispatch<SetStateAction<boolean>>;
   setOpenUnAssign: Dispatch<SetStateAction<boolean>>;
@@ -26,6 +28,7 @@ export const useTableActions = ({
   setPartnerId: Dispatch<SetStateAction<string>>;
   itemsPerPage: number;
   serviceId?: string;
+  selectedBusiness: string;
 }) => {
   const [searchValue, setSearchValue] = useState("");
   const { getReqStatusColor } = useGlobalFunctions();
@@ -44,21 +47,23 @@ export const useTableActions = ({
     useGetServiceRequestQuery,
     assignRequestMutation,
     unAssignRequestMutation,
-    useGetAllRequestsQuery,
     searchRequestMutation,
   } = useRequestApi();
 
-  const allRequestsResponse = useGetAllRequestsQuery({
-    page: tablePage,
-    pageSize: itemsPerPage,
-  });
+  const getBusinessRequest = useGetBusinessRequest({ id: selectedBusiness });
+
+  // const allRequestsResponse = useGetAllRequestsQuery({
+  //   page: tablePage,
+  //   pageSize: itemsPerPage,
+  // });
+
   const serviceRequestsResponse = useGetServiceRequestQuery({
     serviceId: selectedServiceId,
     page: tablePage,
     pageSize: itemsPerPage,
   });
 
-  const allRequests = allRequestsResponse.data?.data;
+  const allRequests = getBusinessRequest.data?.data.data.productRequest;
   const serviceRequests = serviceRequestsResponse.data?.data;
   const searchRequests = searchRequestMutation.data?.data;
 
@@ -66,16 +71,16 @@ export const useTableActions = ({
     ? searchRequests?.data
     : selectedServiceId
     ? serviceRequests?.data
-    : allRequests?.data;
+    : allRequests;
 
   const totalRequests = searchValue
     ? searchRequests?.data?.length
     : selectedServiceId
     ? serviceRequests?.total
-    : allRequests?.total;
+    : allRequests?.length;
 
   const requestsLoading =
-    allRequestsResponse.isLoading ||
+    getBusinessRequest.isLoading ||
     serviceRequestsResponse.isLoading ||
     searchRequestMutation.isPending;
 

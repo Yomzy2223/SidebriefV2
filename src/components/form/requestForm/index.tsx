@@ -1,7 +1,8 @@
 "use client";
 
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
-import { TProductForm, TServiceForm } from "@/services/service/types";
+import { TServiceForm } from "@/services/service/types";
+import { TProductForm } from "@/services/product/types";
 import { Tabs, TabsRef } from "flowbite-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { RefObject, useEffect, useRef } from "react";

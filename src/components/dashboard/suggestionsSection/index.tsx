@@ -1,6 +1,6 @@
 import React from "react";
 import SuggestionCard from "./suggestionCard";
-import { useGetProductSuggestions } from "@/services/service";
+import { useGetProductSuggestions } from "@/services/product";
 import { useGetBusinessRequest, useGetProductRequest } from "@/services/business";
 
 const SuggestionSection = ({ selectedBusiness }: { selectedBusiness: string }) => {

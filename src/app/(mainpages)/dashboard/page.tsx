@@ -13,7 +13,7 @@ import useRequestApi from "@/hooks/useRequestApi";
 import { useSession } from "next-auth/react";
 import { serviceTableNav } from "./constants";
 import { useState } from "react";
-import { useGetUserBusinessRequests } from "@/services/business";
+import { useGetUserBusinessRequests, useGetBusinessRequest } from "@/services/business";
 import TableSection from "./tableSection";
 
 // interface BadgeProps {
@@ -70,6 +70,16 @@ export default function Dashboard() {
 
   const moreThanOneRequest = (businessRequests || []).length > 1;
 
+  const OneOrMoreRequests = (businessRequests || []).length >= 1;
+
+  const useGetBusinessRequests = useGetBusinessRequest({ id: selectedBusiness });
+
+  const businessRequest = useGetBusinessRequests.data?.data.data;
+
+  const productRequests = businessRequest?.productRequest;
+
+  const showTableSection = productRequests && productRequests.length > 1;
+
   return (
     <div className="p-5 space-y-14 md:p-8">
       <WelcomeSection />
@@ -82,9 +92,9 @@ export default function Dashboard() {
       )}
       {moreThanOneRequest && <SuggestionSection selectedBusiness={selectedBusiness} />}
       {moreThanOneRequest && <BusinessMembersSection selectedBusiness={selectedBusiness} />}
-      {moreThanOneRequest && <OngoingRegSection />}
+      {OneOrMoreRequests && <OngoingRegSection />}
 
-      <TableSection />
+      {showTableSection && <TableSection selectedBusiness={selectedBusiness} />}
     </div>
   );
 }

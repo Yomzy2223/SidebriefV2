@@ -7,7 +7,8 @@ import {
   useUpdateRequestQA,
 } from "@/services/productQA";
 import { TFormQACreate, TFormQAGet } from "@/services/productQA/types";
-import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
+import { TServiceForm, TSubForm } from "@/services/service/types";
+import { TProductForm } from "@/services/product/types";
 import { useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 

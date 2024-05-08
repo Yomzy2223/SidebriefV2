@@ -17,8 +17,8 @@ const HeaderSection = ({
       <div>
         <p className="sb-text-24 font-semibold mb-3">Recent services</p>
         <div className="flex flex-col gap-3 text-sm font-normal mb-6 md:gap-4 md:flex-row md:items-center">
-          <span>Show only:</span>
-          <QueryNav2 queryNav={tableNav} />
+          {/* <span>Show only:</span>
+          <QueryNav2 queryNav={tableNav} /> */}
         </div>
       </div>
       <div className="flex flex-col justify-between items-end gap-2 mb-6">

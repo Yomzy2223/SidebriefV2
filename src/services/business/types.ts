@@ -1,5 +1,5 @@
 import { TFormQAGet } from "../productQA/types";
-import { TProduct } from "../service/types";
+import { TProduct } from "../product/types";
 
 export type TCreateBusinessPayload = {
   userId: string;

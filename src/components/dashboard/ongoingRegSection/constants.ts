@@ -1,9 +1,10 @@
 import { InfoGif, PaymentCardGif, ProfileGif, ReviewGif } from "@/assets/gif";
-import { useGetProductForms } from "@/services/service";
+import { useGetProductForms } from "@/services/product";
 import { useGetRequestQA } from "@/services/productQA";
 // import { getRequestQA } from "@/services/productQA/operations";
 import { TFormQAGet, TSubformQAGet } from "@/services/productQA/types";
-import { TProductForm, TSubForm } from "@/services/service/types";
+import { TSubForm } from "@/services/service/types";
+import { TProductForm } from "@/services/product/types";
 import { useGetServiceForms } from "@/services/service";
 // import { useUploadActions } from "@/app/(mainpages)/request/[service]/kyc/[processId]/upload/uploadActions";
 
