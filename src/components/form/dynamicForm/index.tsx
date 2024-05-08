@@ -1,4 +1,4 @@
-import { Checkbox, Label, Radio, TextInput } from "flowbite-react";
+import { Checkbox, Label, Radio, Textarea, TextInput } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +12,7 @@ import { countries } from "countries-list";
 import { FileInput } from "@/components/file/fileInput";
 import { useGetCountries } from "@/services/service";
 import { getDynamicSchema, getVisibilityStatus, resetDependees } from "./actions";
+import ListOptions from "./listOptions";
 
 const DynamicForm = ({
   children,
@@ -93,20 +94,18 @@ const DynamicForm = ({
           const isTextInput =
             el.type === "email" ||
             el.type === "phone number" ||
-            el.type === "paragraph" ||
             el.type === "promocode" ||
             el.type === "password" ||
             el.type === "short answer";
           const isSelect =
             el.type === "select" ||
             el.type === "countries-all" ||
-            el.type === "countries-operation" ||
-            el.type === "multiple choice";
+            el.type === "countries-operation";
           const errorMsg = errors[el.name]?.message;
           let type = el.type === "phone number" ? "number" : "text";
           if (el.type === "password") type = "password";
 
-          let selectOptions = el.selectOptions;
+          let selectOptions = el.options;
           switch (el.type) {
             case "countries-all":
               selectOptions = Object.values(countries).map((country) => country.name);
@@ -125,6 +124,7 @@ const DynamicForm = ({
                   <Label htmlFor={el.name} value={el.label} />
                 </div>
               )}
+
               {isTextInput && (
                 <TextInput
                   id={el.name}
@@ -137,10 +137,29 @@ const DynamicForm = ({
                   {...register(el.name)}
                 />
               )}
-              {el.type === "checkbox" && (
-                <Checkbox id={el.name} defaultChecked {...register(el.name)} />
+
+              {el.type === "paragraph" && (
+                <Textarea
+                  id={el.name}
+                  helperText={<>{errorMsg}</>}
+                  color={errorMsg && "failure"}
+                  className={errorMsg ? "focus:[&_input]:ring-0" : ""}
+                  {...el.textInputProp}
+                  {...register(el.name)}
+                />
               )}
-              {el.type === "multiple choice" && <Radio id={el.name} {...register(el.name)} />}
+
+              {(el.type === "checkbox" || el.type === "multiple choice") && (
+                <ListOptions
+                  name={el.name}
+                  options={el.options}
+                  type={el.type}
+                  allowOther={el.allowOther}
+                  setValue={setValue}
+                  defaultValue={el.value}
+                  errorMsg={errorMsg as string}
+                />
+              )}
 
               {(el.type === "document template" || el.type === "document upload") && (
                 <FileInput
@@ -152,6 +171,7 @@ const DynamicForm = ({
                   errorMsg={errorMsg as string}
                 />
               )}
+
               {isSelect && (
                 <ComboBox
                   name={el.name}
@@ -173,10 +193,11 @@ const DynamicForm = ({
                   optionsErrorMsg={el.optionsErrorMsg}
                 />
               )}
+
               {el.type === "objectives" && (
                 <MultiSelectCombo
                   name={el.name}
-                  options={el.selectOptions || []}
+                  options={el.options || []}
                   setValue={setValue}
                   selectProp={el.selectProp}
                   fieldName="objectives"
@@ -186,6 +207,7 @@ const DynamicForm = ({
                   errorMsg={errorMsg?.toString()}
                 />
               )}
+
               {el.type === "business name" && (
                 <InputWithTags
                   submitErr={errorMsg}
@@ -202,6 +224,7 @@ const DynamicForm = ({
                   }}
                 />
               )}
+
               {/* {el.type === "objectives" && (
                 <BusinessObjectiveInput
                   id={el.id!}

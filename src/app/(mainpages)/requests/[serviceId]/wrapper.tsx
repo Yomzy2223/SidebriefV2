@@ -16,7 +16,7 @@ const RequestWrapper = ({
       <div className="flex-1 py-6 h-max px-1 md:pt-16 md:pb-20 max-w-[80%]">{children}</div>
       {!hideFAQ && (
         <div className="flex-[0.6] xl:ml-auto hidden sticky top-0 overflow-auto lg:block">
-          <RequestInfoPanel />
+          <RequestInfoPanel productInfo={productInfo} />
         </div>
       )}
     </div>

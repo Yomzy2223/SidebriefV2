@@ -76,6 +76,12 @@ export const customTheme: ThemeProps = {
         },
       },
     },
+    checkbox: {
+      root: {
+        base: "h-4 w-4 rounded focus:ring-offset-0 focus:ring-1 appearance-none bg-muted border-none rounded  bg-white ring-1 ring-border checked:bg-primary checked:ring-primary disabled:opacity-70",
+        color: {},
+      },
+    },
     radio: {
       root: {
         base: "h-4 w-4 border border-border focus:ring-0 dark:border-gray-600 dark:bg-gray-700 dark:focus:bg-cyan-600 text-cyan-600",
