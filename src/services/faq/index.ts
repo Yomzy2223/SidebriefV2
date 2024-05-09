@@ -8,10 +8,17 @@ export const useGetFAQQuery = (id: string) =>
     enabled: !!id,
   });
 
-export const useGetProductFAQsQuery = (productId: string) =>
+export const useGetProductFAQsQuery = ({
+  productId,
+  requestState,
+}: {
+  productId: string;
+  requestState: string;
+}) =>
   useQuery({
-    queryKey: ["FAQ", productId],
-    queryFn: ({ queryKey }) => getProductFAQs(queryKey[1]),
+    queryKey: ["FAQ", productId, requestState],
+    queryFn: ({ queryKey }) =>
+      getProductFAQs({ productId: queryKey[1], requestState: queryKey[2] }),
     enabled: !!productId,
   });
 

@@ -6,9 +6,17 @@ export const getFAQ = async (id: string) => {
   return await client.get<rootType<TFAQ>>(`/faqs/${id}`);
 };
 
-export const getProductFAQs = async (productId: string) => {
+export const getProductFAQs = async ({
+  productId,
+  requestState,
+}: {
+  productId: string;
+  requestState: string;
+}) => {
   const client = await Client();
-  return await client.get<rootType<TFAQ[]>>(`/faqs/product/${productId}`);
+  return await client.get<rootType<TFAQ[]>>(
+    `/faqs/product/${productId}?requestState=${requestState}`
+  );
 };
 
 export const getServiceFAQs = async (serviceId: string) => {

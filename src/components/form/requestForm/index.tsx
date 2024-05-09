@@ -4,7 +4,7 @@ import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { TProductForm, TServiceForm } from "@/services/service/types";
 import { Tabs, TabsRef } from "flowbite-react";
 import { useParams, useSearchParams } from "next/navigation";
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useRef } from "react";
 import EachForm from "./eachForm";
 
 const RequestForm = ({
@@ -92,7 +92,6 @@ const RequestForm = ({
                     isLoading={false}
                     isServiceForm={isServiceForm}
                     handeNext={(subTabRef) => handeNext(i, subTabRef)}
-                    isOnLastForm={isOnLastForm}
                   />
                 </div>
               </Tabs.Item>
@@ -110,7 +109,6 @@ const RequestForm = ({
             isLoading={false}
             handeNext={(subTabRef) => handeNext(0, subTabRef)}
             isServiceForm={isServiceForm}
-            isOnLastForm
           />
         </div>
       )}
