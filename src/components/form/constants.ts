@@ -1,4 +1,5 @@
-import { TFieldTypes, TSubForm } from "@/services/service/types";
+import { TFieldTypes, TServiceForm, TSubForm } from "@/services/service/types";
+import { TProductForm } from "@/services/product/types";
 import { ReactNode } from "react";
 import { UseFormReset } from "react-hook-form";
 import { ZodType } from "zod";

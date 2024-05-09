@@ -1,6 +1,5 @@
 "use client";
 
-
 import React, { useState } from "react";
 import { IProductFull } from "@/hooks/api/types";
 import useProductApi from "@/hooks/useProductApi";
@@ -12,6 +11,7 @@ import { ArrowRightCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import useRequestApi from "@/hooks/useRequestApi";
 import ComboBox from "@/components/form/dynamicForm/comboBox";
+import { useCreateBusinessRequest } from "@/services/business";
 
 const SelectProduct = () => {
   const [selectedPlan, setSelectedPlan] = useState<IProductFull>();
@@ -22,7 +22,8 @@ const SelectProduct = () => {
   const serviceId = get("serviceId") || "";
   const country = get("country") || "";
 
-  const { createRequestMutation } = useRequestApi();
+  const createRequestMutation = useCreateBusinessRequest();
+
   const productLoading = createRequestMutation.isPending;
 
   const { useGetCountryServiceProductsQuery } = useProductApi();

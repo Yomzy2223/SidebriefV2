@@ -16,11 +16,14 @@ const WelcomeSection = () => {
 
   const priority1 = services?.find((el) => el.priority === 1);
 
+  const isNewUser = !session.data?.message.toLowerCase().includes("login");
+
   return (
     <div className="flex flex-col justify-between gap-3 md:gap-8 md:flex-row">
       <div className="md:w-4/6">
         <p className="sb-text-24 font-semibold">
-          Welcome to Sidebrief{firstName && `, ${firstName}`}
+          {isNewUser ? "Welcome to Sidebrief" : "Welcome back"}
+          {firstName && `, ${firstName}`}
         </p>
         <p className="text-sm text-foreground-3 font-normal lg:sb-text-18">
           We are glad to have you join the 22,000,000 people all over the world who manage their

@@ -17,29 +17,7 @@ export type countryType = {
   flagUrl: string;
 };
 
-export type TProduct = {
-  id: string;
-  name: string;
-  description: string;
-  country: string;
-  currency: string;
-  amount: number;
-  timeline: string;
-  feature: string[];
-  serviceId: string;
-  // hasShares: boolean;
-  // hasAgent: boolean;
-  // hasOwner: boolean;
-  // hasController: boolean;
-  // controllerIsCalled: string | null;
-  // ownerIsCalled: string | null;
-  // agentIsCalled: string | null;
-  // createdAt: string;
-  // updatedAt: string;
-  // serviceCategoryId: string;
-};
-
-type TFormCFields = {
+export type TFormCFields = {
   id: string;
   title: string;
   type: string;
@@ -49,10 +27,6 @@ type TFormCFields = {
   isDeprecated: boolean;
   updatedAt: string;
   subForm: TSubForm[];
-};
-
-export type TProductForm = TFormCFields & {
-  productId: string;
 };
 
 export type TServiceForm = TFormCFields & {

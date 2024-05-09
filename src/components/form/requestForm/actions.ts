@@ -6,7 +6,8 @@ import {
   useUpdateRequestQA,
 } from "@/services/productQA";
 import { TFormQACreate, TFormQAGet } from "@/services/productQA/types";
-import { TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
+import { TServiceForm, TSubForm } from "@/services/service/types";
+import { TProductForm } from "@/services/product/types";
 import { useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -47,11 +48,6 @@ export const useActions = ({
   };
 };
 
-//
-
-//
-
-//
 export const useNewFormAction = ({
   info,
   QAForm,

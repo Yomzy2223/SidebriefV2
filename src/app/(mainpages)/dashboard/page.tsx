@@ -13,6 +13,8 @@ import useRequestApi from "@/hooks/useRequestApi";
 import { useSession } from "next-auth/react";
 import { serviceTableNav } from "./constants";
 import { useState } from "react";
+import { useGetUserBusinessRequests, useGetBusinessRequest } from "@/services/business";
+import TableSection from "./tableSection";
 
 // interface BadgeProps {
 //   size?: "sm" | "lg";
@@ -57,29 +59,42 @@ export default function Dashboard() {
 
   const [selectedBusiness, setSelectedBusiness] = useState("");
 
-  const { useGetUserRequestsQuery } = useRequestApi();
-  const { data } = useGetUserRequestsQuery(userId);
-  const userRequests = data?.data?.data;
+  // const { useGetUserRequestsQuery } = useRequestApi();
+  // const { data } = useGetUserRequestsQuery(userId);
+  // const userRequests = data?.data?.data;
+
+  // check if 1 or more business request has being created
+  const getBusinessRequests = useGetUserBusinessRequests({ userId: userId });
+
+  const businessRequests = getBusinessRequests.data?.data.data;
+
+  const moreThanOneRequest = (businessRequests || []).length > 1;
+
+  const OneOrMoreRequests = (businessRequests || []).length >= 1;
+
+  const useGetBusinessRequests = useGetBusinessRequest({ id: selectedBusiness });
+
+  const businessRequest = useGetBusinessRequests.data?.data.data;
+
+  const productRequests = businessRequest?.productRequest;
+
+  const showTableSection = productRequests && productRequests.length > 1;
 
   return (
     <div className="p-5 space-y-14 md:p-8">
       <WelcomeSection />
       <HandpickedSection />
-      <SuggestionSection />
-      <BusinessInfoSecion
-        selectedBusiness={selectedBusiness}
-        setSelectedBusiness={(id: string) => setSelectedBusiness(id)}
-      />
-      <BusinessMembersSection selectedBusiness={selectedBusiness} />
-      <OngoingRegSection />
-      <Card>
-        <GeneralTable
-          tableHeaders={tableHeaders}
-          tableBody={tableBody || []}
-          serviceTableNav={serviceTableNav}
-          title="All Services"
+      {moreThanOneRequest && (
+        <BusinessInfoSecion
+          selectedBusiness={selectedBusiness}
+          setSelectedBusiness={(id: string) => setSelectedBusiness(id)}
         />
-      </Card>
+      )}
+      {moreThanOneRequest && <SuggestionSection selectedBusiness={selectedBusiness} />}
+      {moreThanOneRequest && <BusinessMembersSection selectedBusiness={selectedBusiness} />}
+      {OneOrMoreRequests && <OngoingRegSection />}
+
+      {showTableSection && <TableSection selectedBusiness={selectedBusiness} />}
     </div>
   );
 }
