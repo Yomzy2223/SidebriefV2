@@ -31,5 +31,5 @@ export const getProductForm = async ({ productId }: { productId: string }) => {
 
 export const getProductSuggestion = async ({ objectives }: { objectives: string[] }) => {
   const client = await Client();
-  return client.post<rootType<any>>(`/products/objective/all`, { objectives });
+  return client.post<rootType<TProduct[]>>(`/products/objective/all`, { objectives });
 };

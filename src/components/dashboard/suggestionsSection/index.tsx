@@ -2,6 +2,7 @@ import React from "react";
 import SuggestionCard from "./suggestionCard";
 import { useGetProductSuggestions } from "@/services/product";
 import { useGetBusinessRequest, useGetProductRequest } from "@/services/business";
+import { Loader } from "./suggestionLoader";
 
 const SuggestionSection = ({ selectedBusiness }: { selectedBusiness: string }) => {
   // console.log(selectedBusiness);
@@ -19,56 +20,63 @@ const SuggestionSection = ({ selectedBusiness }: { selectedBusiness: string }) =
 
   const getProductSuggestions = useGetProductSuggestions({ objectives });
 
-  const productSuggestions = getProductSuggestions.data?.data.data;
+  const productSuggestions = getProductSuggestions.data?.data.data || [];
 
-  // if (productSuggestions) console.log(productSuggestions);
+  const loading =
+    getBusinessRequest.isLoading || getProductRequest.isLoading || getProductSuggestions.isLoading;
 
-  // console.log(getProductSuggestions.isLoading, getProductSuggestions.error);
+  const suggestions = productSuggestions.map((el) => ({
+    title: el.name,
+    description: el.description,
+    guideLink: "",
+  }));
 
   return (
     <div className="flex gap-4 max-w-full overflow-auto">
-      {suggestions.map((el) => (
-        <SuggestionCard
-          key={el.title}
-          title={el.title}
-          description={el.description}
-          guideLink={el?.guideLink || ""}
-        />
-      ))}
+      {loading
+        ? Array(4).fill(<Loader />)
+        : suggestions.map((el) => (
+            <SuggestionCard
+              key={el.title}
+              title={el.title}
+              description={el.description}
+              guideLink={el?.guideLink || ""}
+            />
+          ))}
     </div>
   );
 };
 
 export default SuggestionSection;
 
-const suggestions = [
-  {
-    title: "Business Registration",
-    description:
-      "Go to this step by step guideline process on how to certify for your weekly benefits:",
-  },
-  {
-    title: "Tax",
-    description:
-      "Go to this step by step guideline process on how to certify for your weekly benefits:",
-    guideLink: "/",
-  },
-  {
-    title: "Bank Account",
-    description:
-      "Go to this step by step guideline process on how to certify for your weekly benefits:",
-    guideLink: "/",
-  },
-  {
-    title: "Intellectual Properties",
-    description:
-      "Go to this step by step guideline process on how to certify for your weekly benefits:",
-    guideLink: "/",
-  },
-  {
-    title: "Work Permit",
-    description:
-      "Go to this step by step guideline process on how to certify for your weekly benefits:",
-    guideLink: "/",
-  },
-];
+// const suggestions = [
+//   {
+//     title: "Business Registration",
+//     description:
+//       "Go to this step by step guideline process on how to certify for your weekly benefits:",
+//   },
+//   {
+//     title: "Tax",
+//     description:
+//       "Go to this step by step guideline process on how to certify for your weekly benefits:",
+//     guideLink: "/",
+//   },
+//   {
+//     title: "Bank Account",
+//     description:
+//       "Go to this step by step guideline process on how to certify for your weekly benefits:",
+//     guideLink: "/",
+//   },
+//   {
+//     title: "Intellectual Properties",
+//     description:
+//       "Go to this step by step guideline process on how to certify for your weekly benefits:",
+//     guideLink: "/",
+//   },
+//   {
+//     title: "Work Permit",
+//     description:
+//       "Go to this step by step guideline process on how to certify for your weekly benefits:",
+//     guideLink: "/",
+//   },
+// ];
