@@ -11,7 +11,6 @@ import { signOut, useSession } from "next-auth/react";
 export const Header = () => {
   const session = useSession();
   const { push } = useRouter();
-  const session = useSession();
 
   const handleLogout = async () => {
     await signOut({ redirect: true });

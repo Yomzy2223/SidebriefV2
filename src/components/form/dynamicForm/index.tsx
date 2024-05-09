@@ -92,6 +92,7 @@ const DynamicForm = ({
       <div className={cn("flex flex-col justify-start gap-8", className)}>
         {(formInfo || []).map((el, i: number) => {
           const isTextInput =
+            el.type === "text" ||
             el.type === "email" ||
             el.type === "phone number" ||
             el.type === "promocode" ||
