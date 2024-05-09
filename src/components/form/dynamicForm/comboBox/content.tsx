@@ -53,7 +53,7 @@ const ComboContent = ({
             <Check
               className={cn(
                 "mr-2 h-4 w-4",
-                selectValue === option.toLowerCase() ? "opacity-100" : "opacity-0"
+                selectValue?.toLowerCase() === option.toLowerCase() ? "opacity-100" : "opacity-0"
               )}
             />
             {option}

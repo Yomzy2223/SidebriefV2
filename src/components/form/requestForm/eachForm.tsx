@@ -12,6 +12,11 @@ import { useSearchParams } from "next/navigation";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import ConfirmAction from "@/components/confirmAction";
 import { TFormQAGet } from "@/services/productQA/types";
+import { FormProvider, useForm } from "react-hook-form";
+import { getDynamicSchema } from "../dynamicForm/actions";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ZodType } from "zod";
 
 const EachForm = ({
   info,
@@ -53,15 +58,10 @@ const EachForm = ({
   const handeleSubmit = () => {
     if (isOnLastSubTab) {
       handeNext(tabsRef);
-      // tabsRef.current?.setActiveTab(0); //navigate to the next sub tab
-      // setActiveSubTab(0);
       return;
     }
     tabsRef.current?.setActiveTab(activeSubTab + 1); //navigate to the next sub tab
     setActiveSubTab(activeSubTab + 1);
-    //  document
-    //    .getElementById("subFormTabs" + activeSubTab)
-    //    ?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
   };
 
   const onFormDelete = (isNew?: boolean) => {
@@ -133,7 +133,7 @@ const EachForm = ({
           setNewForm={setNewForm}
           handeleSubmit={handeleSubmit}
           formHasTabs={false}
-          isNewForm
+          // isNewForm
         />
       )}
     </>
@@ -170,19 +170,21 @@ const FormInstance = ({
     setOnlyCreate,
   });
 
+  // console.log(formInfo);
   return (
     <DynamicForm
       formInfo={formInfo}
       onFormSubmit={({ values, reset }) => submitFormHandler(values)}
       className="gap-6"
       formClassName="gap-12 justify-between"
+      fullFormInfo={info?.subForm}
     >
       <div className="flex justify-between gap-6">
         <Button
           color="secondary"
           size="lg"
           type="submit"
-          isProcessing={isPending && !isNewForm}
+          isProcessing={isPending && !onlyCreate}
           disabled={isPending}
           processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
         >
@@ -208,7 +210,7 @@ const FormInstance = ({
               </Button>
             )}
             <Button
-              type={isNewForm ? "submit" : "button"}
+              type={isNewForm || !formHasTabs ? "submit" : "button"}
               color="transparent"
               size="fit"
               className="text-primary lowercase"
@@ -219,7 +221,7 @@ const FormInstance = ({
               }}
             >
               <span className="lowercase first-letter:uppercase">
-                {isNewForm ? "Save" : `Add new ${info?.title || ""}`}
+                {isNewForm || !formHasTabs ? "Save" : `Add new ${info?.title || ""}`}
               </span>
             </Button>
           </div>

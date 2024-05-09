@@ -42,7 +42,7 @@ const ConfirmAction = ({
             disabled={isLoading}
             processingSpinner={<Oval color="white" strokeWidth={4} className="h-5 w-5" />}
           >
-            Yes, I'm sure
+            Yes, I&#39;m sure
           </Button>
           <Button
             outline

@@ -1,10 +1,9 @@
-import { Checkbox, Label, Radio, Select, TextInput } from "flowbite-react";
-import React, { useEffect, useMemo, useRef, useCallback, MutableRefObject } from "react";
-import { useForm, Controller, FormState } from "react-hook-form";
+import { Checkbox, Label, Radio, Textarea, TextInput } from "flowbite-react";
+import React, { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DynamicFormProps } from "../constants";
-import { useDynamic } from "@/hooks/useDynamic";
 import ComboBox from "./comboBox";
 import { cn } from "@/lib/utils";
 import MultiSelectCombo from "./multiSelectCombo";
@@ -12,6 +11,8 @@ import InputWithTags from "@/components/input/inputWithTags";
 import { countries } from "countries-list";
 import { FileInput } from "@/components/file/fileInput";
 import { useGetCountries } from "@/services/service";
+import { getDynamicSchema, getVisibilityStatus, resetDependees } from "./actions";
+import ListOptions from "./listOptions";
 
 const DynamicForm = ({
   children,
@@ -19,16 +20,17 @@ const DynamicForm = ({
   defaultValues,
   formSchema,
   onFormSubmit,
-  watchValues,
   disableAll,
   formClassName,
   className,
-  setFormState,
+  fullFormInfo,
 }: DynamicFormProps) => {
-  const dynamic = useDynamic({ subForms: formInfo });
+  const [rerender, setRerender] = useState(false);
+
+  let subFormsRef = useRef<any>([]);
+  const dynamic = getDynamicSchema({ subForms: subFormsRef.current });
 
   const schema = formSchema || dynamic.schema;
-  const dValues = defaultValues || dynamic.defaultValues;
 
   type formType = z.infer<typeof schema>;
 
@@ -42,26 +44,36 @@ const DynamicForm = ({
     setValue,
     control,
     reset,
+    resetField,
   } = useForm<formType>({
     resolver: zodResolver(schema),
-    defaultValues: dValues,
+    defaultValues,
   });
 
   // Submit handler
   function onSubmit(values: formType) {
-    // console.log(values);
     onFormSubmit && onFormSubmit({ values, reset });
   }
 
   useEffect(() => {
-    const subscription = watch((values) => watchValues && watchValues(values));
-    return () => subscription.unsubscribe();
-  }, [watch, watchValues]);
+    const newFormInfo = formInfo?.filter((field) =>
+      getVisibilityStatus({ field, getValues, fullFormInfo })
+    );
+    subFormsRef.current = newFormInfo;
+  }, [getValues()]);
 
   useEffect(() => {
     (formInfo || []).forEach((form) => {
       if (form.value) {
         setValue(form.name, form.value);
+      }
+      if (form.fileName && form.fileLink && form.fileType && form.fileSize) {
+        setValue(form.name, {
+          fileName: form.fileName,
+          fileLink: form.fileLink,
+          fileType: form.fileType,
+          fileSize: form.fileSize,
+        });
       }
     });
   }, [setValue, formInfo]);
@@ -82,19 +94,18 @@ const DynamicForm = ({
           const isTextInput =
             el.type === "email" ||
             el.type === "phone number" ||
-            el.type === "paragraph" ||
-            el.type === "address" ||
             el.type === "promocode" ||
             el.type === "password" ||
             el.type === "short answer";
           const isSelect =
             el.type === "select" ||
             el.type === "countries-all" ||
-            el.type === "countries-operation" ||
-            el.type === "multiple choice";
+            el.type === "countries-operation";
           const errorMsg = errors[el.name]?.message;
+          let type = el.type === "phone number" ? "number" : "text";
+          if (el.type === "password") type = "password";
 
-          let selectOptions;
+          let selectOptions = el.options;
           switch (el.type) {
             case "countries-all":
               selectOptions = Object.values(countries).map((country) => country.name);
@@ -103,6 +114,9 @@ const DynamicForm = ({
               selectOptions = sidebriefCountries;
           }
 
+          let showField = getVisibilityStatus({ field: el, getValues, fullFormInfo });
+          if (!showField) return;
+
           return (
             <div key={i}>
               {el.label && (
@@ -110,10 +124,11 @@ const DynamicForm = ({
                   <Label htmlFor={el.name} value={el.label} />
                 </div>
               )}
+
               {isTextInput && (
                 <TextInput
                   id={el.name}
-                  type={el.type}
+                  type={type}
                   sizing="md"
                   helperText={<>{errorMsg}</>}
                   color={errorMsg && "failure"}
@@ -122,16 +137,29 @@ const DynamicForm = ({
                   {...register(el.name)}
                 />
               )}
-              {/* {el.type === "countries-all" && (
-                <AllCOuntries
-                  value={watch(el.name) || ""}
-                  setValue={(value: string) => setValue(el.name, value)}
+
+              {el.type === "paragraph" && (
+                <Textarea
+                  id={el.name}
+                  helperText={<>{errorMsg}</>}
+                  color={errorMsg && "failure"}
+                  className={errorMsg ? "focus:[&_input]:ring-0" : ""}
+                  {...el.textInputProp}
+                  {...register(el.name)}
                 />
-              )} */}
-              {el.type === "checkbox" && (
-                <Checkbox id={el.name} defaultChecked {...register(el.name)} />
               )}
-              {el.type === "multiple choice" && <Radio id={el.name} {...register(el.name)} />}
+
+              {(el.type === "checkbox" || el.type === "multiple choice") && (
+                <ListOptions
+                  name={el.name}
+                  options={el.options}
+                  type={el.type}
+                  allowOther={el.allowOther}
+                  setValue={setValue}
+                  defaultValue={el.value}
+                  errorMsg={errorMsg as string}
+                />
+              )}
 
               {(el.type === "document template" || el.type === "document upload") && (
                 <FileInput
@@ -142,20 +170,21 @@ const DynamicForm = ({
                   fileSize={el.fileSize || ""}
                   errorMsg={errorMsg as string}
                 />
-                // <FileInput
-                //   id={el.name}
-                //   helperText="A profile picture is useful to confirm your are logged into your account"
-                //   {...register(el.name)}
-                // />
               )}
+
               {isSelect && (
                 <ComboBox
                   name={el.name}
-                  options={selectOptions || el.selectOptions || []}
+                  options={selectOptions || []}
                   setValue={setValue}
                   errorMsg={errorMsg?.toString()}
                   selectProp={el.selectProp}
-                  handleSelect={el.handleSelect}
+                  placeholder={el.placeholder}
+                  handleSelect={(value) => {
+                    setRerender(!rerender);
+                    resetDependees({ question: el.label || "", fullFormInfo, setValue });
+                    el.handleSelect && el.handleSelect(value);
+                  }}
                   fieldName="options"
                   leftContent={el.leftContent}
                   defaultValue={el.value as string}
@@ -164,10 +193,11 @@ const DynamicForm = ({
                   optionsErrorMsg={el.optionsErrorMsg}
                 />
               )}
+
               {el.type === "objectives" && (
                 <MultiSelectCombo
                   name={el.name}
-                  options={el.selectOptions || []}
+                  options={el.options || []}
                   setValue={setValue}
                   selectProp={el.selectProp}
                   fieldName="objectives"
@@ -177,6 +207,7 @@ const DynamicForm = ({
                   errorMsg={errorMsg?.toString()}
                 />
               )}
+
               {el.type === "business name" && (
                 <InputWithTags
                   submitErr={errorMsg}
@@ -193,15 +224,7 @@ const DynamicForm = ({
                   }}
                 />
               )}
-              {/* {el.type === "business name" && (
-                <BusinessNameInput
-                  id={el.id!}
-                  // question={el.}
-                  value={watch(el.name) || []}
-                  setValue={(value: string[]) => setValue(el.name, value)}
-                  error={errorMsg as string | undefined}
-                />
-              )} */}
+
               {/* {el.type === "objectives" && (
                 <BusinessObjectiveInput
                   id={el.id!}

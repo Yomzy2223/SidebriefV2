@@ -1,4 +1,4 @@
-import { TFieldTypes } from "@/services/service/types";
+import { TFieldTypes, TProductForm, TServiceForm, TSubForm } from "@/services/service/types";
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { FormState, UseFormReset } from "react-hook-form";
 import { ZodType } from "zod";
@@ -10,11 +10,13 @@ export interface IFormInput {
   type: TFieldTypes;
   textInputProp?: Record<string, any>;
   selectProp?: Record<string, any>;
+  placeholder?: string;
   fileProp?: Record<string, any>;
-  selectOptions?: string[];
+  options?: string[];
   value?: string | string[];
   leftContent?: string | ReactNode;
   handleSelect?: (selected?: string) => void;
+  compulsory?: boolean;
   fieldName?: string;
   optionsLoading?: boolean;
   optionsErrorMsg?: string;
@@ -22,6 +24,11 @@ export interface IFormInput {
   fileType?: string;
   fileLink?: string;
   fileSize?: string;
+  dependsOn?: {
+    field: string;
+    options: string[];
+  };
+  allowOther?: boolean;
 }
 
 export interface DynamicFormProps {
@@ -30,10 +37,9 @@ export interface DynamicFormProps {
   onFormSubmit: ({ values, reset }: { values: any; reset: UseFormReset<any> }) => void;
   defaultValues?: Record<string, any>;
   formSchema?: ZodType<any, any, any>;
-  watchValues?: (values: { [key: string]: string | string[] }) => void;
   // selectedPerson?: number | null;
   disableAll?: boolean;
   formClassName?: string;
   className?: string;
-  setFormState?: Dispatch<SetStateAction<FormState<any>>>;
+  fullFormInfo?: TSubForm[];
 }

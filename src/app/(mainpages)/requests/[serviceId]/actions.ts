@@ -17,7 +17,15 @@ import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import * as z from "zod";
-import { formSchema } from "./page";
+
+export const formSchema = z.object({
+  country: z
+    .string({ required_error: "You need to select a country" })
+    .min(1, { message: "You need to select a country" }),
+  product: z
+    .string({ required_error: "You need to select a product" })
+    .min(1, { message: "You need to select a product" }),
+});
 
 // ACTIONS
 export const useActions = ({ serviceId }: { serviceId: string }) => {
@@ -55,7 +63,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
       setCountry(country);
       setSelectedProduct(product.name);
     }
-  }, [product, worldCountries]);
+  }, [product]);
 
   const productInfo = products?.find((el) => el.name === selectedProduct);
 
@@ -78,7 +86,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
       name: "country",
       type: "select",
       label: "Select an operational country",
-      selectOptions: originalCountries,
+      options: originalCountries,
       optionsLoading: countriesRes.isLoading,
       optionsErrorMsg: countriesRes.error?.message,
       value: country,
@@ -88,7 +96,7 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
       name: "product",
       type: "select",
       label: "Select a product of your choice",
-      selectOptions: productsNames,
+      options: productsNames,
       optionsLoading: productsRes.isLoading,
       optionsErrorMsg: productsRes.error?.message,
       value: selectedProduct,

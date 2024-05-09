@@ -6,7 +6,7 @@ import { BadgeCheck } from "@/assets/svg";
 import Image from "next/image";
 import { Button, Timeline } from "flowbite-react";
 
-export const LaunchStepper = () => {
+export const RequestStepper = () => {
   const { requestSteps, progress, handleClick, activePage } = useLaunchSteps();
 
   const activeRoute = activePage ? "/" + activePage?.toLowerCase() : "/";

@@ -27,6 +27,7 @@ const ComboBox = ({
   const [openSelect, setOpenSelect] = useState(false);
   const [selectValue, setSelectValue] = useState(defaultValue);
 
+  // console.log(defaultValue, selectValue);
   const findOriginalValue = (value: string) =>
     options.find((el) => el.toLowerCase() === value.toLowerCase()) || "";
 
@@ -65,6 +66,7 @@ const ComboBox = ({
             {
               "border-primary ring-primary ring-1": openSelect && !isMultiCombo,
               "[&_span]:rounded-none rounded-none border-none bg-transparent": isMultiCombo,
+              "border-destructive-foreground !bg-destructive-foreground": errorMsg,
             },
             className
           )}

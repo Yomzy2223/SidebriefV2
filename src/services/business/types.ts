@@ -59,3 +59,6 @@ export type TProductRequest = TCreateRequest & {
   product: TProduct;
   business: TBusinessData;
 };
+
+export type TRequestState = "SERVICEFORM" | "PAYMENT" | "PRODUCTFORM" | "REVIEW";
+export type TRequestStatus = "PENDING" | "SUBMITTED" | "ASSIGNED" | "REJECTED" | "COMPLETED";

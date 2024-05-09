@@ -145,9 +145,11 @@ const BusinessInfoSecion = ({
             My business
           </Badge>
         </div>
-        <p className="sb-text-18 mb-3">
-          {selectBusiness ? selectAddress : <Skeleton className="w-full h-6" />}
-        </p>
+        {selectBusiness ? (
+          <p className="sb-text-18 mb-3">selectAddress</p>
+        ) : (
+          <Skeleton className="w-full h-6" />
+        )}
         <div className="flex items-center gap-2">
           <Badge color="green" className="sb-text-14">
             {/* TODO: do this status part */}

@@ -9,7 +9,9 @@ import { TFormQACreate, TFormQAGet } from "@/services/productQA/types";
 import { TServiceForm, TSubForm } from "@/services/service/types";
 import { TProductForm } from "@/services/product/types";
 import { useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { IFormInput } from "../constants";
 
 export const useActions = ({
   info,
@@ -35,7 +37,9 @@ export const useActions = ({
 
   const QAForms = getQAForms(info?.title);
   const formHasTabs = QAForms?.length >= 1 && info?.type?.toLowerCase() === "person";
-  const isOnLastSubTab = activeSubTab === QAForms?.length - (newForm ? 0 : 1);
+  const isOnLastSubTab = QAForms?.length
+    ? activeSubTab === QAForms?.length - (newForm ? 0 : 1)
+    : true;
 
   return {
     QAForms,
@@ -55,7 +59,8 @@ export const useNewFormAction = ({
   onFormDelete,
   onlyCreate,
   setOnlyCreate,
-}: INewFormActionProps) => {
+}: // form,
+INewFormActionProps) => {
   const saveRequestQA = useSaveRequestQA();
   const updateRequestQA = useUpdateRequestQA();
   const deleteRequestQA = useDeleteRequestQA();
@@ -77,14 +82,14 @@ export const useNewFormAction = ({
       return !isDoc;
     }) || [];
 
-  const formInfo = nonDocSubforms.map((field) => {
+  // Used to construct the form
+  let formInfo: IFormInput[] = nonDocSubforms.map((field) => {
     const QAField = getQAField(field.question);
 
     const isTextInput =
       field.type === "email" ||
       field.type === "phone number" ||
       field.type === "paragraph" ||
-      field.type === "address" ||
       field.type === "promocode" ||
       field.type === "short answer";
     const isSelect =
@@ -101,8 +106,14 @@ export const useNewFormAction = ({
       name: sluggify(field.question),
       label: field.question,
       type: field.type,
-      selectOptions: field.options,
+      options: field.options,
       compulsory: field.compulsory,
+      dependsOn: field.dependsOn,
+      allowOther: field.allowOther,
+      placeholder: field.question,
+      textInputProp: {
+        placeholder: field.question,
+      },
       value,
     };
   });
@@ -129,7 +140,7 @@ export const useNewFormAction = ({
       subForm: info.subForm.map((field) => ({
         id: getQAField(field.question)?.id,
         question: field.question,
-        answer: getAnswer(field),
+        answer: getAnswer(field) || "",
         type: field.type,
         compulsory: field.compulsory,
         fileName: "",
@@ -155,11 +166,9 @@ export const useNewFormAction = ({
       { requestId, formId: info.id, form: payload },
       {
         onSuccess: (data) => {
-          if (isNewForm) {
-            setNewForm(false);
-            setOnlyCreate(false);
-            if (!onlyCreate) handeleSubmit();
-          } else handeleSubmit();
+          if (onlyCreate) setOnlyCreate(false);
+          else handeleSubmit();
+          if (isNewForm) setNewForm(false);
           console.log("Created request form");
         },
       }
@@ -195,4 +204,5 @@ interface INewFormActionProps {
   onFormDelete?: (isNew?: boolean) => void;
   onlyCreate: boolean;
   setOnlyCreate: Dispatch<SetStateAction<boolean>>;
+  // form: UseFormReturn<any, any, undefined>;
 }

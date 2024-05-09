@@ -1,5 +1,6 @@
 import { IFormInput } from "@/components/form/constants";
-import { z } from "zod";
+import { TSubForm } from "@/services/service/types";
+import { nullable, z } from "zod";
 
 export const useDynamic = ({
   isLoading = false,
@@ -59,16 +60,16 @@ export const useDynamic = ({
                   // }
                   // return [field.type, objectivesSchema];
                   return [field.name, z.array(z.string()).min(1, "Select business objectives")];
-                case "country":
-                  return [field.name, z.string().min(1, "Select a country")];
-                case "address":
-                  return [field.name, z.string().min(1, "This field is required")];
+                // case "address":
+                //   return [field.name, z.string().min(1, "This field is required")];
                 case "email":
                   return [field.name, z.string().email().min(1, "Enter email address")];
                 case "phone number":
                   return [field.name, z.coerce.number().min(1, "Enter phone number")];
                 case "short answer":
                   return [field.name, z.string().min(1, "This field is required")];
+                case "countries-operation":
+                  return [field.name, z.string().min(1, "Select a country")];
                 case "countries-all":
                   return [field.name, z.string().min(1, "Select a country")];
                 case "document upload":

@@ -102,7 +102,10 @@ export const FileInput = ({
               <Button
                 color="link"
                 size="fit"
-                onClick={() => saveAs(file || fileLink, file?.name || fileName)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  saveAs(file || fileLink, file?.name || fileName);
+                }}
               >
                 <DownloadIcon size={18} />
               </Button>

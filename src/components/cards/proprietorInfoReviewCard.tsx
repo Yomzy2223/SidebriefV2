@@ -70,7 +70,7 @@ export const MemberInfoReviewCards = ({
     value: title.toLowerCase() + " " + (i + 1),
   }));
 
-  const details = collapseAll ? [info[position][0]] : info[position];
+  const details = collapseAll ? [info?.[position]?.[0]] : info?.[position];
 
   const showDetails = (i: number) => {
     setQuery(title.toLowerCase(), title.toLowerCase() + " " + (i + 1));
@@ -94,7 +94,7 @@ export const MemberInfoReviewCards = ({
               key={i}
               className={cn("shadow-none transition-all border border-border rounded-md", {
                 "w-[235px]": collapseAll,
-                "w-[800px] overflow-auto": !collapseAll,
+                "w-full overflow-auto": !collapseAll,
               })}
             >
               <motion.div className="min-w-max">

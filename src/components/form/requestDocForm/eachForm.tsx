@@ -17,17 +17,15 @@ const EachForm = ({
   info,
   isLoading,
   isServiceForm = false,
-  handeNext,
+  handleNext,
   isOnLastForm,
 }: {
   info: TServiceForm | TProductForm;
   isLoading: boolean;
   isServiceForm?: boolean;
-  handeNext: (tabsRef: RefObject<TabsRef>) => void;
+  handleNext: (tabsRef: RefObject<TabsRef>) => void;
   isOnLastForm: boolean;
 }) => {
-  const [newForm, setNewForm] = useState<boolean>(false);
-
   const tabsRef = useRef<TabsRef>(null);
   const searchParams = useSearchParams();
   const { setQueriesWithPath } = useGlobalFunctions();
@@ -47,12 +45,11 @@ const EachForm = ({
   const { QAForms, formHasTabs, isOnLastSubTab } = useActions({
     info,
     activeSubTab,
-    newForm,
   });
 
   const handeleSubmit = () => {
     if (isOnLastSubTab) {
-      handeNext(tabsRef);
+      handleNext(tabsRef);
       return;
     }
     tabsRef.current?.setActiveTab(activeSubTab + 1); //navigate to the next sub tab
@@ -128,6 +125,7 @@ const FormInstance = ({
     QAForm,
     handeleSubmit,
     setIsUploading,
+    isOnLastSubTab,
   });
 
   let btnText = isOnLastSubTab ? "Continue" : "Next";
@@ -164,5 +162,5 @@ interface IEachFormComp {
   QAForm?: TFormQAGet;
   formHasTabs: boolean;
   handeleSubmit: () => void;
-  isOnLastSubTab?: boolean;
+  isOnLastSubTab: boolean;
 }
