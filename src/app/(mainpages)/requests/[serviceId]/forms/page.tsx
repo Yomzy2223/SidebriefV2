@@ -9,13 +9,13 @@ import RequestWrapper from "../wrapper";
 
 const Forms = () => {
   const searchParams = useSearchParams();
-  const productId = searchParams.get("productId");
+  const productId = searchParams.get("productId") || "";
 
   const productFormsRes = useGetProductForms(productId as string);
   const productForms = productFormsRes.data?.data?.data || [];
 
   return (
-    <RequestWrapper>
+    <RequestWrapper productId={productId} requestState="PRODUCTFORM">
       <RequestForm forms={productForms} step="STEP 4" />
       <RequestDocForm forms={productForms?.filter((el) => el.type.toLowerCase() === "person")} />
     </RequestWrapper>

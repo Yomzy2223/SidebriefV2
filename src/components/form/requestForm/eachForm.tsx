@@ -12,24 +12,17 @@ import { useSearchParams } from "next/navigation";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import ConfirmAction from "@/components/confirmAction";
 import { TFormQAGet } from "@/services/productQA/types";
-import { FormProvider, useForm } from "react-hook-form";
-import { getDynamicSchema } from "../dynamicForm/actions";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ZodType } from "zod";
 
 const EachForm = ({
   info,
   isLoading,
   isServiceForm = false,
   handeNext,
-  isOnLastForm,
 }: {
   info: TServiceForm | TProductForm;
   isLoading: boolean;
   isServiceForm?: boolean;
   handeNext: (tabsRef: RefObject<TabsRef>) => void;
-  isOnLastForm: boolean;
 }) => {
   const [newForm, setNewForm] = useState<boolean>(false);
 

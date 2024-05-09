@@ -15,6 +15,7 @@ const Payment = () => {
   const { serviceId } = useParams();
 
   const searchParams = useSearchParams();
+  const productId = searchParams.get("productId") || "";
   const hasPForms = searchParams.get("hasPForms");
 
   // Used to create and update QA form
@@ -31,7 +32,7 @@ const Payment = () => {
   };
 
   return (
-    <RequestWrapper>
+    <RequestWrapper productId={productId} requestState="PAYMENT">
       <DynamicForm
         formInfo={formInfo}
         onFormSubmit={submitFormHandler}
