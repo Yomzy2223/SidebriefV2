@@ -10,7 +10,7 @@ export const Member = ({ businessId }: { businessId: string }) => {
 
   const businessRequest = getBusinessRequest.data?.data.data;
 
-  const productRequestId = businessRequest?.productRequest[0].id;
+  const productRequestId = businessRequest?.productRequest[0]?.id;
 
   const getProductRequestQA = useGetRequestQA(productRequestId || "");
 
