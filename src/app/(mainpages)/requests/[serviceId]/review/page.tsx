@@ -13,7 +13,6 @@ export default function Review() {
   const searchParams = useSearchParams();
 
   const { mutateAsync: submitRequest, isPending: submittingRequest } = useSubmitProductRequest();
-  const { processId, service }: { service: string; processId: string } = useParams();
 
   const businesssId = searchParams.get("businessId");
   const process = useGetBusinessRequest({ id: businesssId || "" });
@@ -33,7 +32,7 @@ export default function Review() {
         disabled={process.isLoading}
         onClick={async () => {
           await submitRequest({ productRequestIds: [productRequestId || ""] });
-          router.push(`/requests/${service}/success`);
+          router.push(`/requests/success`);
         }}
         color="secondary"
         size={"lg"}

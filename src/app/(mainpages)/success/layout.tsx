@@ -1,12 +1,12 @@
-import { Header } from "@/components/headers/mainHeader";
+// import { Header } from "@/components/headers/mainHeader";
 import { ReactNode } from "react";
 
 const Successlayout = ({ children }: { children: ReactNode }) => {
   return (
     <div>
-      <div className="mx-4 md:mx-8">
+      {/* <div className="mx-4 md:mx-8">
         <Header />
-      </div>
+      </div> */}
       {children}
     </div>
   );
