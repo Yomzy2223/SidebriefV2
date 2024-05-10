@@ -13,7 +13,6 @@ export default function Review() {
   const searchParams = useSearchParams();
 
   const { mutateAsync: submitRequest, isPending: submittingRequest } = useSubmitProductRequest();
-  const { processId, service }: { service: string; processId: string } = useParams();
 
   const businesssId = searchParams.get("businessId");
   const process = useGetBusinessRequest({ id: businesssId || "" });
@@ -24,7 +23,7 @@ export default function Review() {
   const productRequestId = processData?.productRequest[0].id;
 
   return (
-    <RequestWrapper hideFAQ>
+    <RequestWrapper productId={""} requestState={""} hideFAQ>
       <div className="space-y-14">
         <BusinessInfoReview />
         <ProprietorInfoReview productId={productRequestId || ""} />
@@ -33,7 +32,7 @@ export default function Review() {
         disabled={process.isLoading}
         onClick={async () => {
           await submitRequest({ productRequestIds: [productRequestId || ""] });
-          router.push(`/request/${service}/complete`);
+          router.push(`/requests/success`);
         }}
         color="secondary"
         size={"lg"}

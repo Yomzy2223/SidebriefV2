@@ -78,9 +78,9 @@ export const BusinessInfoReview = () => {
                 Edit <PencilLine strokeWidth={1} size={16} />
               </Button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(450px,1fr))] gap-8">
+            <div className="flex flex-wrap justify-between gap-8">
               {el.subForm.map((subform) => (
-                <div className="space-y-2" key={subform.id}>
+                <div className="space-y-2 w-full lg:w-[calc(50%-1rem)]" key={subform.id}>
                   <Label htmlFor={sluggify(subform.question)} value={subform.question} />
                   <TextInput
                     id={sluggify(subform.question)}

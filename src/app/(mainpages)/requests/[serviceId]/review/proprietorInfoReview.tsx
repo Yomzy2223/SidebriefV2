@@ -5,6 +5,7 @@ import { MemberInfoReviewCards } from "@/components/cards/proprietorInfoReviewCa
 import { useGetRequestQA } from "@/services/productQA";
 import { TProductRequest } from "@/services/business/types";
 import { TFormQAGet } from "@/services/productQA/types";
+import { TFieldTypes } from "@/services/service/types";
 
 export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
   const productQA = useGetRequestQA(productId);
@@ -52,6 +53,11 @@ export const ProprietorInfoReview = ({ productId }: { productId: string }) => {
               return {
                 field: el.question,
                 value: el.answer[0],
+                type: el.type as TFieldTypes | undefined,
+                fileName: el.fileName,
+                fileLink: el.fileLink,
+                fileType: el.fileType,
+                fileSize: el.fileSize,
               };
             });
           })}

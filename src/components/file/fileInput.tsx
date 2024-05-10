@@ -8,6 +8,7 @@ import { FileIcon, defaultStyles, DefaultExtensionType } from "react-file-icon";
 import { Button } from "flowbite-react";
 import { DownloadIcon, PenIcon, PenLineIcon } from "lucide-react";
 import { saveAs } from "file-saver";
+import { on } from "stream";
 
 export const FileInput = ({
   fileName,
@@ -28,10 +29,13 @@ export const FileInput = ({
 }) => {
   const [file, setFile] = useState<File>();
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFile(acceptedFiles[0]);
-    onFileChange && onFileChange(acceptedFiles[0]);
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      setFile(acceptedFiles[0]);
+      onFileChange && onFileChange(acceptedFiles[0]);
+    },
+    [onFileChange]
+  );
 
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({
     onDrop,
@@ -48,9 +52,17 @@ export const FileInput = ({
 
   const fileExtension = file?.name.split(".").pop() || fileType;
 
-  let size: string | number = Math.ceil(file?.size ? file?.size / 1000 : 0) || parseInt(fileSize);
-  if (size >= 1000) size = (size / 1000).toFixed(2) + "MB";
-  else if (size > 0) size = size + "KB";
+  const formatFileSize = (sizeInBytes: number): string => {
+    if (sizeInBytes >= 1024 * 1024) {
+      return `${(sizeInBytes / (1024 * 1024)).toFixed(2)} MB`;
+    } else if (sizeInBytes >= 1024) {
+      return `${(sizeInBytes / 1024).toFixed(2)} KB`;
+    } else {
+      return `${sizeInBytes} B`;
+    }
+  };
+
+  let size: string = formatFileSize(file?.size || parseInt(fileSize) || 0);
 
   return (
     <div
@@ -62,7 +74,7 @@ export const FileInput = ({
         }
       )}
     >
-      {/* <input {...getInputProps({})} /> */}
+      <input {...getInputProps({})} />
       {!file && !fileName && !fileLink ? (
         <>
           <Upload />
@@ -89,7 +101,7 @@ export const FileInput = ({
               <p className="text-sm underline text-nowrap text-ellipsis overflow-hidden">
                 {file?.name || fileName}
               </p>
-              <p className="text-xs">{size || 0}</p>
+              <p className="text-xs min-w-max">{size || 0}</p>
             </div>
           </div>
           <div className="flex gap-3">
