@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useGetProductRequest } from "@/services/business";
 import { useGetService } from "@/services/service";
 import { sluggify } from "@/lib/utils";
+import { useGlobalFunctions } from "@/hooks/globalFunctions";
 
 const OngoingRegSection = () => {
   const session = useSession();
@@ -21,6 +22,8 @@ const OngoingRegSection = () => {
   const afterProfile = activeStep === "payment" || activeStep === "kyc" || activeStep == "review";
   const afterPayment = activeStep === "kyc" || activeStep == "review";
   const afterInfo = activeStep == "review";
+
+  const { setQueriesWithPath } = useGlobalFunctions();
 
   const userRequests = useGetUserBusinessRequests({ userId: userId });
 
@@ -98,16 +101,22 @@ const OngoingRegSection = () => {
             Delete
           </Button>
           {/* TODO: get the particular position to go to */}
-          <Link
-            href={`http://localhost:3000/request/${sluggify(
-              Serrvice.data?.data.data.name || ""
-            )}/${urlSuffix}/${latest?.id}`}
+          {/* <Link
+            href={`http://localhost:3000/requests/${Serrvice.data?.data.data.id}/${urlSuffix}/${latest?.id}`}
+          > */}
+          <Button
+            color="secondary"
+            className="md:px-6 md:py-1.5"
+            onClick={() => {
+              setQueriesWithPath({
+                path: `/requests/${Serrvice.data?.data.data.id}/${urlSuffix}`,
+              });
+            }}
           >
-            <Button color="secondary" className="md:px-6 md:py-1.5">
-              Resume
-              <ArrowRightCircle fill="white" stroke="hsl(var(--secondary))" />
-            </Button>
-          </Link>
+            Resume
+            <ArrowRightCircle fill="white" stroke="hsl(var(--secondary))" />
+          </Button>
+          {/* </Link> */}
         </div>
       </div>
 

@@ -2,16 +2,25 @@ import Image from "next/image";
 import Ellipse2 from "./Ellipse 2.svg";
 import Ellipse3 from "./Ellipse3.svg";
 import { useGetProductFAQsQuery } from "@/services/faq";
-import { TProduct } from "@/services/service/types";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useGetProductById } from "@/services/service";
 
-export const RequestInfoPanel = ({ productInfo }: { productInfo?: TProduct }) => {
-  const productFAQsRes = useGetProductFAQsQuery(productInfo?.id || "");
+export const RequestInfoPanel = ({
+  productId,
+  requestState,
+}: {
+  productId: string;
+  requestState: string;
+}) => {
+  const productRes = useGetProductById(productId);
+  const product = productRes.data?.data?.data;
+
+  const productFAQsRes = useGetProductFAQsQuery({ productId, requestState });
   const productFAQs = productFAQsRes.data?.data?.data;
 
   return (
@@ -21,8 +30,8 @@ export const RequestInfoPanel = ({ productInfo }: { productInfo?: TProduct }) =>
       <Image src={Ellipse2} alt="" className="absolute top-0 z-0 h-full" />
       <div className="py-[70px] px-[49px] relative">
         <div className="space-y-0.5">
-          <h6 className="text-lg font-semibold text-black">Product Description</h6>
-          <p className="text-sm text-black pt-2">{productInfo?.description}</p>
+          <h6 className="text-lg font-semibold text-black capitalize">{product?.name}</h6>
+          <p className="text-sm text-black pt-2">{product?.description}</p>
         </div>
 
         <div className="space-y-[10px]">

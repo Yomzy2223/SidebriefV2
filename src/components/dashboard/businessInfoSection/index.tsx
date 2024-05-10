@@ -36,6 +36,8 @@ const BusinessInfoSecion = ({
 
   const priority1 = services?.find((el) => el.priority === 1);
 
+  const priority2 = services?.find((el) => el.priority === 2);
+
   const userId = session.data?.user.id;
 
   const getUserBusinessRequests = useGetUserBusinessRequests({ userId });
@@ -164,21 +166,39 @@ const BusinessInfoSecion = ({
       </div>
 
       <div className="flex flex-col gap-4 xl:flex-row md:items-center md:gap-7">
-        <Button outline className="border-foreground">
-          <span>Manage this business</span>
-          <ArrowRightCircle fill="hsl(var(--foreground))" stroke="white" />
-        </Button>
+        {!getServices.isLoading ? (
+          <>
+            {priority2 && (
+              <Link href={`/requests/${priority2?.id}`}>
+                <Button
+                  outline
+                  className="border-foreground"
+                  processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
+                >
+                  <span>{priority2?.label}</span>
+                  <ArrowRightCircle fill="hsl(var(--foreground))" stroke="white" />
+                </Button>
+              </Link>
+            )}
+          </>
+        ) : (
+          <Skeleton className="w-48 h-12" />
+        )}
         <div>
           {!getServices.isLoading ? (
-            <Link href={`/requests/${priority1?.id}`}>
-              <Button
-                color="secondary"
-                processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
-              >
-                <span>{priority1?.label}</span>
-                <ArrowRightCircle fill="white" stroke="hsl(var(--secondary))" />
-              </Button>
-            </Link>
+            <>
+              {priority1 && (
+                <Link href={`/requests/${priority1?.id}`}>
+                  <Button
+                    color="secondary"
+                    processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
+                  >
+                    <span>{priority1?.label}</span>
+                    <ArrowRightCircle fill="white" stroke="hsl(var(--secondary))" />
+                  </Button>
+                </Link>
+              )}
+            </>
           ) : (
             <Skeleton className="w-48 h-12" />
           )}

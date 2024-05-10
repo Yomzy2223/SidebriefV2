@@ -4,8 +4,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import slugify from "slugify";
 import { useGetServices } from "@/services/service";
+import { useGetUserBusinessRequests } from "@/services/business";
+import { useSession } from "next-auth/react";
 
 const HandpickedSection = () => {
   const getServices = useGetServices();
@@ -21,7 +22,7 @@ const HandpickedSection = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-0.5 gap-y-6 p-1 rounded-2xl md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-3 gap-y-6 p-1 rounded-2xl md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
         {getServices.isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
               <Skeleton

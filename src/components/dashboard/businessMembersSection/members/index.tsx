@@ -4,6 +4,7 @@ import { useGetBusinessRequest } from "@/services/business";
 import MemberCard from "./MemberCard";
 import { useGetRequestFormQA, useGetRequestQA } from "@/services/productQA";
 import { MemberCardSkeleton } from "./memberSkeleton";
+import { Tabs } from "flowbite-react";
 
 export const Member = ({ businessId }: { businessId: string }) => {
   const getBusinessRequest = useGetBusinessRequest({ id: businessId });
@@ -15,7 +16,7 @@ export const Member = ({ businessId }: { businessId: string }) => {
   const getProductRequestQA = useGetRequestQA(productRequestId || "");
 
   const productRequestQA = getProductRequestQA.data?.data.data;
-
+  ("");
   const persons = productRequestQA?.filter((el) => el.type === "person");
 
   const loading = getBusinessRequest.isLoading || getProductRequestQA.isLoading || !businessId;
@@ -35,12 +36,50 @@ export const Member = ({ businessId }: { businessId: string }) => {
         className="space-y-4 max-h-[400px] overflow-auto"
         // whileHover={{ overflow: "auto" }}
       >
-        {loading
-          ? Array.from({ length: 6 }).map((_, i) => <MemberCardSkeleton key={i} />)
-          : proprietors?.map((el, i) => <MemberCard key={i} info={el} />)}
+        {loading ? (
+          Array.from({ length: 6 }).map((_, i) => <MemberCardSkeleton key={i} />)
+        ) : (
+          <RenderMembers members={proprietors || []} />
+        )}
       </div>
     </div>
   );
+};
+
+const RenderMembers = ({ members }: { members: MemberType[] }) => {
+  function getUniqueTypes(persons: MemberType[]): string[] {
+    const typeSet = new Set<string>();
+    for (const person of persons) {
+      typeSet.add(person.type);
+    }
+    return Array.from(typeSet);
+  }
+
+  const memberTypes = getUniqueTypes(members);
+
+  if (memberTypes.length > 1) {
+    return (
+      <Tabs style="underline">
+        {memberTypes.map((type, i) => (
+          <Tabs.Item active title={type} className="p-1" key={i}>
+            {members
+              ?.filter((el) => el.type === type)
+              .map((el, i) => (
+                <MemberCard key={i} info={el} />
+              ))}
+          </Tabs.Item>
+        ))}
+      </Tabs>
+    );
+  } else {
+    return (
+      <>
+        {members?.map((el, i) => (
+          <MemberCard key={i} info={el} />
+        ))}
+      </>
+    );
+  }
 };
 
 type MemberType = {

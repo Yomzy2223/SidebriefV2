@@ -74,6 +74,16 @@ export const useGlobalFunctions = () => {
     });
   };
 
+  const getReqStatusColor = (status: string) => {
+    if (status === "PENDING") return "[&_span]:bg-primary-8 [&_span]:text-primary";
+    if (status === "SUBMITTED") return "[&_span]:bg-success [&_span]:text-success-foreground";
+    if (status === "ASSIGNED") return "[&_span]:bg-success [&_span]:text-success-foreground";
+    if (status === "ACCEPTED") return "[&_span]:bg-tertiary [&_span]:text-tertiary-foreground";
+    if (status === "REJECTED")
+      return "[&_span]:bg-destructive [&_span]:text-destructive-foreground";
+    if (status === "COMPLETED") return "[&_span]:bg-success [&_span]:text-success-foreground";
+  };
+
   return {
     createQueryString,
     deleteQueryString,
@@ -82,6 +92,7 @@ export const useGlobalFunctions = () => {
     isDesktop,
     getRandColor,
     userCloudFolder,
+    getReqStatusColor,
   };
 };
 

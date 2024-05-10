@@ -5,30 +5,24 @@ import DynamicForm from "@/components/form/dynamicForm";
 import { Oval } from "react-loading-icons";
 import { ArrowRightCircle } from "lucide-react";
 import { useActions, useNewFormAction } from "./actions";
-import { TProductForm, TServiceForm } from "@/services/service/types";
+import { TServiceForm } from "@/services/service/types";
+import { TProductForm } from "@/services/product/types";
 import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import ConfirmAction from "@/components/confirmAction";
 import { TFormQAGet } from "@/services/productQA/types";
-import { FormProvider, useForm } from "react-hook-form";
-import { getDynamicSchema } from "../dynamicForm/actions";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ZodType } from "zod";
 
 const EachForm = ({
   info,
   isLoading,
   isServiceForm = false,
   handeNext,
-  isOnLastForm,
 }: {
   info: TServiceForm | TProductForm;
   isLoading: boolean;
   isServiceForm?: boolean;
   handeNext: (tabsRef: RefObject<TabsRef>) => void;
-  isOnLastForm: boolean;
 }) => {
   const [newForm, setNewForm] = useState<boolean>(false);
 
