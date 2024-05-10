@@ -139,6 +139,26 @@ const DynamicForm = ({
                 />
               )}
 
+               {/* {isTextInput && (
+                <div className="w-full flex items-center">
+                  <TextInput
+                    id={el.name}
+                    type={type}
+                    sizing="md"
+                    helperText={<>{errorMsg}</>}
+                    color={errorMsg && "failure"}
+                    className={errorMsg ? "focus:[&_input]:ring-0" : ""}
+                    {...el.textInputProp}
+                    {...register(el.name)}
+                  />
+                  {el.rightText && (
+                    <span className="ml-2 underline decoration-solid decoration-sky-500">  
+                      {el.rightText}
+                    </span>
+                  )}
+                </div>
+              )} */}
+
               {el.type === "paragraph" && (
                 <Textarea
                   id={el.name}

@@ -34,7 +34,7 @@ export const useTableInfo = () => {
     queries:
       sortedUserBusinessRequests?.map((request) => {
         return {
-          queryKey: ["get product QA", request.productRequest[0].id],
+          queryKey: ["get product QA", request.productRequest[0]?.id],
           queryFn: () => getRequestQA({ requestId: request.productRequest[0].id }),
         };
       }) || [],
