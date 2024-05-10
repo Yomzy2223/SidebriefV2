@@ -29,6 +29,7 @@ export interface IFormInput {
     options: string[];
   };
   allowOther?: boolean;
+  rightText?: string;
 }
 
 export interface DynamicFormProps {
