@@ -8,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useGetProductById } from "@/services/service";
+import { useGetProductById } from "@/services/product";
 
 export const RequestInfoPanel = ({
   productId,

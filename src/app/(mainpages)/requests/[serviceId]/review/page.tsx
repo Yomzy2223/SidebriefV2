@@ -24,7 +24,7 @@ export default function Review() {
   const productRequestId = processData?.productRequest[0].id;
 
   return (
-    <RequestWrapper hideFAQ>
+    <RequestWrapper productId={""} requestState={""} hideFAQ>
       <div className="space-y-14">
         <BusinessInfoReview />
         <ProprietorInfoReview productId={productRequestId || ""} />
@@ -33,7 +33,7 @@ export default function Review() {
         disabled={process.isLoading}
         onClick={async () => {
           await submitRequest({ productRequestIds: [productRequestId || ""] });
-          router.push(`/request/${service}/complete`);
+          router.push(`/requests/${service}/success`);
         }}
         color="secondary"
         size={"lg"}

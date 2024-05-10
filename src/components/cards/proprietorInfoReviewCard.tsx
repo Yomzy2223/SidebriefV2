@@ -1,154 +1,135 @@
 "use client";
 
-import { Card, Badge, Button, Navbar, NavbarCollapse } from "@/components/flowbite";
-import { SwatchBook } from "@/assets/icons";
-import { ExternalLink, Minus, Plus, User } from "lucide-react";
-import { CheckBullet } from "../reuseables/checkBullet";
-import { motion } from "framer-motion";
-import { useSearchParams } from "next/navigation";
-import { useGlobalFunctions } from "@/hooks/globalFunctions";
+import { Button } from "@/components/flowbite";
+import { Minus, Plus, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import QueryNav3 from "../navbar/querynav3";
 import TextWithDetails from "../text/textWithDetails";
-
-// export const MemberInfoReviewCard = ({
-//   type,
-//   name,
-//   email,
-// }: {
-//   type: string;
-//   name: string;
-//   email: string;
-// }) => {
-//   return (
-//     <Card className="w-full md:min-w-[480px] md:max-w-[calc(50%-12px)]">
-//       <div className="grid grid-cols-[50px,1fr] grid-row-[repeat(2,fit-content)] gap-x-2.5 gap-y-7">
-//         <div className="bg-primary text-white w-[50px] h-[50px] rounded-full grid place-items-center">
-//           {getInitials(name)}
-//         </div>
-//         <div className="flex justify-between items-center">
-//           <Badge color={"green"} icon={SwatchBook}>
-//             {type}
-//           </Badge>
-//           <Button color="link" size={"fit"}>
-//             <div className="flex gap-2 items-center">
-//               See details <ExternalLink size={16} />
-//             </div>
-//           </Button>
-//         </div>
-//         <div className="col-start-2">
-//           <h6 className="text-2xl font-semibold leading-normal">{name}</h6>
-
-//           <p className="text-foreground-5 leading-normal">{email}</p>
-
-//           <div className="mt-3.5 flex-col sm:flex-row flex flex-wrap gap-2">
-//             <CheckBullet grey>10% share allocated</CheckBullet>
-//             <CheckBullet grey>HT Share Type</CheckBullet>
-//           </div>
-//         </div>
-//       </div>
-//     </Card>
-//   );
-// };
+import { FileInput } from "../file/fileInput";
+import { useState } from "react";
+import { TFieldTypes } from "@/services/service/types";
 
 export const MemberInfoReviewCards = ({
   title,
   info,
 }: {
   title: string;
-  info: { field: string; value: string; type?: string }[][];
+  info: IPersonCard[][];
 }) => {
-  const { setQuery, deleteQueryString } = useGlobalFunctions();
+  const [clicked, setClicked] = useState<boolean>(false);
+  const [position, setPosition] = useState(0);
 
-  const searchParams = useSearchParams();
-  const clicked = searchParams.get(title.toLowerCase());
-  const collapseAll = clicked === "all" || !clicked;
-  const position = collapseAll ? 0 : parseInt(clicked?.slice(-1) || "1") - 1;
+  const conditionalInfo = clicked ? [info[0]] : info;
 
-  const queryNav = info?.map((el, i) => ({
-    name: title.toLowerCase(),
-    value: title.toLowerCase() + " " + (i + 1),
-  }));
-
-  const details = collapseAll ? [info?.[position]?.[0]] : info?.[position];
-
-  const showDetails = (i: number) => {
-    setQuery(title.toLowerCase(), title.toLowerCase() + " " + (i + 1));
+  const showDetails = () => {
+    setClicked(true);
   };
 
   const hideDetails = () => {
-    deleteQueryString(title.toLowerCase());
+    setClicked(false);
+    setPosition(0);
   };
+
+  const headers = clicked ? info?.length : 1;
 
   return (
     <div
-      className={cn("flex flex-wrap gap-4 ", {
-        "border border-border p-4": collapseAll,
-        "border-none": !collapseAll,
+      className={cn("flex flex-wrap gap-4 border-none", {
+        "border border-border m-4": !clicked,
       })}
     >
-      {info?.map(
-        (ind, i) =>
-          ((clicked && position === i) || collapseAll) && (
+      {conditionalInfo?.map((el, ind) => {
+        const details = !clicked ? [info[ind][0]] : info[position];
+
+        return (
+          <div
+            key={ind}
+            className={cn("transition-all border border-border rounded", {
+              "w-[235px]": !clicked,
+              "w-[600px] overflow-auto border-none": !!clicked,
+            })}
+          >
+            {/* </Navbar> */}
             <div
-              key={i}
-              className={cn("shadow-none transition-all border border-border rounded-md", {
-                "w-[235px]": collapseAll,
-                "w-full overflow-auto": !collapseAll,
+              className={cn("sticky left-0 flex justify-between gap-6 p-4 pb-0 bg-[#F9FAFB]", {
+                "bg-background pb-4": clicked,
               })}
             >
-              <motion.div className="min-w-max">
-                <Navbar
-                  className={cn(
-                    "flex justify-between gap-6 p-4 bg-background left-0 sticky max-w-full",
-                    {
-                      "pb-0": collapseAll,
-                    }
-                  )}
-                >
-                  <NavbarCollapse>
-                    <QueryNav3
-                      queryNav={collapseAll ? [queryNav[i]] : queryNav}
-                      defaultActive={0}
-                    />
-                  </NavbarCollapse>
-                  <Button className="cursor-pointer" size="fit" color="ghost">
-                    {collapseAll ? (
-                      <Plus size={16} onClick={() => showDetails(i)} />
-                    ) : (
-                      <Minus size={16} onClick={hideDetails} />
-                    )}
-                  </Button>
-                </Navbar>
+              <div className="flex gap-4">
+                {Array(headers)
+                  .fill("")
+                  ?.map((el, i) => (
+                    <Button
+                      key={i}
+                      color="ghost"
+                      size="fit"
+                      className={cn("text-foreground-5 px-2.5 py-0.5", {
+                        "bg-success text-success-foreground": position === i,
+                      })}
+                      onClick={() => setPosition(i)}
+                    >
+                      {title.toLowerCase() + " " + ((clicked ? i : ind) + 1)}
+                    </Button>
+                  ))}
+              </div>
 
+              <Button className="cursor-pointer" size="fit" color="ghost">
+                {!clicked ? (
+                  <Plus size={16} onClick={showDetails} />
+                ) : (
+                  <Minus size={16} onClick={hideDetails} />
+                )}
+              </Button>
+            </div>
+            <div className="min-w-max bg-[#F9FAFB] p-4">
+              <div className="flex gap-4">
+                {!!clicked && <User />}
                 <div
-                  className={cn("flex gap-4 p-4 ", {
-                    "bg-[#F9FAFB]": !collapseAll,
+                  className={cn("grid grid-cols-3 gap-4", {
+                    flex: !clicked,
                   })}
                 >
-                  {!collapseAll && <User />}
-                  <div
-                    className={cn("grid grid-cols-3 gap-4", {
-                      flex: collapseAll,
-                    })}
-                  >
-                    {details?.map((el) => (
-                      <div key={el?.field}>
-                        {el?.type === "doc" ? (
-                          <TextWithDetails title={el?.field} text={el?.value} />
+                  {details?.map((el) => (
+                    <div key={el?.field}>
+                      {el?.type === "document template" || el?.type === "document upload" ? (
+                        el.fileName && el.fileLink && el.fileSize && el.fileType ? (
+                          <FileInput
+                            fileName={el.fileName}
+                            fileLink={el.fileLink}
+                            fileSize={el.fileSize}
+                            fileType={el.fileType}
+                            onlyDownload
+                          />
                         ) : (
-                          <TextWithDetails title={el?.field} text={el?.value} />
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                          <div>
+                            <p className="text-base font-semibold text-foreground-9">{el.field}</p>
+                            <p className="text-foreground-5 text-sm italic">
+                              Document not uploaded yet
+                            </p>
+                          </div>
+                        )
+                      ) : (
+                        <TextWithDetails title={el?.field} text={el?.value} />
+                      )}
+                    </div>
+                  ))}
                 </div>
-              </motion.div>
+              </div>
             </div>
-          )
-      )}
+          </div>
+        );
+      })}
     </div>
   );
 };
 
 // export default PersonsCard;
+export interface IPersonCard {
+  field: string;
+  value: string;
+  type?: TFieldTypes;
+  fileName?: string;
+  fileLink?: string;
+  fileType?: string;
+  fileSize?: string;
+}

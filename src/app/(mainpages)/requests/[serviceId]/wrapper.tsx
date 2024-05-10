@@ -1,5 +1,5 @@
 import { RequestInfoPanel } from "@/components/cards/requestStepper/requestInfoPanel";
-import { TProduct } from "@/services/service/types";
+import { TProduct } from "@/services/product/types";
 import React, { ReactNode } from "react";
 
 const RequestWrapper = ({
