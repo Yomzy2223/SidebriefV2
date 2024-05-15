@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { PaymentPayload } from "./types";
+import { PaymentPayload, createStripeIntentPayload } from "./types";
 import { initializePayment, CreateStripePaymentIntent } from "./operation";
 
 export const useInitPayment = () => {
@@ -12,6 +12,6 @@ export const useInitPayment = () => {
 export const useCreateStripePaymentIntent = () => {
   return useMutation({
     mutationKey: ["Create Stripe Intent"],
-    mutationFn: (payload: { amount: number }) => CreateStripePaymentIntent(payload),
+    mutationFn: (payload: createStripeIntentPayload) => CreateStripePaymentIntent(payload),
   });
 };

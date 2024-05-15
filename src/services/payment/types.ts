@@ -12,3 +12,9 @@ export type PaymentPayload = {
   productId: string;
   requestId: string;
 };
+
+export type createStripeIntentPayload = {
+  amount: number;
+  email: string;
+  requestId: string;
+};

@@ -18,9 +18,11 @@ import getCurrencySymbol from "currency-symbol-map";
 import { useCreateStripePaymentIntent } from "@/services/payment";
 import { Modal } from "flowbite-react";
 import { StripeComponent } from "@/components/stripe";
+import { useSession } from "next-auth/react";
 
 const Payment = () => {
   const createStripeIntent = useCreateStripePaymentIntent();
+  const session = useSession();
 
   const [openStripe, setOpenStripe] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
@@ -32,6 +34,7 @@ const Payment = () => {
   const searchParams = useSearchParams();
   const productId = searchParams.get("productId") || "";
   const hasPForms = searchParams.get("hasPForms");
+  const requestId = searchParams.get("requestId") || "";
 
   const getProduct = useGetProductById(productId);
   const product = getProduct.data?.data.data;
@@ -51,7 +54,11 @@ const Payment = () => {
 
   const handleStripePayment = () => {
     createStripeIntent.mutate(
-      { amount: product?.amount ? product.amount * 100 : 0 },
+      {
+        amount: product?.amount ? product.amount * 100 : 0,
+        email: session.data?.user.email,
+        requestId: requestId,
+      },
       {
         onSuccess(data, variables, context) {
           const payment_intent = data.data.data;
