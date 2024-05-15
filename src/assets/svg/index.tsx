@@ -21,6 +21,8 @@ import Settings from "./cog.svg";
 import EllipsisVertical from "./ElpVertical.svg";
 import LaunchIcon from "./launch_icon.svg";
 import EmptyContentSvg from "./empty-content.svg";
+import StripeSvg from "./stripe.svg";
+import PaystackSvg from "./paystack.svg";
 
 export {
   AuthPattern,
@@ -46,4 +48,6 @@ export {
   EllipsisVertical,
   LaunchIcon,
   EmptyContentSvg,
+  StripeSvg,
+  PaystackSvg,
 };
