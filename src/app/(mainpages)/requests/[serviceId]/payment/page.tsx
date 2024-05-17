@@ -155,26 +155,26 @@ const Payment = () => {
 
 export default Payment;
 
-const formInfo: IFormInput[] = [
-  {
-    id: "1",
-    name: "name1",
-    label: "label1",
-    type: "short answer",
-    options: [],
-    // compulsory: true,
-    value: "value1",
-  },
-  {
-    id: "2",
-    name: "name2",
-    label: "label2",
-    type: "short answer",
-    options: [],
-    // compulsory: true,
-    value: "value2",
-  },
-];
+// const formInfo: IFormInput[] = [
+//   {
+//     id: "1",
+//     name: "name1",
+//     label: "label1",
+//     type: "short answer",
+//     options: [],
+//     // compulsory: true,
+//     value: "value1",
+//   },
+//   {
+//     id: "2",
+//     name: "name2",
+//     label: "label2",
+//     type: "short answer",
+//     options: [],
+//     // compulsory: true,
+//     value: "value2",
+//   },
+// ];
 
 const paymentProviders = [
   {
