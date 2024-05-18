@@ -75,6 +75,12 @@ const BusinessInfoSecion = ({
           ?.find((qa) => qa.subForm.some((subform) => subform.type === "business name"))
           ?.subForm.find((subform) => subform.type === "business name")?.answer[0] ||
         `No added name ${index + 1}`,
+      address:
+        business.headOfficeAddress ||
+        productQAQueries[index]
+          ?.find((qa) => qa.subForm.some((subform) => subform.type === "address"))
+          ?.subForm.find((subform) => subform.type === "address")?.answer[0] ||
+        "No address found",
     };
   });
 
@@ -94,17 +100,11 @@ const BusinessInfoSecion = ({
   const loading =
     loadingProductQA || session.status === "loading" || getUserBusinessRequests.isLoading;
 
-  const selectBusiness = businesses?.find((el) => el.id === selectedBusiness)?.name;
+  const selectBusiness = businesses?.find((el) => el.id === selectedBusiness);
 
-  const selectAddress =
-    sortedUserBusinessRequests?.find((each) => each.id === selectedBusiness)?.headOfficeAddress ||
-    sortedUserBusinessRequests?.findIndex((each) => each.id === selectedBusiness)
-      ? productQAQueries[
-          sortedUserBusinessRequests?.findIndex((each) => each.id === selectedBusiness)
-        ]
-          ?.find((qa) => qa.subForm.some((subform) => subform.type === "address"))
-          ?.subForm.find((subform) => subform.type === "address")?.answer[0] || "No address found"
-      : "No address found";
+  const selectedBusinessName = selectBusiness?.name;
+
+  const selectAddress = selectBusiness?.address;
 
   const selectdate = sortedUserBusinessRequests?.find(
     (each) => each.id === selectedBusiness
@@ -117,7 +117,7 @@ const BusinessInfoSecion = ({
           <PopOverWrapper
             open={open}
             setOpen={setOpen}
-            onClose={() => console.log("Closed")}
+            // onClose={() => console.log("Closed")}
             content={
               !loading ? (
                 <BusinessList
@@ -132,7 +132,7 @@ const BusinessInfoSecion = ({
           >
             <Button color="ghost" size="fit" className="text-start [&>span]:justify-start ">
               <h2 className="sb-text-24 font-bold whitespace-nowrap text-ellipsis overflow-hidden max-w-[200px] sm:max-w-[400px] lg:max-w-[500px] 2xl:max-w-[800px]">
-                {selectBusiness || <Skeleton className="w-20 h-full" />}
+                {selectedBusinessName || <Skeleton className="w-20 h-full" />}
               </h2>
               <ChevronDown />
             </Button>
@@ -146,7 +146,7 @@ const BusinessInfoSecion = ({
           </Badge>
         </div>
         {selectBusiness ? (
-          <p className="sb-text-18 mb-3">selectAddress</p>
+          <p className="sb-text-18 mb-3">{selectAddress}</p>
         ) : (
           <Skeleton className="w-full h-6" />
         )}

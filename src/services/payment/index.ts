@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { PaymentPayload, createStripeIntentPayload } from "./types";
-import { initializePayment, CreateStripePaymentIntent } from "./operation";
+import { PaymentPayload, createPaymentIntentPayload } from "./types";
+import { initializePayment, CreateStripePaymentIntent, initializePaystack } from "./operation";
 
 export const useInitPayment = () => {
   return useMutation({
@@ -12,6 +12,13 @@ export const useInitPayment = () => {
 export const useCreateStripePaymentIntent = () => {
   return useMutation({
     mutationKey: ["Create Stripe Intent"],
-    mutationFn: (payload: createStripeIntentPayload) => CreateStripePaymentIntent(payload),
+    mutationFn: (payload: createPaymentIntentPayload) => CreateStripePaymentIntent(payload),
+  });
+};
+
+export const useInitializePaystack = () => {
+  return useMutation({
+    mutationKey: ["initialize paysyack payment"],
+    mutationFn: (payload: createPaymentIntentPayload) => initializePaystack(payload),
   });
 };
