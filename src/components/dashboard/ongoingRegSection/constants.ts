@@ -45,7 +45,7 @@ export const useSteps = ({
 
   type booleanFunc = () => boolean;
 
-  const checkStep2: booleanFunc = () => {
+  const checkStepInfo: booleanFunc = () => {
     // if prroductQA is empty or undefinedr
     if (!productQA || productQA.length === 0) {
       return false;
@@ -74,7 +74,7 @@ export const useSteps = ({
     return true;
   };
 
-  const checkStep4: booleanFunc = () => {
+  const checkStepKYC: booleanFunc = () => {
     // if prroductQA is empty or undefined
     if (!productQA || productQA.length === 0) {
       return false;
@@ -113,6 +113,8 @@ export const useSteps = ({
     return true;
   };
 
+  // console.log(checkStep4());
+
   return {
     loading: getServiceForm.isLoading || getProductQA.isLoading,
     steps: [
@@ -128,22 +130,22 @@ export const useSteps = ({
         step: "Step 2",
         description:
           "Now continue the process of registering your business without the need for any physical paperwork.",
-        done: checkStep2(),
+        // TODO: check if payment is done
+        done: false,
         icon: PaymentCardGif,
       },
       {
         step: "Step 3",
         description:
           "Now continue the process of registering your business without the need for any physical paperwork.",
-        // TODO: check if payment is done
-        done: false,
+        done: checkStepInfo(),
         icon: InfoGif,
       },
       {
         step: "Step 4",
         description:
           "Now continue the process of registering your business without the need for any physical paperwork.",
-        done: checkStep4(),
+        done: checkStepKYC(),
         icon: ReviewGif,
       },
     ],

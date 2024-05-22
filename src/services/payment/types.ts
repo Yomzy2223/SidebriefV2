@@ -12,3 +12,19 @@ export type PaymentPayload = {
   productId: string;
   requestId: string;
 };
+
+export type createPaymentIntentPayload = {
+  amount: number;
+  email: string;
+  requestId: string;
+};
+
+export interface PaystackResponse {
+  status: boolean;
+  message: string;
+  data: {
+    authorization_url: string;
+    access_code: string;
+    references: string;
+  };
+}

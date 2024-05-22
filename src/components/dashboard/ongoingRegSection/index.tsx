@@ -11,6 +11,9 @@ import { useGetProductRequest } from "@/services/business";
 import { useGetService } from "@/services/service";
 import { sluggify } from "@/lib/utils";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
+import { useQueries } from "@tanstack/react-query";
+import { getRequestQA } from "@/services/productQA/operations";
+import { useGetRequestQA } from "@/services/productQA";
 
 const OngoingRegSection = () => {
   const session = useSession();
@@ -29,7 +32,11 @@ const OngoingRegSection = () => {
 
   const businessRequests = userRequests.data?.data.data;
 
-  const latest = businessRequests ? businessRequests[businessRequests?.length - 1] : undefined;
+  const sortedUserBusinessRequests = businessRequests?.sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
+  const latest = sortedUserBusinessRequests ? sortedUserBusinessRequests[0] : undefined;
 
   const productRequestId = latest ? latest.productRequest[0].id : "";
 
@@ -37,7 +44,11 @@ const OngoingRegSection = () => {
 
   const serviceId = productRequest?.data?.data.data.product.serviceId;
 
-  const Serrvice = useGetService(serviceId || "");
+  const Service = useGetService(serviceId || "");
+
+  const getRequestQA = useGetRequestQA(productRequestId);
+
+  const latestRequestQA = getRequestQA.data?.data.data;
 
   const { steps, loading: stepLoading } = useSteps({
     productRequestId: productRequestId,
@@ -49,8 +60,9 @@ const OngoingRegSection = () => {
     session.status === "loading" ||
     userRequests.isLoading ||
     productRequest.isLoading ||
-    Serrvice.isLoading ||
-    stepLoading;
+    Service.isLoading ||
+    getRequestQA.isLoading;
+  stepLoading;
 
   if (loading) {
     return <OngoingRegSkeleton />;
@@ -85,7 +97,11 @@ const OngoingRegSection = () => {
         <div className="md:max-w-[50%]">
           <div className="flex items-center gap-4">
             <h2 className="sb-text-24 font-semibold whitespace-nowrap text-ellipsis overflow-hidden max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] 2xl:max-w-[800px]">
-              {latest?.companyName ? latest.companyName : "No Registered Name Yet"}
+              {latest?.companyName ||
+                latestRequestQA
+                  ?.find((qa) => qa.subForm.some((subform) => subform.type === "business name"))
+                  ?.subForm.find((subform) => subform.type === "business name")?.answer[0] ||
+                "No Registered Name Yet"}
             </h2>
             <Badge color="pink" icon={() => <InfoIcon size={10} />}>
               Ongoing
@@ -102,14 +118,14 @@ const OngoingRegSection = () => {
           </Button>
           {/* TODO: get the particular position to go to */}
           {/* <Link
-            href={`http://localhost:3000/requests/${Serrvice.data?.data.data.id}/${urlSuffix}/${latest?.id}`}
+            href={`http://localhost:3000/requests/${Service.data?.data.data.id}/${urlSuffix}/${latest?.id}`}
           > */}
           <Button
             color="secondary"
             className="md:px-6 md:py-1.5"
             onClick={() => {
               setQueriesWithPath({
-                path: `/requests/${Serrvice.data?.data.data.id}/${urlSuffix}`,
+                path: `/requests/${Service.data?.data.data.id}/${urlSuffix}`,
               });
             }}
           >

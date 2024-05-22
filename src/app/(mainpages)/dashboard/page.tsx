@@ -82,7 +82,8 @@ export default function Dashboard() {
 
   return (
     <div className="p-5 space-y-14 md:p-8">
-      <WelcomeSection />
+      {!OneOrMoreRequests || (getBusinessRequests.isLoading && <WelcomeSection />)}
+      {OneOrMoreRequests && <OngoingRegSection />}
       <HandpickedSection />
       {moreThanOneRequest && (
         <BusinessInfoSecion
@@ -92,7 +93,6 @@ export default function Dashboard() {
       )}
       {moreThanOneRequest && <SuggestionSection selectedBusiness={selectedBusiness} />}
       {moreThanOneRequest && <BusinessMembersSection selectedBusiness={selectedBusiness} />}
-      {OneOrMoreRequests && <OngoingRegSection />}
 
       {showTableSection && <TableSection selectedBusiness={selectedBusiness} />}
     </div>
