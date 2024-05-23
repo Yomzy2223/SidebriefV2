@@ -17,7 +17,7 @@ export const Member = ({ businessId }: { businessId: string }) => {
   const getProductRequestQA = useGetRequestQA(productRequestId || "");
 
   const productRequestQA = getProductRequestQA.data?.data.data;
-  ("");
+
   const persons = productRequestQA?.filter((el) => el.type === "person");
 
   const loading = getBusinessRequest.isLoading || getProductRequestQA.isLoading || !businessId;

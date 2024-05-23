@@ -17,13 +17,7 @@ type documentType = {
   size: string;
 };
 
-export const DocumentComponent = ({
-  files,
-  businessId,
-}: {
-  files: { received: File[]; uploaded: File[] };
-  businessId: string;
-}) => {
+export const DocumentComponent = ({ businessId }: { businessId: string }) => {
   const getBusinessRequest = useGetBusinessRequest({ id: businessId });
 
   const businessRequest = getBusinessRequest.data?.data.data;
