@@ -32,7 +32,7 @@ const config: Config = {
         },
         tertiary: {
           DEFAULT: "hsl(var(--tertiary))",
-          foreground: "hsl(var(--tertiary-foreground",
+          foreground: "hsl(var(--tertiary-foreground))",
         },
         yellow: {
           DEFAULT: "hsl(var(--yellow))",
@@ -48,7 +48,6 @@ const config: Config = {
         input: {
           DEFAULT: "hsl(var(--input))",
         },
-
         label: {
           DEFAULT: "hsl(var(--label))",
         },
@@ -81,12 +80,6 @@ const config: Config = {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
-
-        // sb: {
-        // 	cyan: "hsl(var(--sb-cyan)",
-        // 	yellow:  "hsl(var(--sb-cyan)",
-        // 	yellowdark:  "hsl(var(--sb-yellow-dark)",
-        // },
       },
       backgroundImage: {
         authPattern: "url(../assets/svg/auth_pattern.svg)",

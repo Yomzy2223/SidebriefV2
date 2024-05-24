@@ -12,9 +12,11 @@ import { TFieldTypes } from "@/services/service/types";
 export const MemberInfoReviewCards = ({
   title,
   info,
+  fill,
 }: {
   title: string;
   info: IPersonCard[][];
+  fill?: boolean;
 }) => {
   const [clicked, setClicked] = useState<boolean>(false);
   const [position, setPosition] = useState(0);
@@ -47,6 +49,8 @@ export const MemberInfoReviewCards = ({
             className={cn("transition-all border border-border rounded", {
               "w-[235px]": !clicked,
               "w-[600px] overflow-auto border-none": !!clicked,
+              "w-full": !!clicked && fill,
+              "w-[400px]": !clicked && fill,
             })}
           >
             {/* </Navbar> */}
