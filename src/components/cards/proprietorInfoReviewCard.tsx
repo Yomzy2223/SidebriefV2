@@ -50,6 +50,7 @@ export const MemberInfoReviewCards = ({
               "w-[235px]": !clicked,
               "w-[600px] overflow-auto border-none": !!clicked,
               "w-full": !!clicked && fill,
+              "w-[400px]": !clicked && fill,
             })}
           >
             {/* </Navbar> */}

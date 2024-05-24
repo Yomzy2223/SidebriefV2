@@ -8,6 +8,7 @@ import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { Forms } from "./forms";
 import { Documents } from "./documents";
 import { Members } from "./members";
+import { Manage } from "./manageBusiness";
 
 const RequestDetails: React.FC = () => {
   const tabsRef = useRef<TabsRef>(null);
@@ -64,6 +65,6 @@ const tabElements: { id: number; title: string; content: React.ReactNode }[] = [
   {
     id: 4,
     title: "Manage Business",
-    content: 4,
+    content: <Manage />,
   },
 ];
