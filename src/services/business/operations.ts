@@ -1,5 +1,6 @@
 import { Client, rootType } from "../index";
 import {
+  IDocument,
   TBusinessDataFull,
   TCreateBusinessPayload,
   TCreateRequest,
@@ -56,4 +57,14 @@ export const submitProductRequest = async ({
   return client.post<rootType<any>>(`/productRequest/submission`, {
     requestIds: productRequestIds,
   });
+};
+
+export const getbusinessDocuments = async ({ businessId }: { businessId: string }) => {
+  const client = await Client();
+  return client.get(`/userDocument/process/${businessId}`);
+};
+
+export const getRequestDocuments = async ({ requestId }: { requestId: string }) => {
+  const client = await Client();
+  return client.get<rootType<IDocument[]>>(`/userDocument/request/${requestId}`);
 };

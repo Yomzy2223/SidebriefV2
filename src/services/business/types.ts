@@ -60,5 +60,22 @@ export type TProductRequest = TCreateRequest & {
   business: TBusinessData;
 };
 
+export interface IDocument {
+  id: string;
+  name: string;
+  type: string;
+  link: string;
+  size: string;
+  belongsTo: any;
+  isReceived: boolean;
+  isApproved: boolean;
+  isDeprecated: boolean;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+  requestId: string;
+  requestSubFormId: string;
+}
+
 export type TRequestState = "SERVICEFORM" | "PAYMENT" | "PRODUCTFORM" | "REVIEW";
 export type TRequestStatus = "PENDING" | "SUBMITTED" | "ASSIGNED" | "REJECTED" | "COMPLETED";

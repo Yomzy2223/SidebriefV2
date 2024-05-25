@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { useGetServices } from "@/services/service";
 import { ArrowRightCircle } from "lucide-react";
 import Link from "next/link";
+import { useGetProductById } from "@/services/product";
 
 export const Header = () => {
   const { businessId } = useParams();
@@ -18,15 +19,19 @@ export const Header = () => {
 
   const getBusinessRequest = useGetBusinessRequest({ id: businessId as string });
   const getRequestQA = useGetRequestQA(requestId);
+  const getProduct = useGetProductById(productId);
   const business = getBusinessRequest.data?.data.data;
   const productQA = getRequestQA.data?.data.data;
+  const product = getProduct.data?.data.data;
 
   const getServices = useGetServices();
   const services = getServices.data?.data.data;
 
-  const priority1 = services?.find((el) => el.priority === 1);
+  const currentService = services?.find((el) => el.id === product?.serviceId);
 
-  const loading = getBusinessRequest.isLoading || getRequestQA.isLoading;
+  const priority2 = services?.find((el) => el.priority === 2);
+
+  const loading = getBusinessRequest.isLoading || getRequestQA.isLoading || getProduct.isLoading;
 
   const name =
     business?.companyName ||
@@ -38,7 +43,11 @@ export const Header = () => {
   return (
     <div className="flex justify-between items-center px-4 pt-10 pb-6">
       <div className="flex flex-col gap-1">
-        <p className="text-[#727474] text-sm font-medium uppercase">Business Registration</p>
+        {loading ? (
+          <Skeleton className="w-[150px] h-5" />
+        ) : (
+          <p className="text-[#727474] text-sm font-medium uppercase">{currentService?.name}</p>
+        )}
         <div className="flex gap-8 items-center">
           {loading ? (
             <Skeleton className="w-[200px] h-8" />
@@ -53,11 +62,11 @@ export const Header = () => {
       <div>
         {!getServices.isLoading ? (
           <>
-            {priority1 && (
-              <Link href={`/requests/${priority1?.id}`}>
-                <Button color="secondary">
-                  <span>{priority1?.label}</span>
-                  <ArrowRightCircle fill="white" stroke="hsl(var(--secondary))" />
+            {priority2 && (
+              <Link href={`/requests/${priority2?.id}`}>
+                <Button outline>
+                  <span>{priority2?.label}</span>
+                  <ArrowRightCircle />
                 </Button>
               </Link>
             )}
