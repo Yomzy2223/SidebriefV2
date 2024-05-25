@@ -8,6 +8,7 @@ import { useGetRequestQA } from "@/services/productQA";
 import { TFormQAGet } from "@/services/productQA/types";
 import { FileIcon, defaultStyles, DefaultExtensionType } from "react-file-icon";
 import { FileSkeletonLoader } from "./loader";
+import { NotFoundCard } from "@/components/cards/NotFoundCard";
 
 type documentType = {
   name: string;
@@ -16,13 +17,7 @@ type documentType = {
   size: string;
 };
 
-export const DocumentComponent = ({
-  files,
-  businessId,
-}: {
-  files: { received: File[]; uploaded: File[] };
-  businessId: string;
-}) => {
+export const DocumentComponent = ({ businessId }: { businessId: string }) => {
   const getBusinessRequest = useGetBusinessRequest({ id: businessId });
 
   const businessRequest = getBusinessRequest.data?.data.data;
@@ -77,26 +72,32 @@ export const DocumentComponent = ({
 const RenderFile = ({ files, loading }: { files: documentType[]; loading: boolean }) => {
   return (
     <div className="space-y-4 max-h-[380px] overflow-auto">
-      {loading
-        ? Array.from({ length: 5 }, (_, i) => <FileSkeletonLoader key={i} />)
-        : files.map((file, i) => (
-            <div
-              key={file.name + i}
-              className="sb-text-16 flex items-center leading-normal rounded-[50px] py-4 px-6 bg-[#FAFAFA]"
-            >
-              <div className="mr-2 w-6 h-6">
-                <FileIcon
-                  extension={file.type}
-                  {...defaultStyles[file.type as DefaultExtensionType]}
-                  glyphColor={`${file.type === "pdf" && "red"}`}
-                />
-              </div>
-              {/* <Image src={getFileImage(file.type)} alt={file.name} className="" /> */}
-              <span className="underline text-ellipsis whitespace-nowrap overflow-hidden">
-                {file.name}
-              </span>
+      {loading ? (
+        Array.from({ length: 5 }, (_, i) => <FileSkeletonLoader key={i} />)
+      ) : files.length > 0 ? (
+        files.map((file, i) => (
+          <div
+            key={file.name + i}
+            className="sb-text-16 flex items-center leading-normal rounded-[50px] py-4 px-6 bg-[#FAFAFA]"
+          >
+            <div className="mr-2 w-6 h-6">
+              <FileIcon
+                extension={file.type}
+                {...defaultStyles[file.type as DefaultExtensionType]}
+                glyphColor={`${file.type === "pdf" && "red"}`}
+              />
             </div>
-          ))}
+            {/* <Image src={getFileImage(file.type)} alt={file.name} className="" /> */}
+            <span className="underline text-ellipsis whitespace-nowrap overflow-hidden">
+              {file.name}
+            </span>
+          </div>
+        ))
+      ) : (
+        <div className="grid place-items-center h-[380px] w-full">
+          <NotFoundCard />
+        </div>
+      )}
     </div>
   );
 };

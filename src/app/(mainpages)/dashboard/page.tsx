@@ -82,7 +82,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-5 space-y-14 md:p-8">
-      <WelcomeSection />
+      {!OneOrMoreRequests || (getBusinessRequests.isLoading && <WelcomeSection />)}
       {OneOrMoreRequests && <OngoingRegSection />}
       <HandpickedSection />
       {moreThanOneRequest && (

@@ -15,13 +15,14 @@ import { cn } from "@/lib/utils";
 import { useGetProductById } from "@/services/product";
 import numeral from "numeral";
 import getCurrencySymbol from "currency-symbol-map";
-import { useCreateStripePaymentIntent } from "@/services/payment";
+import { useCreateStripePaymentIntent, useInitializePaystack } from "@/services/payment";
 import { Modal } from "flowbite-react";
 import { StripeComponent } from "@/components/stripe";
 import { useSession } from "next-auth/react";
 
 const Payment = () => {
   const createStripeIntent = useCreateStripePaymentIntent();
+  const initializedPaystack = useInitializePaystack();
   const session = useSession();
 
   const [openStripe, setOpenStripe] = useState(false);
@@ -60,10 +61,26 @@ const Payment = () => {
         requestId: requestId,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           const payment_intent = data.data.data;
           setClientSecret(payment_intent);
           setOpenStripe(true);
+        },
+      }
+    );
+  };
+
+  const handlePaystackPayment = () => {
+    initializedPaystack.mutate(
+      {
+        amount: product?.amount ? product.amount * 100 : 0,
+        email: session.data?.user.email,
+        requestId: requestId,
+      },
+      {
+        onSuccess(data, variables, context) {
+          const url = data.data.data.data.authorization_url;
+          window.location.href = url;
         },
       }
     );
@@ -75,7 +92,7 @@ const Payment = () => {
         handleStripePayment();
         break;
       case "paystack":
-        console.log("I am paystack");
+        handlePaystackPayment();
         break;
       default:
         console.log("provider not valid");
@@ -117,7 +134,7 @@ const Payment = () => {
             disabled={getProduct.isLoading}
             size={"lg"}
             onClick={handlePayment}
-            isProcessing={createStripeIntent.isPending}
+            isProcessing={createStripeIntent.isPending || initializedPaystack.isPending}
           >
             Complete payment
           </Button>
@@ -155,26 +172,26 @@ const Payment = () => {
 
 export default Payment;
 
-const formInfo: IFormInput[] = [
-  {
-    id: "1",
-    name: "name1",
-    label: "label1",
-    type: "short answer",
-    options: [],
-    // compulsory: true,
-    value: "value1",
-  },
-  {
-    id: "2",
-    name: "name2",
-    label: "label2",
-    type: "short answer",
-    options: [],
-    // compulsory: true,
-    value: "value2",
-  },
-];
+// const formInfo: IFormInput[] = [
+//   {
+//     id: "1",
+//     name: "name1",
+//     label: "label1",
+//     type: "short answer",
+//     options: [],
+//     // compulsory: true,
+//     value: "value1",
+//   },
+//   {
+//     id: "2",
+//     name: "name2",
+//     label: "label2",
+//     type: "short answer",
+//     options: [],
+//     // compulsory: true,
+//     value: "value2",
+//   },
+// ];
 
 const paymentProviders = [
   {

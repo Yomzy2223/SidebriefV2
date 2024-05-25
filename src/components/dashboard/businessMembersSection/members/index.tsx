@@ -5,6 +5,7 @@ import MemberCard from "./MemberCard";
 import { useGetRequestFormQA, useGetRequestQA } from "@/services/productQA";
 import { MemberCardSkeleton } from "./memberSkeleton";
 import { Tabs } from "flowbite-react";
+import { NotFoundCard } from "@/components/cards/NotFoundCard";
 
 export const Member = ({ businessId }: { businessId: string }) => {
   const getBusinessRequest = useGetBusinessRequest({ id: businessId });
@@ -16,7 +17,7 @@ export const Member = ({ businessId }: { businessId: string }) => {
   const getProductRequestQA = useGetRequestQA(productRequestId || "");
 
   const productRequestQA = getProductRequestQA.data?.data.data;
-  ("");
+
   const persons = productRequestQA?.filter((el) => el.type === "person");
 
   const loading = getBusinessRequest.isLoading || getProductRequestQA.isLoading || !businessId;
@@ -62,11 +63,15 @@ const RenderMembers = ({ members }: { members: MemberType[] }) => {
       <Tabs style="underline">
         {memberTypes.map((type, i) => (
           <Tabs.Item active title={type} className="p-1" key={i}>
-            {members
-              ?.filter((el) => el.type === type)
-              .map((el, i) => (
-                <MemberCard key={i} info={el} />
-              ))}
+            {members?.filter((el) => el.type === type).length > 0 ? (
+              members
+                ?.filter((el) => el.type === type)
+                .map((el, i) => <MemberCard key={i} info={el} />)
+            ) : (
+              <div className="grid place-items-center h-[400px] w-full">
+                <NotFoundCard />
+              </div>
+            )}
           </Tabs.Item>
         ))}
       </Tabs>
@@ -74,9 +79,13 @@ const RenderMembers = ({ members }: { members: MemberType[] }) => {
   } else {
     return (
       <>
-        {members?.map((el, i) => (
-          <MemberCard key={i} info={el} />
-        ))}
+        {members.length > 0 ? (
+          members?.map((el, i) => <MemberCard key={i} info={el} />)
+        ) : (
+          <div className="grid place-items-center h-[400px] w-full">
+            <NotFoundCard />
+          </div>
+        )}
       </>
     );
   }

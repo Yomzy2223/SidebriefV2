@@ -7,6 +7,7 @@ import { Avatar, Button } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 export const Header = () => {
   const session = useSession();
@@ -22,12 +23,14 @@ export const Header = () => {
     <div className="sticky top-0 left-0 bg-background border-b z-20 px-5 md:px-8 ">
       {/* Desktop header */}
       <div className="hidden items-center w-full h-20 divide-x md:flex">
-        <Image
-          src={SidebriefLogo}
-          alt="sidebrief"
-          quality={100}
-          className="object-contain py-4 mr-8"
-        />
+        <Link href={"/dashboard"}>
+          <Image
+            src={SidebriefLogo}
+            alt="sidebrief"
+            quality={100}
+            className="object-contain py-4 mr-8"
+          />
+        </Link>
 
         <div className="flex items-center justify-between py-4 gap-8 w-full pl-10">
           <div className="flex flex-1 items-center gap-8">
