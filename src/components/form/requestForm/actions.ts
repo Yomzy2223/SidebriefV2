@@ -3,6 +3,7 @@ import {
   useDeleteRequestQA,
   useGetRequestFormQA,
   useSaveRequestQA,
+  useUpdateBusinessInfoMutation,
   useUpdateRequestQA,
 } from "@/services/productQA";
 import { TFormQACreate, TFormQAGet } from "@/services/productQA/types";
@@ -12,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { IFormInput } from "../constants";
+import { useSaveMultipleQASubForms } from "@/services/productQA";
 
 export const useActions = ({
   info,
@@ -64,9 +66,12 @@ INewFormActionProps) => {
   const saveRequestQA = useSaveRequestQA();
   const updateRequestQA = useUpdateRequestQA();
   const deleteRequestQA = useDeleteRequestQA();
+  const saveMultipleQASubForms = useSaveMultipleQASubForms();
+  const updateBusinessInfoMutation = useUpdateBusinessInfoMutation();
 
   const searchParams = useSearchParams();
   const requestId = searchParams.get("requestId") || "";
+  const businessId = searchParams.get("businessId") || "";
 
   // Returns the QA for a field
   const getQAField = (question: string) => {
@@ -127,9 +132,25 @@ INewFormActionProps) => {
 
     const getAnswer = (field: TSubForm) => {
       let answer = values[sluggify(field.question)];
-      if (typeof answer === "number") answer = answer.toString();
+      if (typeof answer === "number") answer = [answer.toString()];
+      if (typeof answer === "string") answer = [answer];
       return answer;
     };
+
+    const subForm = info.subForm.map((field) => ({
+      id: getQAField(field.question)?.id,
+      question: field.question,
+      answer: getAnswer(field) || "",
+      type: field.type,
+      compulsory: field.compulsory,
+      fileName: "",
+      fileLink: "",
+      fileType: "",
+      fileSize: "",
+    }));
+
+    const subFormWithId = subForm?.filter((field) => !!field.id);
+    const subFormWithNoId = subForm?.filter((field) => !field.id);
 
     const payload: TFormQACreate = {
       title: info.title,
@@ -137,20 +158,23 @@ INewFormActionProps) => {
       type: info.type,
       compulsory: info.compulsory,
       isGeneral: isServiceForm,
-      subForm: info.subForm.map((field) => ({
-        id: getQAField(field.question)?.id,
-        question: field.question,
-        answer: getAnswer(field) || "",
-        type: field.type,
-        compulsory: field.compulsory,
-        fileName: "",
-        fileLink: "",
-        fileType: "",
-        fileSize: "",
-      })),
+      subForm: QAForm?.id ? subFormWithId : subForm,
     };
 
+    const companyName = payload?.subForm?.find((el) => el.type === "business name")?.answer?.[0];
+
+    // Save business name
+    if (companyName) {
+      updateBusinessInfoMutation.mutate({ id: businessId, formInfo: { companyName } });
+    }
+
     if (QAForm?.id) {
+      if (subFormWithNoId?.length > 0) {
+        // Create multiple subforms
+        console.log(subFormWithNoId);
+        saveMultipleQASubForms.mutate({ formId: QAForm?.id, form: { subForm: subFormWithNoId } });
+      }
+
       updateRequestQA.mutate(
         { requestFormId: QAForm.id, form: payload },
         {

@@ -120,31 +120,27 @@ export const useSteps = ({
     steps: [
       {
         step: "Step 1",
-        description:
-          "Now continue the process of registering your business without the need for any physical paperwork.",
+        description: "Browse our services and select the one that best suits your business needs.",
         // state: "request-info",
         icon: ProfileGif,
         done: true,
       },
       {
         step: "Step 2",
-        description:
-          "Now continue the process of registering your business without the need for any physical paperwork.",
+        description: "Answer a few quick questions to personalize your request process.",
         // TODO: check if payment is done
         done: false,
-        icon: PaymentCardGif,
-      },
-      {
-        step: "Step 3",
-        description:
-          "Now continue the process of registering your business without the need for any physical paperwork.",
-        done: checkStepInfo(),
         icon: InfoGif,
       },
       {
+        step: "Step 3",
+        description: "Complete your request with a secure and convenient payment method.",
+        done: checkStepInfo(),
+        icon: PaymentCardGif,
+      },
+      {
         step: "Step 4",
-        description:
-          "Now continue the process of registering your business without the need for any physical paperwork.",
+        description: "Submit all required information and documents to complete your registration.",
         done: checkStepKYC(),
         icon: ReviewGif,
       },
