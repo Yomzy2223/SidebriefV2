@@ -69,7 +69,9 @@ const OngoingRegSection = () => {
     productRequest.isLoading ||
     Service.isLoading ||
     getRequestQA.isLoading ||
-    stepLoading;
+    stepLoading ||
+    productFormsRes.isLoading ||
+    serviceFormsRes.isLoading;
 
   if (loading) {
     return <OngoingRegSkeleton />;
