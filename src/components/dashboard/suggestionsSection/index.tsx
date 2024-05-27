@@ -34,7 +34,9 @@ const SuggestionSection = ({ selectedBusiness }: { selectedBusiness: string }) =
   return (
     <div className="flex gap-4 max-w-full overflow-auto">
       {loading
-        ? Array(4).fill(<Loader />)
+        ? Array(4)
+            .fill(null)
+            .map((_, index) => <Loader key={index} />)
         : suggestions.map((el) => (
             <SuggestionCard
               key={el.title}
