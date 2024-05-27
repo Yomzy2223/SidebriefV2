@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import MainNavigation from "@/components/navbar";
+import { navRoutes } from "./constants";
 
 const Dashboardlayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -11,27 +12,3 @@ const Dashboardlayout = ({ children }: { children: ReactNode }) => {
 };
 
 export default Dashboardlayout;
-
-// Dashboard navigation routes
-export const navRoutes = [
-  {
-    name: "Home",
-    to: "/dashboard",
-  },
-  {
-    name: "Bank Accounts",
-    to: "/dashboard/bank-accounts",
-  },
-  {
-    name: "Rewards",
-    to: "/dashboard/rewards",
-  },
-  {
-    name: "Resources",
-    to: "/dashboard/resources",
-  },
-  {
-    name: "Settings",
-    to: "/dashboard/settings",
-  },
-];

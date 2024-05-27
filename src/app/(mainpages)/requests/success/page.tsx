@@ -6,7 +6,7 @@ import { Button } from "@/components/flowbite";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-const page = () => {
+const Page = () => {
   const searchParams = useSearchParams();
   const businessId = searchParams.get("businessId") || "";
 
@@ -35,4 +35,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

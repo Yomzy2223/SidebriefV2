@@ -5,16 +5,12 @@ const Onhboardlayout = ({ children }: { children: ReactNode }) => {
   return (
     <div>
       <MainNavigation navRoutes={navRoutes} className="hidden py-5 md:flex bg-label/[0.02]" />
-      <OnboardBusinessWrapper>
-        {children}
-      </OnboardBusinessWrapper>
-      
+      <OnboardBusinessWrapper>{children}</OnboardBusinessWrapper>
     </div>
   );
 };
 
 export default Onhboardlayout;
-
 
 const navRoutes = [
   {

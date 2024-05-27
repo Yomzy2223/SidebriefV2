@@ -1,6 +1,6 @@
 import MainNavigation from "@/components/navbar";
+import { navRoutes } from "../../dashboard/constants";
 import { Header } from "./header";
-import { navRoutes } from "../../dashboard/layout";
 
 export default function DetailLayout({ children }: { children: React.ReactNode }) {
   return (
