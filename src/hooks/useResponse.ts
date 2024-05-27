@@ -33,6 +33,7 @@ export const useResponse = () => {
   const handleSuccess = ({ data, title, action, hideIcon }: successType) => {
     let successMessage;
     if (data?.data?.message) successMessage = data?.data?.message;
+    if (data?.message) successMessage = data?.message;
     if (typeof data === "string") successMessage = data;
 
     toast({

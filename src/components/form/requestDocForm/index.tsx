@@ -22,7 +22,7 @@ const RequestForm = ({
   const { serviceId } = useParams();
 
   const searchParams = useSearchParams();
-  const { deleteQueryString, setQueriesWithPath } = useGlobalFunctions();
+  const { deleteQueryStrings, setQueriesWithPath } = useGlobalFunctions();
 
   // Get and set active tab to url query
   const activeTab = parseInt(searchParams.get("activeTab") || "0");
@@ -60,7 +60,7 @@ const RequestForm = ({
       });
       return;
     }
-    deleteQueryString("openDocument");
+    deleteQueryStrings(["openDocument"]);
   };
 
   return (

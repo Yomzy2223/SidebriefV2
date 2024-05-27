@@ -3,13 +3,13 @@ import React from "react";
 import Image from "next/image";
 import { SuccessImage } from "@/assets/images";
 import { Button } from "@/components/flowbite";
-// import { ConfettiDesign } from '@/lib/utils'
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 const page = () => {
-  // useEffect(() => {
-  //     ConfettiDesign()
-  // }, [])
+  const searchParams = useSearchParams();
+  const businessId = searchParams.get("businessId") || "";
+
   return (
     <>
       <div className="px-6 py-12 sm:py-12 lg:px-8 flex items-center justify-center min-h-screen">
@@ -24,7 +24,7 @@ const page = () => {
             You will get your document in no time.
           </h4>
           <h4 className="mt-0 text-lg leading-8 text-dark-300">Thank you for using Sidebrief.</h4>
-          <Link href={"/dashboard"}>
+          <Link href={`/dashboard/?businessId=${businessId}`}>
             <Button color="magenta" size="lg" className="mt-8">
               <p>Back to Dashboard</p>
             </Button>

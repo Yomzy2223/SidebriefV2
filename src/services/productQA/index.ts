@@ -6,6 +6,7 @@ import {
   deleteRequestQA,
   getRequestFormQA,
   saveMultipleQASubForms,
+  updateBusinessInfo,
 } from "./operations";
 import { saveRequestQAPayload, updateRequestQAPayload, deleteRequestQAPayload } from "./types";
 import { useToast } from "@/components/ui/use-toast";
@@ -86,6 +87,22 @@ export const useSaveMultipleQASubForms = () => {
     },
     onSuccess(data, variables, context) {
       queryClient.invalidateQueries({ queryKey: ["get product QA"] });
+    },
+  });
+};
+
+export const useUpdateBusinessInfoMutation = () => {
+  const queryClient = useQueryClient();
+  const { handleError } = useResponse();
+
+  return useMutation({
+    mutationKey: ["update business info"],
+    mutationFn: updateBusinessInfo,
+    onError(error, variables, context) {
+      handleError({ title: "Failed", error });
+    },
+    onSuccess(data, variables, context) {
+      queryClient.invalidateQueries({ queryKey: ["business info"] });
     },
   });
 };

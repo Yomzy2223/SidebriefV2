@@ -6,6 +6,8 @@ import {
   TFormQACreate,
   TFormQAGet,
   multipleQASubFormsPayload,
+  TBusinessInfoCreate,
+  TBusinessInfoGet,
 } from "./types";
 
 export const saveRequestQA = async ({ requestId, formId, form }: saveRequestQAPayload) => {
@@ -42,4 +44,17 @@ export const getRequestFormQA = async ({
 export const saveMultipleQASubForms = async ({ formId, form }: multipleQASubFormsPayload) => {
   const client = await Client();
   return client.post<rootType<TFormQAGet[]>>(`/productRequest/multiple/subForm/${formId}`, form);
+};
+
+export const updateBusinessInfo = async ({
+  id,
+  formInfo,
+}: {
+  id: string;
+  formInfo: TBusinessInfoCreate;
+}) => {
+  const client = await Client();
+  return client.put<rootType<TBusinessInfoGet>>(`/businessRequest/${id}`, {
+    ...formInfo,
+  });
 };

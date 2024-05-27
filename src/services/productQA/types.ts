@@ -1,3 +1,5 @@
+import { TFieldTypes } from "../service/types";
+
 type IFormQA<ISubForm> = {
   title: string;
   description: string;
@@ -20,7 +22,7 @@ export type TFormQAGet = IFormQA<TSubformQAGet> & {
 export type TSubformQACreate = {
   question: string;
   answer: string[];
-  type: string;
+  type: TFieldTypes;
   compulsory: boolean;
   fileName: string;
   fileLink: string;
@@ -63,4 +65,42 @@ export type multipleQASubFormsPayload = {
   form: {
     subForm: TSubformQACreate[];
   };
+};
+
+export type TBusinessInfoCreate = {
+  rcNumber?: number;
+  companyName?: string;
+  companyEmail?: string;
+  companyType?: string;
+  branchAddress?: string;
+  city?: string;
+  classification?: string;
+  headOfficeAddress?: string;
+  lga?: string;
+  affiliates?: number;
+  shareCapital?: string;
+  state?: string;
+  status?: string;
+};
+
+export type TBusinessInfoGet = {
+  id: string;
+  rcNumber: string;
+  companyName: string;
+  companyType: string;
+  registrationDate: string;
+  branchAddress: string;
+  companyEmail: string;
+  city: string;
+  classification: string;
+  headOfficeAddress: string;
+  lga: string;
+  affiliates: string;
+  shareCapital: string;
+  state: string;
+  status: string;
+  isDeprecated: false;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
 };

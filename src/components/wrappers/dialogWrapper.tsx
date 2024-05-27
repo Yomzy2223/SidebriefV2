@@ -32,7 +32,7 @@ const DialogWrapper = ({
           onClose={() => setOpen(false)}
           dismissible={dismissible}
         >
-          <Modal.Header className={classNames?.header}>
+          <Modal.Header className={cn("items-center py-4", classNames?.header)}>
             <span className="text-lg font-semibold text-foreground">{title}</span>
           </Modal.Header>
           <Modal.Body
