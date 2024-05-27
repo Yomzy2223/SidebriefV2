@@ -13,7 +13,7 @@ const Dashboardlayout = ({ children }: { children: ReactNode }) => {
 export default Dashboardlayout;
 
 // Dashboard navigation routes
-const navRoutes = [
+export const navRoutes = [
   {
     name: "Home",
     to: "/dashboard",

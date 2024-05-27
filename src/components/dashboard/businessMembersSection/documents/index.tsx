@@ -3,12 +3,13 @@
 import Image from "next/image";
 import { Tabs } from "flowbite-react";
 import { getFileImage } from "@/hooks/globalFunctions";
-import { useGetBusinessRequest } from "@/services/business";
+import { useGetBusinessRequest, useGetRequestDocuments } from "@/services/business";
 import { useGetRequestQA } from "@/services/productQA";
 import { TFormQAGet } from "@/services/productQA/types";
 import { FileIcon, defaultStyles, DefaultExtensionType } from "react-file-icon";
 import { FileSkeletonLoader } from "./loader";
 import { NotFoundCard } from "@/components/cards/NotFoundCard";
+import { IDocument } from "@/services/business/types";
 
 type documentType = {
   name: string;
@@ -24,38 +25,33 @@ export const DocumentComponent = ({ businessId }: { businessId: string }) => {
 
   const productRequestId = businessRequest?.productRequest[0]?.id;
 
-  const getProductRequestQA = useGetRequestQA(productRequestId || "");
+  const getRequestdocuments = useGetRequestDocuments(productRequestId || "");
+  const requestDocuments = getRequestdocuments.data?.data.data;
 
-  const productRequestQA = getProductRequestQA.data?.data.data;
+  // const getProductRequestQA = useGetRequestQA(requestId || "");
+  // const productRequestQA = getProductRequestQA.data?.data.data;
 
-  const loading = getBusinessRequest.isLoading || getProductRequestQA.isLoading || !businessId;
-
-  // console.log(productRequestQA);
-
-  // console.log(productRequestQA);
-  // console.log(loading);
-
-  function getFiles(formData: TFormQAGet[]): documentType[] {
+  function getFiles(documents: IDocument[]): documentType[] {
     const files: documentType[] = [];
 
-    formData.forEach((form) => {
-      form.subForm.forEach((subForm) => {
-        if (subForm.type === "document upload" || subForm.type === "document template") {
-          const file: documentType = {
-            name: subForm.fileName,
-            link: subForm.fileLink,
-            type: subForm.fileType,
-            size: subForm.fileSize,
-          };
-          files.push(file);
-        }
-      });
+    documents.forEach((doc) => {
+      if (doc.name) {
+        const file: documentType = {
+          name: doc.name,
+          link: doc.link,
+          type: doc.type,
+          size: doc.size,
+        };
+        files.push(file);
+      }
     });
 
     return files;
   }
 
-  const documents = getFiles(productRequestQA || []);
+  const documents = getFiles(requestDocuments || []);
+
+  const loading = getRequestdocuments.isLoading || getBusinessRequest.isLoading || !businessId;
 
   return (
     <Tabs style="underline">

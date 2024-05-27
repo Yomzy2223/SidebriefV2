@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useGetRequestDocuments } from "@/services/business";
 import { SVGSkeleton, Skeleton } from "@/components/ui/skeleton";
 import { IDocument } from "@/services/business/types";
+import { EmptyPage } from "./empty";
 
 type documentType = {
   name: string;
@@ -49,21 +50,25 @@ export const Documents = () => {
 
   return (
     <div className="flex flex-wrap gap-6">
-      {loading
-        ? [...Array(3)].map((_, index) => <FileUploadSkeleton key={index} />)
-        : documents.map((each, i) =>
-            each.name && each.link && each.type && each.size ? (
-              <div key={i} className="max-w-[400px] w-full">
-                <FileInput
-                  fileName={each.name}
-                  fileLink={each.link}
-                  fileSize={each.size}
-                  fileType={each.type}
-                  onlyDownload
-                />
-              </div>
-            ) : null
-          )}
+      {loading ? (
+        [...Array(3)].map((_, index) => <FileUploadSkeleton key={index} />)
+      ) : documents.length <= 0 && !loading ? (
+        <EmptyPage text="Nothing here yet" />
+      ) : (
+        documents.map((each, i) =>
+          each.name && each.link && each.type && each.size ? (
+            <div key={i} className="max-w-[400px] w-full">
+              <FileInput
+                fileName={each.name}
+                fileLink={each.link}
+                fileSize={each.size}
+                fileType={each.type}
+                onlyDownload
+              />
+            </div>
+          ) : null
+        )
+      )}
     </div>
   );
 };

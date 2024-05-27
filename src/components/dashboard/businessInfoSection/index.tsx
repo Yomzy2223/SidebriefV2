@@ -19,6 +19,7 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { Oval } from "react-loading-icons";
 import { useGetServices } from "@/services/service";
+import { getProductRequest } from "@/services/business/operations";
 
 const BusinessInfoSecion = ({
   selectedBusiness,
@@ -50,7 +51,7 @@ const BusinessInfoSecion = ({
 
   // console.log(sortedUserBusinessRequests);
 
-  const getProductQAQueries = useQueries({
+  const getRequestQAQueries = useQueries({
     queries:
       sortedUserBusinessRequests?.map((request) => {
         return {
@@ -60,27 +61,42 @@ const BusinessInfoSecion = ({
       }) || [],
   });
 
-  const productQAQueries = getProductQAQueries.map((QA) => QA.data?.data.data);
+  const getRequestQueries = useQueries({
+    queries:
+      sortedUserBusinessRequests?.map((request) => {
+        return {
+          queryKey: ["get product by id", request.productRequest[0].id],
+          queryFn: () => getProductRequest({ productRequestId: request.productRequest[0].id }),
+        };
+      }) || [],
+  });
 
-  const loadingProductQA = getProductQAQueries.some((QA) => QA.isLoading);
+  const requestQAQueries = getRequestQAQueries.map((QA) => QA.data?.data.data);
 
-  // console.log(productQAQueries);
+  const loadingProductQA = getRequestQAQueries.some((QA) => QA.isLoading);
+
+  const requestQueries = getRequestQueries.map((request) => request.data?.data.data);
+
+  const loadingRequest = getRequestQueries.some((request) => request.isLoading);
+
+  // console.log(requestQueries);
 
   const businesses = sortedUserBusinessRequests?.map((business, index) => {
     return {
       id: business.id,
       name:
         business.companyName ||
-        productQAQueries[index]
+        requestQAQueries[index]
           ?.find((qa) => qa.subForm.some((subform) => subform.type === "business name"))
           ?.subForm.find((subform) => subform.type === "business name")?.answer[0] ||
         `No added name ${index + 1}`,
       address:
         business.headOfficeAddress ||
-        productQAQueries[index]
+        requestQAQueries[index]
           ?.find((qa) => qa.subForm.some((subform) => subform.type === "address"))
           ?.subForm.find((subform) => subform.type === "address")?.answer[0] ||
         "No address found",
+      status: requestQueries[index]?.status,
     };
   });
 
@@ -98,13 +114,18 @@ const BusinessInfoSecion = ({
   // console.log(businesses);
 
   const loading =
-    loadingProductQA || session.status === "loading" || getUserBusinessRequests.isLoading;
+    loadingProductQA ||
+    session.status === "loading" ||
+    getUserBusinessRequests.isLoading ||
+    loadingRequest;
 
   const selectBusiness = businesses?.find((el) => el.id === selectedBusiness);
 
   const selectedBusinessName = selectBusiness?.name;
 
   const selectAddress = selectBusiness?.address;
+
+  const selectStatus = selectBusiness?.status;
 
   const selectdate = sortedUserBusinessRequests?.find(
     (each) => each.id === selectedBusiness
@@ -152,8 +173,7 @@ const BusinessInfoSecion = ({
         )}
         <div className="flex items-center gap-2">
           <Badge color="green" className="sb-text-14">
-            {/* TODO: do this status part */}
-            Completed
+            {selectStatus}
           </Badge>
           <span className="sb-text-14">
             {selectBusiness ? (

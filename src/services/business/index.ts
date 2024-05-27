@@ -34,14 +34,14 @@ export const useCreateBusinessRequest = () => {
 export const useGetBusinessRequest = ({ id }: { id: string }) =>
   useQuery({
     queryFn: () => getBusinessRequest({ id }),
-    queryKey: ["product requests", id],
+    queryKey: ["business request", id],
     enabled: !!id,
   });
 
 export const useGetUserBusinessRequests = ({ userId }: { userId: string }) =>
   useQuery({
     queryFn: () => getUserBusinessRequests({ userId }),
-    queryKey: ["product requests", userId],
+    queryKey: ["user business requests", userId],
     enabled: !!userId,
   });
 

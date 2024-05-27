@@ -1,7 +1,9 @@
+"use client";
+
 import { Badge, Button } from "flowbite-react";
 import { ArrowRight } from "@/assets/icons";
 import { useParams, useSearchParams } from "next/navigation";
-import { useGetBusinessRequest } from "@/services/business";
+import { useGetBusinessRequest, useGetProductRequest } from "@/services/business";
 import { useGetRequestQA } from "@/services/productQA";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSession } from "next-auth/react";
@@ -20,9 +22,11 @@ export const Header = () => {
   const getBusinessRequest = useGetBusinessRequest({ id: businessId as string });
   const getRequestQA = useGetRequestQA(requestId);
   const getProduct = useGetProductById(productId);
+  const getRequest = useGetProductRequest(requestId);
   const business = getBusinessRequest.data?.data.data;
   const productQA = getRequestQA.data?.data.data;
   const product = getProduct.data?.data.data;
+  const request = getRequest.data?.data.data;
 
   const getServices = useGetServices();
   const services = getServices.data?.data.data;
@@ -31,7 +35,11 @@ export const Header = () => {
 
   const priority2 = services?.find((el) => el.priority === 2);
 
-  const loading = getBusinessRequest.isLoading || getRequestQA.isLoading || getProduct.isLoading;
+  const loading =
+    getBusinessRequest.isLoading ||
+    getRequestQA.isLoading ||
+    getProduct.isLoading ||
+    getRequest.isLoading;
 
   const name =
     business?.companyName ||
@@ -54,9 +62,13 @@ export const Header = () => {
           ) : (
             <h1 className="text-2xl font-semibold">{name}</h1>
           )}
-          <Badge color={"green"}>
-            <p className="text-green-400">completed</p>
-          </Badge>
+          {loading ? (
+            <Skeleton className="w-20 h-4" />
+          ) : (
+            <Badge color={"green"}>
+              <p className="text-green-400">{request?.status}</p>
+            </Badge>
+          )}
         </div>
       </div>
       <div>

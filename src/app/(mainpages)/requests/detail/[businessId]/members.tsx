@@ -5,6 +5,7 @@ import { useGetRequestQA } from "@/services/productQA";
 import { TFormQAGet } from "@/services/productQA/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { EmptyPage } from "./empty";
 
 export const Members = () => {
   const { businessId } = useParams();
@@ -45,6 +46,8 @@ export const Members = () => {
     <div className="flex flex-wrap gap-6">
       {loading ? (
         [...Array(3)].map((_, index) => <MemberSkeletonLoader key={index} />)
+      ) : consolidated.length <= 0 && !loading ? (
+        <EmptyPage text="Nothing here yet" />
       ) : (
         <MemberInfoReviewCards
           title={"Proprietor"}
