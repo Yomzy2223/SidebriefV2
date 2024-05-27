@@ -72,27 +72,36 @@ export default function Dashboard() {
 
   const OneOrMoreRequests = (businessRequests || []).length >= 1;
 
-  const useGetBusinessRequests = useGetBusinessRequest({ id: selectedBusiness });
+  const getBusinessRequest = useGetBusinessRequest({ id: selectedBusiness });
 
-  const businessRequest = useGetBusinessRequests.data?.data.data;
+  const businessRequest = getBusinessRequest.data?.data.data;
 
   const productRequests = businessRequest?.productRequest;
 
   const showTableSection = productRequests && productRequests.length > 1;
 
+  const loading =
+    session.status === "loading" || getBusinessRequests.isLoading || getBusinessRequest.isLoading;
+
   return (
     <div className="p-5 space-y-14 md:p-8">
-      {!OneOrMoreRequests || (getBusinessRequests.isLoading && <WelcomeSection />)}
-      {OneOrMoreRequests && <OngoingRegSection />}
-      <HandpickedSection />
-      {moreThanOneRequest && (
+      {!OneOrMoreRequests && !loading && <WelcomeSection />}
+      {(OneOrMoreRequests || loading) && <OngoingRegSection />}
+
+      {!OneOrMoreRequests && !loading && <HandpickedSection />}
+
+      {(moreThanOneRequest || loading) && (
         <BusinessInfoSecion
           selectedBusiness={selectedBusiness}
           setSelectedBusiness={(id: string) => setSelectedBusiness(id)}
         />
       )}
-      {moreThanOneRequest && <SuggestionSection selectedBusiness={selectedBusiness} />}
-      {moreThanOneRequest && <BusinessMembersSection selectedBusiness={selectedBusiness} />}
+
+      {(moreThanOneRequest || loading) && <SuggestionSection selectedBusiness={selectedBusiness} />}
+
+      {(moreThanOneRequest || loading) && (
+        <BusinessMembersSection selectedBusiness={selectedBusiness} />
+      )}
 
       {showTableSection && <TableSection selectedBusiness={selectedBusiness} />}
     </div>

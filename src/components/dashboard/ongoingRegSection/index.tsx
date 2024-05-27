@@ -62,8 +62,8 @@ const OngoingRegSection = () => {
     userRequests.isLoading ||
     productRequest.isLoading ||
     Service.isLoading ||
-    getRequestQA.isLoading;
-  stepLoading;
+    getRequestQA.isLoading ||
+    stepLoading;
 
   if (loading) {
     return <OngoingRegSkeleton />;
@@ -136,10 +136,6 @@ const OngoingRegSection = () => {
           <Button size="fit" color="ghost" className="underline text-destructive-foreground">
             Delete
           </Button>
-          {/* TODO: get the particular position to go to */}
-          {/* <Link
-            href={`http://localhost:3000/requests/${Service.data?.data.data.id}/${urlSuffix}/${latest?.id}`}
-          > */}
           <Button
             color="secondary"
             className="md:px-6 md:py-1.5"

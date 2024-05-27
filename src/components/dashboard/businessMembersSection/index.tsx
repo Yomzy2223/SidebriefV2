@@ -15,9 +15,9 @@ const BusinessMembersSection = ({ selectedBusiness }: { selectedBusiness: string
         <DocumentComponent businessId={selectedBusiness} />
       </SectionWrapper>
 
-      <SectionWrapper title="My Activities" businessId={selectedBusiness}>
+      {/* <SectionWrapper title="My Activities" businessId={selectedBusiness}>
         <Activity />
-      </SectionWrapper>
+      </SectionWrapper> */}
     </div>
   );
 };
@@ -33,76 +33,3 @@ interface IFiles {
   received: IFile[];
   uploaded: IFile[];
 }
-
-const files: IFiles = {
-  received: [
-    {
-      id: "1",
-      name: "Statement of aaccount",
-      type: "application/pdf",
-    },
-
-    {
-      id: "2",
-      name: "National ID Card",
-      type: "image/png",
-    },
-    {
-      id: "3",
-      name: "Statemaent of account",
-      type: "application/pdf",
-    },
-
-    {
-      id: "2",
-      name: "National ID Card",
-      type: "image/png",
-    },
-    {
-      id: "1",
-      name: "Statement of account",
-      type: "application/pdf",
-    },
-
-    {
-      id: "2",
-      name: "National ID Card",
-      type: "image/png",
-    },
-    {
-      id: "1",
-      name: "Statement of account",
-      type: "application/pdf",
-    },
-
-    {
-      id: "2",
-      name: "National ID Card",
-      type: "image/png",
-    },
-    {
-      id: "1",
-      name: "Statement of account",
-      type: "application/pdf",
-    },
-
-    {
-      id: "2",
-      name: "National ID Card",
-      type: "image/png",
-    },
-  ],
-  uploaded: [
-    {
-      id: "11",
-      name: "Statemt of account",
-      type: "application/pdf",
-    },
-
-    {
-      id: "12",
-      name: "Natiol ID Card",
-      type: "image/png",
-    },
-  ],
-};

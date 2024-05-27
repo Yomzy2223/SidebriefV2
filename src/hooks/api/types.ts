@@ -16,6 +16,7 @@ export interface IRequest {
   productId: string;
   currentState: string;
   partnerInCharge: string;
+  businessId: string;
 }
 
 export interface IService {

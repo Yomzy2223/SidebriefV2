@@ -9,6 +9,7 @@ import { Dispatch, MouseEvent, SetStateAction, useState } from "react";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { IRequest, IServiceFull } from "@/hooks/api/types";
 import { useGetBusinessRequest } from "@/services/business";
+import { TProductRequest } from "@/services/business/types";
 
 // Table information
 export const useTableActions = ({
@@ -31,7 +32,7 @@ export const useTableActions = ({
   selectedBusiness: string;
 }) => {
   const [searchValue, setSearchValue] = useState("");
-  const { getReqStatusColor } = useGlobalFunctions();
+  const { getReqStatusColor, setQueriesWithPath } = useGlobalFunctions();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -102,7 +103,27 @@ export const useTableActions = ({
   };
 
   const handleClick = (e: MouseEvent<HTMLTableRowElement>, rowId: string, rowInfo: IRowInfo[]) => {
-    router.push(`/services/request/${rowId}`);
+    const getQueries = (requestData: IRequest, action?: string) => {
+      let queries = [
+        { name: "productId", value: requestData.productId || "" },
+        { name: "requestId", value: requestData.id },
+      ];
+      return queries;
+    };
+
+    const productRequest = requests.find((request) => request.id === rowId);
+
+    const navigateTooDetail = () => {
+      if (productRequest) {
+        setQueriesWithPath({
+          path: `/requests/detail/${productRequest.businessId}`,
+          queries: getQueries(productRequest),
+        });
+      }
+    };
+
+    navigateTooDetail();
+    // router.push(`/services/request/${rowId}`);
   };
 
   const handleAssignClick = (e: MouseEvent<HTMLTableCellElement>, rowId: string, text: string) => {

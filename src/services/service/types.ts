@@ -57,6 +57,7 @@ export type TSubForm = {
 
 export type TFieldTypes =
   | "text"
+  | "address"
   | "password"
   | "business name"
   | "checkbox"
