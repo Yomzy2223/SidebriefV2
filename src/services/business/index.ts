@@ -8,6 +8,8 @@ import {
   updateProductRequest,
   getProductRequest,
   submitProductRequest,
+  getbusinessDocuments,
+  getRequestDocuments,
 } from "./operations";
 import { useResponse } from "..";
 
@@ -103,3 +105,17 @@ export const useSubmitProductRequest = () => {
     },
   });
 };
+
+export const useGetBusinessDocuments = (businessId: string) =>
+  useQuery({
+    queryKey: ["request documents", businessId],
+    queryFn: () => getbusinessDocuments({ businessId }),
+    enabled: !!businessId,
+  });
+
+export const useGetRequestDocuments = (requestId: string) =>
+  useQuery({
+    queryKey: ["request documents", requestId],
+    queryFn: () => getRequestDocuments({ requestId }),
+    enabled: !!requestId,
+  });

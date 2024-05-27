@@ -5,6 +5,7 @@ import { Badge, Button, Label, TextInput } from "flowbite-react";
 import { useSearchParams } from "next/navigation";
 import { SwatchBook } from "@/assets/icons";
 import { FileInput } from "@/components/file/fileInput";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Forms = () => {
   const searchParams = useSearchParams();
@@ -34,6 +35,8 @@ export const Forms = () => {
       }
     });
 
+  const loading = productQA.isLoading;
+
   // const navigate = ({ page }: { page: "info" | "forms" }) => {
   //   setQueriesWithPath({
   //     path: `/requests/${params.serviceId}/${page}`,
@@ -43,14 +46,16 @@ export const Forms = () => {
 
   return (
     <div className="space-y-8">
-      {consolidated?.map((el, i) => {
-        return (
-          <div key={i} className="space-y-5 rounded border p-10">
-            <div className="flex justify-between w-full">
-              <div className="flex flex-col">
-                <h6 className="text-xl leading-normal font-semibold">{el.title}</h6>
-              </div>
-              {/* <Button
+      {loading
+        ? [...Array(3)].map((_, index) => <SkeletonLoader key={index} />)
+        : consolidated?.map((el, i) => {
+            return (
+              <div key={i} className="space-y-5 rounded border p-10">
+                <div className="flex justify-between w-full">
+                  <div className="flex flex-col">
+                    <h6 className="text-xl leading-normal font-semibold">{el.title}</h6>
+                  </div>
+                  {/* <Button
                 color="link"
                 size={"fit"}
                 className="self-end text-sm"
@@ -58,61 +63,89 @@ export const Forms = () => {
               >
                 Edit <PencilLine strokeWidth={1} size={16} />
               </Button> */}
-            </div>
-            <div className="flex flex-wrap justify-between gap-8">
-              {el.subForm.map((subform) => {
-                if (subform.type.includes("document") && subform.fileName !== "") {
-                  <div
-                    className="space-y-2 w-full lg:w-[calc(50%-1rem)] xl:w-[calc(33.333%-1.5rem)]"
-                    key={subform.id}
-                  >
-                    <Label htmlFor={sluggify(subform.question)} value={subform.question} />
-                    <FileInput
-                      fileName={subform.fileName}
-                      fileLink={subform.fileLink}
-                      fileSize={subform.fileSize}
-                      fileType={subform.fileType}
-                      onlyDownload
-                    />
-                  </div>;
-                }
+                </div>
+                <div className="flex flex-wrap justify-start gap-8">
+                  {el.subForm.map((subform) => {
+                    if (subform.type.includes("document") && subform.fileName !== "") {
+                      <div
+                        className="space-y-2 w-full lg:w-[calc(50%-1rem)] xl:w-[calc(33.333%-1.5rem)]"
+                        key={subform.id}
+                      >
+                        <Label htmlFor={sluggify(subform.question)} value={subform.question} />
+                        <FileInput
+                          fileName={subform.fileName}
+                          fileLink={subform.fileLink}
+                          fileSize={subform.fileSize}
+                          fileType={subform.fileType}
+                          onlyDownload
+                        />
+                      </div>;
+                    }
 
-                if (subform.type.includes("document") && subform.fileName === "") {
-                  return;
-                }
+                    if (subform.type.includes("document") && subform.fileName === "") {
+                      return;
+                    }
 
-                if (subform.answer[0] === "" && !subform.type.includes("document")) return;
+                    if (subform.answer[0] === "" && !subform.type.includes("document")) return;
 
-                return (
-                  <div
-                    className="space-y-2 w-full lg:w-[calc(50%-1rem)] xl:w-[calc(33.333%-1.5rem)]"
-                    key={subform.id}
-                  >
-                    <Label htmlFor={sluggify(subform.question)} value={subform.question} />
+                    return (
+                      <div
+                        className="space-y-2 w-full lg:w-[calc(50%-1rem)] xl:w-[calc(33.333%-1.5rem)]"
+                        key={subform.id}
+                      >
+                        <Label htmlFor={sluggify(subform.question)} value={subform.question} />
 
-                    {subform.answer && (
-                      <TextInput
-                        id={sluggify(subform.question)}
-                        value={subform.answer.length === 1 ? subform.answer[0] : ""}
-                        disabled
-                      />
-                    )}
-                    {subform.answer.length > 1 && (
-                      <div className="flex flex-wrap gap-2.5 mt-2">
-                        {subform.answer.map((answer, i) => (
-                          <Badge key={i} color={"green"} icon={SwatchBook}>
-                            {answer}
-                          </Badge>
-                        ))}
+                        {subform.answer && (
+                          <TextInput
+                            id={sluggify(subform.question)}
+                            value={subform.answer.length === 1 ? subform.answer[0] : ""}
+                            disabled
+                          />
+                        )}
+                        {subform.answer.length > 1 && (
+                          <div className="flex flex-wrap gap-2.5 mt-2">
+                            {subform.answer.map((answer, i) => (
+                              <Badge key={i} color={"green"} icon={SwatchBook}>
+                                {answer}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
     </div>
   );
 };
+
+const SkeletonLoader = () => (
+  <div className="space-y-5 rounded border p-10">
+    <div className="flex justify-between w-full">
+      <div className="flex flex-col">
+        <Skeleton className="h-6 w-32" />
+      </div>
+    </div>
+    <div className="flex flex-wrap justify-start gap-8">
+      <div className="space-y-2 w-full lg:w-[calc(50%-1rem)] xl:w-[calc(33.333%-1.5rem)]">
+        <Skeleton className="h-4 w-48" />
+        <div className="flex">
+          <div className="relative w-full">
+            <Skeleton className="h-10 w-full rounded-lg" />
+          </div>
+        </div>
+      </div>
+      <div className="space-y-2 w-full lg:w-[calc(50%-1rem)] xl:w-[calc(33.333%-1.5rem)]">
+        <Skeleton className="h-4 w-48" />
+        <div className="flex">
+          <div className="relative w-full">
+            <Skeleton className="h-10 w-full rounded-lg" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);

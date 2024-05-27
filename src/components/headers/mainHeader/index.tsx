@@ -17,7 +17,19 @@ export const Header = () => {
     await signOut({ redirect: true });
   };
 
-  const firstName = session.data?.user.fullName.split(" ")[0];
+  const fullName = session.data?.user?.fullName || "";
+  const firstName = fullName.split(" ")[0];
+
+  function getInitials(fullName: string): string {
+    const names = fullName.trim().split(" ");
+    if (names.length === 1) {
+      return names[0].substring(0, 2).toUpperCase();
+    }
+    const initials = names[0].charAt(0) + names[names.length - 1].charAt(0);
+    return initials.toUpperCase();
+  }
+
+  const initials = fullName ? getInitials(fullName) : "0";
 
   return (
     <div className="sticky top-0 left-0 bg-background border-b z-20 px-5 md:px-8 ">
@@ -48,7 +60,7 @@ export const Header = () => {
             <Popover>
               <PopoverTrigger asChild>
                 <Button color="ghost" size="fit" className="flex items-center">
-                  <Avatar placeholderInitials="OG" rounded />
+                  <Avatar placeholderInitials={initials} rounded />
                   <ChevronDown color={iconColor} />
                 </Button>
               </PopoverTrigger>
