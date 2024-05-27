@@ -8,13 +8,14 @@ import { useSession } from "next-auth/react";
 import { OngoingRegSkeleton } from "./skeleton";
 import Link from "next/link";
 import { useGetProductRequest } from "@/services/business";
-import { useGetService } from "@/services/service";
+import { useGetService, useGetServiceForms } from "@/services/service";
 import { sluggify } from "@/lib/utils";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { useQueries } from "@tanstack/react-query";
 import { getRequestQA } from "@/services/productQA/operations";
 import { useGetRequestQA } from "@/services/productQA";
 import { TProductRequest } from "@/services/business/types";
+import { useGetProductForms } from "@/services/product";
 
 const OngoingRegSection = () => {
   const session = useSession();
@@ -50,6 +51,11 @@ const OngoingRegSection = () => {
   const getRequestQA = useGetRequestQA(productRequestId);
 
   const latestRequestQA = getRequestQA.data?.data.data;
+
+  const productFormsRes = useGetProductForms(productRequest.data?.data.data.productId || "");
+  const hasPForms = (productFormsRes.data?.data?.data?.length ?? 0) > 0;
+  const serviceFormsRes = useGetServiceForms(serviceId || "");
+  const hasSForms = (serviceFormsRes.data?.data?.data?.length ?? 0) > 0;
 
   const { steps, loading: stepLoading } = useSteps({
     productRequestId: productRequestId,
@@ -92,19 +98,24 @@ const OngoingRegSection = () => {
     }
   }
 
+  // const productFormsRes = useGetProductForms(productInfo?.id || "");
+  // const hasPForms = (productFormsRes.data?.data?.data?.length ?? 0) > 0;
+  // const serviceFormsRes = useGetServiceForms(serviceId);
+  // const hasSForms = (serviceFormsRes.data?.data?.data?.length ?? 0) > 0;
+
   const getQueries = (requestData: TProductRequest, action?: string) => {
     let queries = [
       { name: "productId", value: productRequest.data?.data.data.productId || "" },
       { name: "requestId", value: requestData.id },
-      // { name: "hasSForms", value: hasSForms.toString() },
-      // { name: "hasPForms", value: hasPForms.toString() },
+      { name: "hasSForms", value: hasSForms.toString() },
+      { name: "hasPForms", value: hasPForms.toString() },
     ];
-    // if (hasSForms) {
-    //   queries = [...queries, { name: "activeTab", value: "0" }];
-    // }
-    // if (action === "createReq" || action === "createBusiness") {
-    //   queries = [...queries, { name: "progress", value: "1" }];
-    // }
+    if (hasSForms) {
+      queries = [...queries, { name: "activeTab", value: "0" }];
+    }
+    if (action === "createReq" || action === "createBusiness") {
+      queries = [...queries, { name: "progress", value: "1" }];
+    }
     if (action === "createBusiness") {
       queries = [...queries, { name: "businessId", value: requestData.businessId }];
     }
