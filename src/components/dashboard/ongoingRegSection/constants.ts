@@ -6,6 +6,7 @@ import { TFormQAGet, TSubformQAGet } from "@/services/productQA/types";
 import { TSubForm } from "@/services/service/types";
 import { TProductForm } from "@/services/product/types";
 import { useGetServiceForms } from "@/services/service";
+import { useGetProductRequest } from "@/services/business";
 // import { useUploadActions } from "@/app/(mainpages)/request/[service]/kyc/[processId]/upload/uploadActions";
 
 const noDocuments: (form: TProductForm) => TSubForm[] = (form: TProductForm) => {
@@ -23,8 +24,10 @@ export const useSteps = ({
   productId: string;
 }) => {
   const getProductQA = useGetRequestQA(productRequestId);
+  const getRequest = useGetProductRequest(productRequestId);
 
   const productQA = getProductQA.data?.data.data;
+  const request = getRequest.data?.data.data;
 
   const persons = productQA?.filter((qa) => qa.type === "person");
 
@@ -44,6 +47,12 @@ export const useSteps = ({
   // console.log(productForms);
 
   type booleanFunc = () => boolean;
+
+  const checkStepPayment: booleanFunc = () => {
+    const paid = request?.paid;
+
+    return paid || false;
+  };
 
   const checkStepInfo: booleanFunc = () => {
     // if prroductQA is empty or undefinedr
@@ -113,10 +122,8 @@ export const useSteps = ({
     return true;
   };
 
-  // console.log(checkStep4());
-
   return {
-    loading: getServiceForm.isLoading || getProductQA.isLoading,
+    loading: getServiceForm.isLoading || getProductQA.isLoading || getRequest.isLoading,
     steps: [
       {
         step: "Step 1",
@@ -128,8 +135,7 @@ export const useSteps = ({
       {
         step: "Step 2",
         description: "Answer a few quick questions to personalize your request process.",
-        // TODO: check if payment is done
-        done: false,
+        done: checkStepPayment(),
         icon: InfoGif,
       },
       {
