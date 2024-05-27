@@ -62,9 +62,4 @@ const tabElements: { id: number; title: string; content: React.ReactNode }[] = [
     title: "Documents",
     content: <Documents />,
   },
-  {
-    id: 4,
-    title: "Manage Business",
-    content: <Manage />,
-  },
 ];
