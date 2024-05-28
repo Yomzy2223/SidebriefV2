@@ -84,10 +84,7 @@ const DynamicForm = ({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={cn(
-        "flex flex-col gap-8 justify-between flex-1 max-w-[500px] min-h-full",
-        formClassName
-      )}
+      className={cn("flex flex-col gap-8 justify-between flex-1 min-h-full", formClassName)}
     >
       <div className={cn("flex flex-col justify-start gap-8", className)}>
         {(formInfo || []).map((el, i: number) => {
@@ -139,7 +136,7 @@ const DynamicForm = ({
                 />
               )}
 
-               {/* {isTextInput && (
+              {/* {isTextInput && (
                 <div className="w-full flex items-center">
                   <TextInput
                     id={el.name}
