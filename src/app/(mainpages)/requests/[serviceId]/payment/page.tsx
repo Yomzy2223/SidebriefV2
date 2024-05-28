@@ -30,7 +30,7 @@ const Payment = () => {
 
   const { setQueriesWithPath } = useGlobalFunctions();
   const { serviceId } = useParams();
-  const [selectedProvider, setSelectedProvided] = useState("");
+  const [selectedProvider, setSelectedProvided] = useState(paymentProviders[0].id);
 
   const searchParams = useSearchParams();
   const productId = searchParams.get("productId") || "";
@@ -127,7 +127,7 @@ const Payment = () => {
           {numeral(product?.amount).format("0,0")}
         </p>
       </div>
-      {selectedProvider !== "" && (
+      {selectedProvider !== "" && !openStripe && (
         <div className="mt-8">
           <Button
             color="secondary"
@@ -135,16 +135,20 @@ const Payment = () => {
             size={"lg"}
             onClick={handlePayment}
             isProcessing={createStripeIntent.isPending || initializedPaystack.isPending}
+            processingSpinner={<Oval color="white" strokeWidth={4} className="h-5 w-5" />}
           >
             Complete payment
           </Button>
         </div>
       )}
-      <Modal show={openStripe}>
-        <Modal.Body>
-          <StripeComponent clientSecret={clientSecret} close={closeStripe} />
-        </Modal.Body>
-      </Modal>
+      {/* <Modal show={openStripe}>
+        <Modal.Body> */}
+
+      <div className="mt-6">
+        <StripeComponent clientSecret={clientSecret} close={closeStripe} />
+      </div>
+      {/* </Modal.Body>
+      </Modal> */}
 
       {/* <DynamicForm
         formInfo={formInfo}

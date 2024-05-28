@@ -141,8 +141,8 @@ const OngoingRegSection = () => {
             </Badge>
           </div>
           <p className="text-sm w-4/5">
-            Now continue the process of registering your business without the need for any physical
-            paperwork.
+            Welcome back! Let&#39;s pick up where you left off and get your business up and running
+            smoothly
           </p>
         </div>
         <div className="flex items-center gap-10 md:gap-16">

@@ -8,6 +8,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { RefObject, useRef, useState } from "react";
 import EachForm from "./eachForm";
 import ConfirmAction from "@/components/confirmAction";
+import { useGetProductRequest } from "@/services/business";
 
 const RequestForm = ({
   forms,
@@ -42,12 +43,17 @@ const RequestForm = ({
     el.subForm?.some((el) => el.type === "document template" || el.type === "document upload")
   );
 
+  const productRequestRes = useGetProductRequest(searchParams.get("requestId") || "");
+  const productRequest = productRequestRes.data?.data?.data;
+
   const handeNext = (i: number, subTabRef: RefObject<TabsRef>) => {
     if (isOnLastForm) {
       if (isServiceForm) {
         setQueriesWithPath({
-          path: `/requests/${serviceId}/payment`,
-          queries: [{ name: "progress", value: "2" }],
+          path: productRequest?.paid
+            ? `/requests/${serviceId}/forms`
+            : `/requests/${serviceId}/payment`,
+          queries: [{ name: "progress", value: productRequest?.paid ? "3" : "2" }],
         });
         return;
       }

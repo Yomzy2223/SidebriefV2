@@ -17,15 +17,13 @@ const Page = () => {
           <div className="flex flex-col items-center">
             <Image src={SuccessImage} quality={100} alt="" />
           </div>
-          <h2 className="text-4xl font-bold tracking-tight text-dark sm:text-6xl">
-            Registration Completed
-          </h2>
+          <h2 className="sb-text-32 font-bold tracking-tight text-dark">Registration Completed</h2>
           <h4 className="mt-6 text-lg leading-8 text-dark-300">
             You will get your document in no time.
           </h4>
           <h4 className="mt-0 text-lg leading-8 text-dark-300">Thank you for using Sidebrief.</h4>
           <Link href={`/dashboard/?businessId=${businessId}`}>
-            <Button color="magenta" size="lg" className="mt-8">
+            <Button color="secondary" size="lg" className="mt-8">
               <p>Back to Dashboard</p>
             </Button>
           </Link>

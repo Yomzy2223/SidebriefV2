@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import MainNavigation from "@/components/navbar";
 import OnboardBusinessWrapper from "./wrapper";
+
 const Onhboardlayout = ({ children }: { children: ReactNode }) => {
   return (
     <div>

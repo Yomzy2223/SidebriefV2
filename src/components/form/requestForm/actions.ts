@@ -143,10 +143,10 @@ INewFormActionProps) => {
       answer: getAnswer(field) || "",
       type: field.type,
       compulsory: field.compulsory,
-      fileName: "",
-      fileLink: "",
-      fileType: "",
-      fileSize: "",
+      fileName: getQAField(field.question)?.fileName || "",
+      fileLink: getQAField(field.question)?.fileLink || "",
+      fileType: getQAField(field.question)?.fileType || "",
+      fileSize: getQAField(field.question)?.fileSize || "",
     }));
 
     const subFormWithId = subForm?.filter((field) => !!field.id);

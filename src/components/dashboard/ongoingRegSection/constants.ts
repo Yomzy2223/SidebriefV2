@@ -84,6 +84,10 @@ export const useSteps = ({
   };
 
   const checkStepKYC: booleanFunc = () => {
+    if (request?.status === "SUBMITTED") {
+      return true;
+    }
+
     // if prroductQA is empty or undefined
     if (!productQA || productQA.length === 0) {
       return false;
@@ -114,10 +118,6 @@ export const useSteps = ({
         }
       }
     }
-
-    // if (!checkAllUploaded(productQA)) {
-    //   return false;
-    // }
 
     return true;
   };

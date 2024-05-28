@@ -1,4 +1,5 @@
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
+import { useGetProductRequest } from "@/services/business";
 import { useParams, usePathname, useSearchParams } from "next/navigation";
 import { formsStep, infoStep, paymentStep, plansStep, reviewStep } from "./constants";
 
@@ -25,14 +26,27 @@ export const useLaunchSteps = () => {
       });
   };
 
+  const productRequestRes = useGetProductRequest(searchParams.get("requestId") || "");
+  const productRequest = productRequestRes.data?.data?.data;
+  const paid = productRequest?.paid;
+
   const SForms = hasSForms === "true" || hasSForms === null ? true : false;
   const PForms = hasPForms === "true" || hasPForms === null ? true : false;
 
   // Dynamic request steps
-  let requestSteps = [plansStep, paymentStep, reviewStep];
-  if (SForms && PForms) requestSteps = [plansStep, infoStep, paymentStep, formsStep, reviewStep];
-  else if (SForms && !PForms) requestSteps = [plansStep, infoStep, paymentStep, reviewStep];
-  else if (!SForms && PForms) requestSteps = [plansStep, paymentStep, formsStep, reviewStep];
+  let requestSteps = paid ? [plansStep, reviewStep] : [plansStep, paymentStep, reviewStep];
+  if (SForms && PForms)
+    requestSteps = paid
+      ? [plansStep, infoStep, formsStep, reviewStep]
+      : [plansStep, infoStep, paymentStep, formsStep, reviewStep];
+  else if (SForms && !PForms)
+    requestSteps = paid
+      ? [plansStep, infoStep, reviewStep]
+      : [plansStep, infoStep, paymentStep, reviewStep];
+  else if (!SForms && PForms)
+    requestSteps = paid
+      ? [plansStep, formsStep, reviewStep]
+      : [plansStep, paymentStep, formsStep, reviewStep];
 
   return {
     progress,

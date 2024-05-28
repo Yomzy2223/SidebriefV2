@@ -3,6 +3,7 @@ import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import {
   useCreateBusinessRequest,
   useCreateProductRequest,
+  useGetProductRequest,
   useUpdateProductRequest,
 } from "@/services/business";
 import { TCreateRequest } from "@/services/business/types";
@@ -104,12 +105,15 @@ export const useActions = ({ serviceId }: { serviceId: string }) => {
     },
   ];
 
+  const productRequestRes = useGetProductRequest(searchParams.get("requestId") || "");
+  const productRequest = productRequestRes.data?.data?.data;
+
   // Creates or updates a business
   const handleFormSubmit = ({ values }: { values: z.infer<typeof formSchema> }) => {
     const businessId = searchParams.get("businessId") || "";
     const requestId = searchParams.get("requestId") || "";
     const productId = products?.find((el) => el.name === values.product)?.id || "";
-    const addPath = hasSForms ? "/info" : "/payment";
+    const addPath = hasSForms ? "/info" : productRequest?.paid ? "/info" : "/payment";
 
     // Returns the queries to be set to the url
     const getQueries = (requestData: TCreateRequest, action?: string) => {

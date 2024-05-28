@@ -37,7 +37,7 @@ const ConfirmAction = ({
         <div className="flex justify-center items-center gap-4 mt-1">
           <Button
             onClick={confirmAction}
-            color={isDelete ? "failure" : "primary"}
+            color={isDelete ? "failure" : "secondary"}
             isProcessing={isLoading}
             disabled={isLoading}
             processingSpinner={<Oval color="white" strokeWidth={4} className="h-5 w-5" />}
