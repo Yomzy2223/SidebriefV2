@@ -7,34 +7,33 @@ import { Button } from "flowbite-react";
 import { ArrowRightCircle } from "lucide-react";
 import { useForgotPassword } from "@/services/auth";
 import { IFormInput } from "@/components/form/constants";
+import { useRouter } from "next/navigation";
+import { Oval } from "react-loading-icons";
 
 export default function ForgotPassword() {
   const forgotPassword = useForgotPassword();
 
   const handleForgot = async ({ values }: { values: { email: string } }) => {
-    forgotPassword.mutate(
-      { email: values.email },
-      {
-        onError: (err: any) => {
-          console.log(err.response.data.error);
-        },
-        onSuccess: (data) => {
-          console.log(data);
-        },
-      }
-    );
+    forgotPassword.mutate({ email: values.email });
   };
 
   return (
-    <AuthFormWrapper title="Forgot Password">
+    <AuthFormWrapper title="Forgot Password" hideSocials>
       <DynamicForm
         formInfo={formInfo}
         defaultValues={defaultValues}
         formSchema={forgotSchema}
         onFormSubmit={handleForgot}
       >
-        <Button type="submit" color="secondary" isProcessing={forgotPassword.isPending}>
-          Get reset link <ArrowRightCircle className="ml-1" />
+        <Button
+          type="submit"
+          color="secondary"
+          isProcessing={forgotPassword.isPending}
+          disabled={forgotPassword.isPending}
+          processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
+        >
+          Get reset link
+          {!forgotPassword.isPending && <ArrowRightCircle className="ml-1" />}
         </Button>
       </DynamicForm>
     </AuthFormWrapper>
