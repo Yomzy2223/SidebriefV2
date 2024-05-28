@@ -1,8 +1,8 @@
-import { Client } from "@/lib/axios";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { AuthOptions, Awaitable, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
+import { Client } from "@/services";
 
 export const authOptions: AuthOptions = {
   pages: {
