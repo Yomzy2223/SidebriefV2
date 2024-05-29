@@ -155,7 +155,7 @@ const Payment = () => {
           <p className="font-semibold">Features</p>
           <div className="flex gap-4">
             {product?.feature?.map((feature) => (
-              <span className="flex items-center gap-2">
+              <span key={feature} className="flex items-center gap-2">
                 <span className="bg-primary p-1 rounded-full">
                   {<CheckCheck color="white" size={12} />}
                 </span>{" "}
