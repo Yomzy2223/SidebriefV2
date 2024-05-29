@@ -72,9 +72,9 @@ const MainNavigation = ({ navRoutes, className, inactiveClassName = "", others }
             ) : (
               <Link href={el.to}>
                 <Button
-                  color="ghost"
+                  color={isActive ? "primary" : "ghost"}
                   className={cn("text-foreground-3 whitespace-nowrap", {
-                    "bg-primary text-primary-foreground": isActive,
+                    "text-primary-foreground": isActive,
                     [inactiveClassName]: !isActive,
                   })}
                 >

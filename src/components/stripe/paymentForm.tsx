@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button } from "flowbite-react";
+import { Oval } from "react-loading-icons";
 
 export const PaymentForm: React.FC<{ clientSecret: string; close: () => void }> = ({
   clientSecret,
@@ -41,8 +42,15 @@ export const PaymentForm: React.FC<{ clientSecret: string; close: () => void }> 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <PaymentElement />
-      <Button color="secondary" disabled={!stripe} type="submit" size={"lg"} isProcessing={loading}>
-        Submit Payment
+      <Button
+        color="secondary"
+        disabled={!stripe}
+        type="submit"
+        size={"lg"}
+        isProcessing={loading}
+        processingSpinner={<Oval color="white" strokeWidth={4} className="h-5 w-5" />}
+      >
+        Pay
       </Button>
     </form>
   );

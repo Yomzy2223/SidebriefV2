@@ -1,11 +1,8 @@
 "use client";
 
-import { IFormInput } from "@/components/form/constants";
-import DynamicForm from "@/components/form/dynamicForm";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
 import { Button } from "flowbite-react";
-import { ArrowRightCircle } from "lucide-react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { Oval } from "react-loading-icons";
 import RequestWrapper from "../wrapper";
@@ -19,8 +16,15 @@ import { useCreateStripePaymentIntent, useInitializePaystack } from "@/services/
 import { Modal } from "flowbite-react";
 import { StripeComponent } from "@/components/stripe";
 import { useSession } from "next-auth/react";
+import ConfirmAction from "@/components/confirmAction";
+import { countries, TCountryCode } from "countries-list";
+import { CheckCheck } from "lucide-react";
 
 const Payment = () => {
+  const [openExit, setOpenExit] = useState(false);
+
+  const router = useRouter();
+
   const createStripeIntent = useCreateStripePaymentIntent();
   const initializedPaystack = useInitializePaystack();
   const session = useSession();
@@ -36,6 +40,7 @@ const Payment = () => {
   const productId = searchParams.get("productId") || "";
   const hasPForms = searchParams.get("hasPForms");
   const requestId = searchParams.get("requestId") || "";
+  const businessId = searchParams.get("businessId");
 
   const getProduct = useGetProductById(productId);
   const product = getProduct.data?.data.data;
@@ -104,9 +109,27 @@ const Payment = () => {
     navigateToNextPage();
   };
 
+  const originalCountry = Object.keys(countries)
+    .map((el: string) => countries[el as TCountryCode].name)
+    .find((el) => el.toLowerCase() === product?.country?.toLowerCase());
+
   return (
     <RequestWrapper productId={productId} requestState="PAYMENT">
-      <p className="text-2xl font-semibold mb-3">Choose your payment choice</p>
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex items-center justify-between gap-4">
+          <h4 className="text-sm leading-normal text-foreground-3">STEP 3</h4>
+          <Button
+            size="fit"
+            color="transparent"
+            className="text-primary"
+            onClick={() => setOpenExit(true)}
+          >
+            Save and continue later
+          </Button>
+        </div>
+        <p className="text-2xl font-semibold">Choose your payment choice</p>
+      </div>
+
       <div className="flex flex-wrap gap-6 mb-8">
         {paymentProviders.map((el) => (
           <div
@@ -120,12 +143,27 @@ const Payment = () => {
           </div>
         ))}
       </div>
-      <div>
-        <span className="font-medium text-lg">Amount</span>
-        <p className="text-4xl font-semibold">
-          {getCurrencySymbol(product?.currency || "") || "$"}
-          {numeral(product?.amount).format("0,0")}
-        </p>
+      <div className="flex flex-col gap-6">
+        {product?.name && (
+          <p className="sb-text-16 font-normal text-foreground-3">
+            Create your {product?.name} request in {originalCountry} within just {product?.timeline}{" "}
+            for {getCurrencySymbol(product?.currency || "")}
+            {numeral(product?.amount).format("0,0")} only.
+          </p>
+        )}
+        <div className="flex flex-col gap-2">
+          <p className="font-semibold">Features</p>
+          <div className="flex gap-4">
+            {product?.feature?.map((feature) => (
+              <span className="flex items-center gap-2">
+                <span className="bg-primary p-1 rounded-full">
+                  {<CheckCheck color="white" size={12} />}
+                </span>{" "}
+                {feature}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
       {selectedProvider !== "" && !openStripe && (
         <div className="mt-8">
@@ -137,7 +175,7 @@ const Payment = () => {
             isProcessing={createStripeIntent.isPending || initializedPaystack.isPending}
             processingSpinner={<Oval color="white" strokeWidth={4} className="h-5 w-5" />}
           >
-            Complete payment
+            Click to pay
           </Button>
         </div>
       )}
@@ -147,29 +185,17 @@ const Payment = () => {
       <div className="mt-6">
         <StripeComponent clientSecret={clientSecret} close={closeStripe} />
       </div>
-      {/* </Modal.Body>
-      </Modal> */}
 
-      {/* <DynamicForm
-        formInfo={formInfo}
-        onFormSubmit={submitFormHandler}
-        className="gap-6"
-        formClassName="gap-12 justify-between"
-      >
-        <Button
-          color="secondary"
-          size={"lg"}
-          type="submit"
-          isProcessing={false}
-          disabled={false}
-          processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
-        >
-          <div className="space-x-2 flex items-center">
-            <p>Continue</p>
-            {true && <ArrowRightCircle className="ml-1" />}
-          </div>
-        </Button>
-      </DynamicForm> */}
+      {openExit && (
+        <ConfirmAction
+          open={openExit}
+          setOpen={setOpenExit}
+          confirmAction={() => router.push(`/dashboard/?businessId=${businessId}`)}
+          title="Save and exit"
+          description="Are you sure you want to save and continue later"
+          dismissible
+        />
+      )}
     </RequestWrapper>
   );
 };

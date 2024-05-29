@@ -73,12 +73,12 @@ const SignUp = () => {
         <AuthStepper />
 
         <div className="flex items-center justify-between gap-14">
-          <p className="sb-text-16 text-foreground-3">
-            {isDesktop && <span>Have an account? </span>}
+          <div className="sb-text-16 text-foreground-3">
+            {isDesktop ? <span>Have an account? </span> : ""}
             <Button color="plain" size="fit" className="text-primary" href="/auth/signin">
               Sign In
             </Button>
-          </p>
+          </div>
           <Button
             type="submit"
             color="secondary"
@@ -87,7 +87,7 @@ const SignUp = () => {
             processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
           >
             <span className="first-letter:capitalize">
-              {isDesktop && "Click to"} create account{" "}
+              {isDesktop ? "Click to" : ""} create account{" "}
             </span>
             {!isPending && <ArrowRightCircle className="ml-1" />}
           </Button>

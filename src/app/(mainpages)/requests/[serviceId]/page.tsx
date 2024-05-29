@@ -17,8 +17,8 @@ const ProductSelect = ({ params }: { params: { serviceId: string } }) => {
 
   return (
     <Wrapper productId={productInfo?.id || ""} requestState="PRODUCTINFO">
-      <div className="flex flex-col mb-6">
-        <h4 className="text-sm leading-normal text-foreground-3 mb-1">STEP 1</h4>
+      <div className="flex flex-col gap-4 mb-6">
+        <h4 className="text-sm leading-normal text-foreground-3">STEP 1</h4>
         <h6 className="text-2xl leading-normal font-semibold">Select Product</h6>
       </div>
 

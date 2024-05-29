@@ -82,7 +82,7 @@ const BusinessInfoSecion = ({
         requestQAQueries[index]
           ?.find((qa) => qa.subForm.some((subform) => subform.type === "business name"))
           ?.subForm.find((subform) => subform.type === "business name")?.answer[0] ||
-        `No added name ${index + 1}`,
+        `My Business Name`,
       address:
         business.headOfficeAddress ||
         requestQAQueries[index]

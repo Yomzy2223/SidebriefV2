@@ -82,8 +82,8 @@ const RequestForm = ({
   };
 
   return (
-    <div className="flex flex-col gap-2 max-w-[500px] w-full">
-      <div className="flex items-center justify-between gap-4 mb-1">
+    <div className="flex flex-col gap-4 max-w-[500px] w-full">
+      <div className="flex items-center justify-between gap-4">
         <h4 className="text-sm leading-normal text-foreground-3">{step}</h4>
         <Button
           size="fit"

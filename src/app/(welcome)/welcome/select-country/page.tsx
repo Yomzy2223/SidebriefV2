@@ -1,7 +1,6 @@
 "use client";
 
 import { CountryCard } from "@/components/cards/CountryCard";
-import CountryCardSK from "@/components/cards/CountryCard/CountryCardSK";
 import { AuthStepper } from "@/app/(welcome)/auth/authStepper";
 import { ICountry } from "@/hooks/api/types";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
@@ -10,6 +9,7 @@ import { Button } from "flowbite-react";
 import { ArrowRightCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const SelectCountry = () => {
   const { setQuery } = useGlobalFunctions();
@@ -44,7 +44,10 @@ const SelectCountry = () => {
 
       <div className="flex flex-1 flex-col justify-between">
         <div className="flex flex-col gap-4 mb-16 sm:gap-2">
-          {isLoading && [1, 2, 3, 4].map((el) => <CountryCardSK key={el} />)}
+          {isLoading &&
+            [1, 2, 3, 4].map((el) => (
+              <Skeleton key={el} className="h-10 w-full max-w-[500px] rounded-xl overflow-hidden" />
+            ))}
           {countriesData?.map((country: ICountry) => (
             <CountryCard
               key={country.name}

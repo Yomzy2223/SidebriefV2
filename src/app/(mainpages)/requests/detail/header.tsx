@@ -46,7 +46,7 @@ export const Header = () => {
     productQA
       ?.find((qa) => qa.subForm.some((subform) => subform.type === "business name"))
       ?.subForm.find((subform) => subform.type === "business name")?.answer[0] ||
-    `No added name`;
+    `My Business Name`;
 
   return (
     <div className="flex justify-between items-center px-4 pt-10 pb-6">
