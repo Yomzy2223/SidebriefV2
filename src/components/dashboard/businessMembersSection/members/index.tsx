@@ -1,17 +1,19 @@
 "use client";
 
-import { useGetBusinessRequest } from "@/services/business";
 import MemberCard from "./MemberCard";
-import { useGetRequestFormQA, useGetRequestQA } from "@/services/productQA";
+import { useGetRequestQA } from "@/services/productQA";
 import { MemberCardSkeleton } from "./memberSkeleton";
 import { Tabs } from "flowbite-react";
 import { NotFoundCard } from "@/components/cards/NotFoundCard";
+import { TBusinessDataFull } from "@/services/business/types";
 
-export const Member = ({ businessId }: { businessId: string }) => {
-  const getBusinessRequest = useGetBusinessRequest({ id: businessId });
-
-  const businessRequest = getBusinessRequest.data?.data.data;
-
+export const Member = ({
+  businessRequest,
+  isLoading,
+}: {
+  businessRequest?: TBusinessDataFull;
+  isLoading: boolean;
+}) => {
   const productRequestId = businessRequest?.productRequest[0]?.id;
 
   const getProductRequestQA = useGetRequestQA(productRequestId || "");
@@ -20,9 +22,10 @@ export const Member = ({ businessId }: { businessId: string }) => {
 
   const persons = productRequestQA?.filter((el) => el.type === "person");
 
-  const loading = getBusinessRequest.isLoading || getProductRequestQA.isLoading || !businessId;
+  const loading = isLoading || getProductRequestQA.isLoading;
 
-  const proprietors: MemberType[] | undefined = persons?.map((el, i) => ({
+  const personsArr: MemberType[] | undefined = persons?.map((el, i) => ({
+    title: el.title,
     email: el.subForm[1].answer[0],
     name: el.subForm[0].answer[0],
     type: el.title,
@@ -32,7 +35,7 @@ export const Member = ({ businessId }: { businessId: string }) => {
 
   return (
     <div className="flex flex-col gap-5 max-w-full">
-      <p className="text-sm">{proprietors && `you have ${proprietors.length} proprietors`}</p>
+      <p className="text-sm">{personsArr && `You currently have ${personsArr.length} members`}</p>
       <div
         className="space-y-4 max-h-[400px] overflow-auto"
         // whileHover={{ overflow: "auto" }}
@@ -40,7 +43,7 @@ export const Member = ({ businessId }: { businessId: string }) => {
         {loading ? (
           Array.from({ length: 6 }).map((_, i) => <MemberCardSkeleton key={i} />)
         ) : (
-          <RenderMembers members={proprietors || []} />
+          <RenderMembers members={personsArr || []} />
         )}
       </div>
     </div>

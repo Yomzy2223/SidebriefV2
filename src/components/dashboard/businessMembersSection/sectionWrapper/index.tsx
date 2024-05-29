@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { LightOutlineArrow } from "@/assets/icons";
 import Link from "next/link";
 import { useGlobalFunctions } from "@/hooks/globalFunctions";
-import { TProductRequest } from "@/services/business/types";
+import { TBusinessDataFull, TProductRequest } from "@/services/business/types";
 import { useGetBusinessRequest, useGetProductRequest } from "@/services/business";
 import { useGetRequestQA } from "@/services/productQA";
 
@@ -11,17 +11,13 @@ export const SectionWrapper = ({
   children,
   title,
   morelink,
-  businessId,
+  businessRequest,
 }: {
-  businessId: string;
   children: ReactNode;
   title: string;
   morelink?: string;
+  businessRequest?: TBusinessDataFull;
 }) => {
-  const getBusinessRequest = useGetBusinessRequest({ id: businessId });
-
-  const businessRequest = getBusinessRequest.data?.data.data;
-
   const productRequestId = businessRequest?.productRequest[0]?.id;
 
   const { setQueriesWithPath } = useGlobalFunctions();
@@ -40,7 +36,7 @@ export const SectionWrapper = ({
   const navigateTooDetail = () => {
     if (productRequest) {
       setQueriesWithPath({
-        path: `/requests/detail/${businessId}`,
+        path: `/requests/detail/${businessRequest?.id}`,
         queries: getQueries(productRequest),
       });
     }

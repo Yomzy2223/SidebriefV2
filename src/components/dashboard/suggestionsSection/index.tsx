@@ -1,18 +1,17 @@
 import React from "react";
 import SuggestionCard from "./suggestionCard";
 import { useGetProductSuggestions } from "@/services/product";
-import { useGetBusinessRequest, useGetProductRequest } from "@/services/business";
+import { useGetProductRequest } from "@/services/business";
 import { Loader } from "./suggestionLoader";
 
-const SuggestionSection = ({ selectedBusiness }: { selectedBusiness: string }) => {
-  // console.log(selectedBusiness);
-  const getBusinessRequest = useGetBusinessRequest({ id: selectedBusiness });
-
-  const businessRequest = getBusinessRequest.data?.data.data;
-
-  const productRequestId = businessRequest?.productRequest[0].id;
-
-  const getProductRequest = useGetProductRequest(productRequestId || "");
+const SuggestionSection = ({
+  businessRequestId,
+  isLoading,
+}: {
+  businessRequestId?: string;
+  isLoading: boolean;
+}) => {
+  const getProductRequest = useGetProductRequest(businessRequestId || "");
 
   const productRequest = getProductRequest.data?.data.data;
 
@@ -22,8 +21,7 @@ const SuggestionSection = ({ selectedBusiness }: { selectedBusiness: string }) =
 
   const productSuggestions = getProductSuggestions.data?.data.data || [];
 
-  const loading =
-    getBusinessRequest.isLoading || getProductRequest.isLoading || getProductSuggestions.isLoading;
+  const loading = isLoading || getProductRequest.isLoading || getProductSuggestions.isLoading;
 
   const suggestions = productSuggestions.map((el) => ({
     title: el.name,

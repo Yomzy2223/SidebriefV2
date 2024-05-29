@@ -1,75 +1,51 @@
 import { Badge, Button } from "flowbite-react";
-import { ArrowRightCircle, Info, InfoIcon } from "lucide-react";
+import { ArrowRightCircle, InfoIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { useSteps } from "./constants";
-import { useGetUserBusinessRequests } from "@/services/business";
 import { useSession } from "next-auth/react";
 import { OngoingRegSkeleton } from "./skeleton";
-import Link from "next/link";
 import { useGetProductRequest } from "@/services/business";
-import { useGetService, useGetServiceForms } from "@/services/service";
-import { sluggify } from "@/lib/utils";
-import { useGlobalFunctions } from "@/hooks/globalFunctions";
-import { useQueries } from "@tanstack/react-query";
-import { getRequestQA } from "@/services/productQA/operations";
-import { useGetRequestQA } from "@/services/productQA";
+import { useGetServiceForms } from "@/services/service";
+import { getStatusBadgeColor, useGlobalFunctions } from "@/hooks/globalFunctions";
 import { TProductRequest } from "@/services/business/types";
 import { useGetProductForms } from "@/services/product";
 
-const OngoingRegSection = () => {
+const OngoingRegSection = ({
+  mostRecentPending,
+  isLoading,
+}: {
+  mostRecentPending: TProductRequest;
+  isLoading: boolean;
+}) => {
   const session = useSession();
-
-  const userId = session.data?.user?.id ?? "";
-
-  const activeStep = "Kyc".toLowerCase();
-
-  const afterProfile = activeStep === "payment" || activeStep === "kyc" || activeStep == "review";
-  const afterPayment = activeStep === "kyc" || activeStep == "review";
-  const afterInfo = activeStep == "review";
 
   const { setQueriesWithPath } = useGlobalFunctions();
 
-  const userRequests = useGetUserBusinessRequests({ userId: userId });
+  const productRequestId = mostRecentPending.id;
 
-  const businessRequests = userRequests.data?.data.data;
+  const getProductRequest = useGetProductRequest(productRequestId);
+  const productRequest = getProductRequest.data?.data?.data;
 
-  const sortedUserBusinessRequests = businessRequests?.sort((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+  const serviceId = productRequest?.product.serviceId;
 
-  const latest = sortedUserBusinessRequests ? sortedUserBusinessRequests[0] : undefined;
-
-  const productRequestId = latest ? latest.productRequest[0].id : "";
-
-  const productRequest = useGetProductRequest(productRequestId);
-
-  const serviceId = productRequest?.data?.data.data.product.serviceId;
-
-  const Service = useGetService(serviceId || "");
-
-  const getRequestQA = useGetRequestQA(productRequestId);
-
-  const latestRequestQA = getRequestQA.data?.data.data;
-
-  const productFormsRes = useGetProductForms(productRequest.data?.data.data.productId || "");
+  const productFormsRes = useGetProductForms(getProductRequest.data?.data.data.productId || "");
+  const productForms = productFormsRes.data?.data?.data;
   const hasPForms = (productFormsRes.data?.data?.data?.length ?? 0) > 0;
   const serviceFormsRes = useGetServiceForms(serviceId || "");
-  const hasSForms = (serviceFormsRes.data?.data?.data?.length ?? 0) > 0;
+  const serviceForm = serviceFormsRes.data?.data.data;
+  const hasSForms = (serviceForm?.length ?? 0) > 0;
 
-  const { steps, loading: stepLoading } = useSteps({
-    productRequestId: productRequestId,
-    serviceId: serviceId || "",
-    productId: productRequest.data?.data.data.productId || "",
+  const { steps } = useSteps({
+    productRequest,
+    serviceForm,
+    productForms,
   });
 
   const loading =
     session.status === "loading" ||
-    userRequests.isLoading ||
-    productRequest.isLoading ||
-    Service.isLoading ||
-    getRequestQA.isLoading ||
-    stepLoading ||
+    isLoading ||
+    getProductRequest.isLoading ||
     productFormsRes.isLoading ||
     serviceFormsRes.isLoading;
 
@@ -88,10 +64,10 @@ const OngoingRegSection = () => {
           break;
         case "Step 3":
           // urlSuffix = "payment";
-          urlSuffix = "kyc";
+          urlSuffix = "forms";
           break;
         case "Step 4":
-          urlSuffix = "kyc";
+          urlSuffix = "forms";
           break;
         default:
           urlSuffix = "info";
@@ -100,14 +76,9 @@ const OngoingRegSection = () => {
     }
   }
 
-  // const productFormsRes = useGetProductForms(productInfo?.id || "");
-  // const hasPForms = (productFormsRes.data?.data?.data?.length ?? 0) > 0;
-  // const serviceFormsRes = useGetServiceForms(serviceId);
-  // const hasSForms = (serviceFormsRes.data?.data?.data?.length ?? 0) > 0;
-
   const getQueries = (requestData: TProductRequest, action?: string) => {
     let queries = [
-      { name: "productId", value: productRequest.data?.data.data.productId || "" },
+      { name: "productId", value: getProductRequest.data?.data.data.productId || "" },
       { name: "requestId", value: requestData.id },
       { name: "hasSForms", value: hasSForms.toString() },
       { name: "hasPForms", value: hasPForms.toString() },
@@ -124,20 +95,29 @@ const OngoingRegSection = () => {
     return queries;
   };
 
+  let status: string = mostRecentPending?.status;
+  switch (mostRecentPending?.status) {
+    case "ASSIGNED":
+      status = "INPROGRESS";
+      break;
+    case "ACCEPTED":
+      status = "INPROGRESS";
+      break;
+    case "REJECTED":
+      status = "INPROGRESS";
+      break;
+  }
+
   return (
     <div className="flex flex-col gap-9 bg-accent rounded-lg">
       <div className="flex justify-between flex-col gap-6 px-8 pb-5 py-1.5 m-0.5 bg-white rounded-t rounded-lg md:flex-row">
         <div className="md:max-w-[50%]">
           <div className="flex items-center gap-4">
             <h2 className="sb-text-24 font-semibold whitespace-nowrap text-ellipsis overflow-hidden max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] 2xl:max-w-[800px]">
-              {latest?.companyName ||
-                latestRequestQA
-                  ?.find((qa) => qa.subForm.some((subform) => subform.type === "business name"))
-                  ?.subForm.find((subform) => subform.type === "business name")?.answer[0] ||
-                "No Registered Name Yet"}
+              {productRequest?.product?.name || ""}
             </h2>
-            <Badge color="pink" icon={() => <InfoIcon size={10} />}>
-              Ongoing
+            <Badge color={getStatusBadgeColor(status)} icon={() => <InfoIcon size={10} />}>
+              {status}
             </Badge>
           </div>
           <p className="text-sm w-4/5">
@@ -153,10 +133,10 @@ const OngoingRegSection = () => {
             color="secondary"
             className="md:px-6 md:py-1.5"
             onClick={() => {
-              const productData = productRequest.data?.data.data;
+              const productData = getProductRequest.data?.data.data;
               if (productData) {
                 setQueriesWithPath({
-                  path: `/requests/${Service.data?.data.data.id}/${urlSuffix}`,
+                  path: `/requests/${serviceId}/${urlSuffix}`,
                   queries: getQueries(productData),
                 });
               }
@@ -171,7 +151,6 @@ const OngoingRegSection = () => {
 
       <div className="flex overflow-auto gap-2.5 mx-8 mb-8">
         {steps.map((el) => {
-          // const state = el.state.toLowerCase();
           const done = el.done;
 
           return (

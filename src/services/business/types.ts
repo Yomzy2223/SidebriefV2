@@ -41,7 +41,7 @@ export type TBusinessDataFull = TBusinessData & {
 export type TCreateRequest = {
   id: string;
   paid: boolean;
-  status: "PENDING" | "SUBMITTED" | "ASSIGNED" | "REJECTED" | "COMPLETED";
+  status: TRequestStatus;
   currentState: "SERVICEFORM" | "PAYMENT";
   partnerInCharge: string;
   isDeprecated: boolean;
@@ -78,4 +78,10 @@ export interface IDocument {
 }
 
 export type TRequestState = "SERVICEFORM" | "PAYMENT" | "PRODUCTFORM" | "REVIEW";
-export type TRequestStatus = "PENDING" | "SUBMITTED" | "ASSIGNED" | "REJECTED" | "COMPLETED";
+export type TRequestStatus =
+  | "PENDING"
+  | "SUBMITTED"
+  | "ASSIGNED"
+  | "ACCEPTED"
+  | "REJECTED"
+  | "COMPLETED";

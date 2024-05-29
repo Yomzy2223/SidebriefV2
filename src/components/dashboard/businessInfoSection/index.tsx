@@ -20,13 +20,19 @@ import Link from "next/link";
 import { Oval } from "react-loading-icons";
 import { useGetServices } from "@/services/service";
 import { getProductRequest } from "@/services/business/operations";
+import { TBusinessDataFull } from "@/services/business/types";
+import { getStatusBadgeColor } from "@/hooks/globalFunctions";
 
 const BusinessInfoSecion = ({
-  selectedBusiness,
+  selectedBusinessId,
   setSelectedBusiness,
+  sortedBusinessReqs,
+  isLoading,
 }: {
-  selectedBusiness: string;
+  selectedBusinessId: string;
   setSelectedBusiness: (id: string) => void;
+  sortedBusinessReqs?: TBusinessDataFull[];
+  isLoading: boolean;
 }) => {
   const [open, setOpen] = useState(false);
   const session = useSession();
@@ -36,24 +42,11 @@ const BusinessInfoSecion = ({
   const services = getServices.data?.data.data;
 
   const priority1 = services?.find((el) => el.priority === 1);
-
   const priority2 = services?.find((el) => el.priority === 2);
-
-  const userId = session.data?.user.id;
-
-  const getUserBusinessRequests = useGetUserBusinessRequests({ userId });
-
-  const userBusinessRequests = getUserBusinessRequests.data?.data.data;
-
-  const sortedUserBusinessRequests = userBusinessRequests?.sort((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
-
-  // console.log(sortedUserBusinessRequests);
 
   const getRequestQAQueries = useQueries({
     queries:
-      sortedUserBusinessRequests?.map((request) => {
+      sortedBusinessReqs?.map((request) => {
         return {
           queryKey: ["get product QA", request.productRequest[0]?.id],
           queryFn: () => getRequestQA({ requestId: request.productRequest[0].id }),
@@ -63,7 +56,7 @@ const BusinessInfoSecion = ({
 
   const getRequestQueries = useQueries({
     queries:
-      sortedUserBusinessRequests?.map((request) => {
+      sortedBusinessReqs?.map((request) => {
         return {
           queryKey: ["get product by id", request.productRequest[0].id],
           queryFn: () => getProductRequest({ productRequestId: request.productRequest[0].id }),
@@ -81,7 +74,7 @@ const BusinessInfoSecion = ({
 
   // console.log(requestQueries);
 
-  const businesses = sortedUserBusinessRequests?.map((business, index) => {
+  const businesses = sortedBusinessReqs?.map((business, index) => {
     return {
       id: business.id,
       name:
@@ -106,30 +99,24 @@ const BusinessInfoSecion = ({
 
   useEffect(() => {
     if (businesses && businesses.length > 0 && !businessInit.current) {
-      setSelectedBusiness(businesses[0].id);
+      setSelectedBusiness(selectedBusinessId || businesses[0].id);
       businessInit.current = true;
     }
   }, [businesses, setSelectedBusiness]);
 
   // console.log(businesses);
 
-  const loading =
-    loadingProductQA ||
-    session.status === "loading" ||
-    getUserBusinessRequests.isLoading ||
-    loadingRequest;
+  const loading = loadingProductQA || session.status === "loading" || isLoading || loadingRequest;
 
-  const selectBusiness = businesses?.find((el) => el.id === selectedBusiness);
+  const selectBusiness = businesses?.find((el) => el.id === selectedBusinessId);
 
   const selectedBusinessName = selectBusiness?.name;
 
   const selectAddress = selectBusiness?.address;
 
-  const selectStatus = selectBusiness?.status;
+  const selectStatus = selectBusiness?.status || "";
 
-  const selectdate = sortedUserBusinessRequests?.find(
-    (each) => each.id === selectedBusiness
-  )?.createdAt;
+  const selectdate = sortedBusinessReqs?.find((each) => each.id === selectedBusinessId)?.createdAt;
 
   return (
     <div className="flex flex-col gap-12 md:justify-between md:flex-row md:gap-3">
@@ -172,7 +159,7 @@ const BusinessInfoSecion = ({
           <Skeleton className="w-full h-6" />
         )}
         <div className="flex items-center gap-2">
-          <Badge color="green" className="sb-text-14">
+          <Badge color={getStatusBadgeColor(selectStatus)} className="sb-text-14">
             {selectStatus}
           </Badge>
           <span className="sb-text-14">
@@ -186,23 +173,27 @@ const BusinessInfoSecion = ({
       </div>
 
       <div className="flex flex-col gap-4 xl:flex-row md:items-center md:gap-7">
-        {!getServices.isLoading ? (
-          <>
-            {priority2 && (
-              <Link href={`/requests/${priority2?.id}`}>
-                <Button
-                  outline
-                  className="border-foreground"
-                  processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
-                >
-                  <span>{priority2?.label}</span>
-                  <ArrowRightCircle fill="hsl(var(--foreground))" stroke="white" />
-                </Button>
-              </Link>
-            )}
-          </>
+        {selectBusiness?.status === "COMPLETED" ? (
+          !getServices.isLoading ? (
+            <>
+              {priority2 && (
+                <Link href={`/requests/${priority2?.id}`}>
+                  <Button
+                    outline
+                    className="border-foreground"
+                    processingSpinner={<Oval color="white" strokeWidth={4} className="h-6 w-6" />}
+                  >
+                    <span>{priority2?.label}</span>
+                    <ArrowRightCircle fill="hsl(var(--foreground))" stroke="white" />
+                  </Button>
+                </Link>
+              )}
+            </>
+          ) : (
+            <Skeleton className="w-48 h-12" />
+          )
         ) : (
-          <Skeleton className="w-48 h-12" />
+          ""
         )}
         <div>
           {!getServices.isLoading ? (

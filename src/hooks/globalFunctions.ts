@@ -175,3 +175,16 @@ export const tagColors = [
     bg: "bg-[hsl(50,100%,91%)]",
   },
 ];
+
+export const getStatusBadgeColor = (status: string) => {
+  if (status === "PENDING") return "pink";
+  if (status === "SUBMITTED") return "blue";
+  if (
+    status === "INPROGRESS" ||
+    status === "ASSIGNED" ||
+    status === "ACCEPTED" ||
+    status === "REJECTED"
+  )
+    return "yellow";
+  if (status === "COMPLETED") return "green";
+};

@@ -9,20 +9,15 @@ import { TFormQAGet } from "@/services/productQA/types";
 import { FileIcon, defaultStyles, DefaultExtensionType } from "react-file-icon";
 import { FileSkeletonLoader } from "./loader";
 import { NotFoundCard } from "@/components/cards/NotFoundCard";
-import { IDocument } from "@/services/business/types";
+import { IDocument, TBusinessDataFull } from "@/services/business/types";
 
-type documentType = {
-  name: string;
-  link: string;
-  type: string;
-  size: string;
-};
-
-export const DocumentComponent = ({ businessId }: { businessId: string }) => {
-  const getBusinessRequest = useGetBusinessRequest({ id: businessId });
-
-  const businessRequest = getBusinessRequest.data?.data.data;
-
+export const DocumentComponent = ({
+  businessRequest,
+  isLoading,
+}: {
+  businessRequest?: TBusinessDataFull;
+  isLoading: boolean;
+}) => {
   const productRequestId = businessRequest?.productRequest[0]?.id;
 
   const getRequestdocuments = useGetRequestDocuments(productRequestId || "");
@@ -51,7 +46,7 @@ export const DocumentComponent = ({ businessId }: { businessId: string }) => {
 
   const documents = getFiles(requestDocuments || []);
 
-  const loading = getRequestdocuments.isLoading || getBusinessRequest.isLoading || !businessId;
+  const loading = getRequestdocuments.isLoading || isLoading;
 
   return (
     <Tabs style="underline">
@@ -103,3 +98,10 @@ interface File {
   name: string;
   type: string;
 }
+
+type documentType = {
+  name: string;
+  link: string;
+  type: string;
+  size: string;
+};

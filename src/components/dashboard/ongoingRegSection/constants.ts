@@ -1,13 +1,7 @@
 import { InfoGif, PaymentCardGif, ProfileGif, ReviewGif } from "@/assets/gif";
-import { useGetProductForms } from "@/services/product";
-import { useGetRequestQA } from "@/services/productQA";
-// import { getRequestQA } from "@/services/productQA/operations";
-import { TFormQAGet, TSubformQAGet } from "@/services/productQA/types";
-import { TSubForm } from "@/services/service/types";
+import { TServiceForm, TSubForm } from "@/services/service/types";
 import { TProductForm } from "@/services/product/types";
-import { useGetServiceForms } from "@/services/service";
-import { useGetProductRequest } from "@/services/business";
-// import { useUploadActions } from "@/app/(mainpages)/request/[service]/kyc/[processId]/upload/uploadActions";
+import { TProductRequest } from "@/services/business/types";
 
 const noDocuments: (form: TProductForm) => TSubForm[] = (form: TProductForm) => {
   return form.subForm?.filter(
@@ -15,41 +9,20 @@ const noDocuments: (form: TProductForm) => TSubForm[] = (form: TProductForm) => 
   );
 };
 export const useSteps = ({
-  productRequestId,
-  serviceId,
-  productId,
+  productRequest,
+  serviceForm,
+  productForms,
 }: {
-  productRequestId: string;
-  serviceId: string;
-  productId: string;
+  productRequest?: TProductRequest;
+  serviceForm?: TServiceForm[];
+  productForms?: TProductForm[];
 }) => {
-  const getProductQA = useGetRequestQA(productRequestId);
-  const getRequest = useGetProductRequest(productRequestId);
-
-  const productQA = getProductQA.data?.data.data;
-  const request = getRequest.data?.data.data;
-
-  const persons = productQA?.filter((qa) => qa.type === "person");
-
-  const getServiceForm = useGetServiceForms(serviceId);
-
-  const serviceForm = getServiceForm.data?.data.data;
-
-  const getProductForm = useGetProductForms(productId);
-
-  const productForms = getProductForm.data?.data.data;
-
-  // const { checkAllUploaded } = useUploadActions({
-  //   persons: persons || [],
-  //   forms: productForms || [],
-  // });
-
-  // console.log(productForms);
+  const productQA = productRequest?.requestQA;
 
   type booleanFunc = () => boolean;
 
   const checkStepPayment: booleanFunc = () => {
-    const paid = request?.paid;
+    const paid = productRequest?.paid;
 
     return paid || false;
   };
@@ -84,7 +57,7 @@ export const useSteps = ({
   };
 
   const checkStepKYC: booleanFunc = () => {
-    if (request?.status === "SUBMITTED") {
+    if (productRequest?.status === "SUBMITTED") {
       return true;
     }
 
@@ -123,7 +96,6 @@ export const useSteps = ({
   };
 
   return {
-    loading: getServiceForm.isLoading || getProductQA.isLoading || getRequest.isLoading,
     steps: [
       {
         step: "Step 1",
